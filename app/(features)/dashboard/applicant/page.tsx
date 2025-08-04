@@ -23,7 +23,7 @@ const ApplicationDashboard = () => {
               Start Application
             </button>
           </div>
-          <div className="flex flex-col gap-3 col-span-2">
+          <div className="flex flex-col gap-4 col-span-2">
             <section className="bg-white p-5 rounded-lg shadow-lg">
               <h3 className="font-bold text-lg mb-3">Complete Your Profile</h3>
               <span className="text-sm text-gray-700 bg-indigo-200 rounded-full px-2 py-1">

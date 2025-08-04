@@ -45,7 +45,7 @@
 //         <div>
 //           <div className="md:grid md:grid-cols-6 gap-6">
 //             <div className="col-span-4 bg-white rounded-lg p-4">
-//               <h1 className="font-bold text-gray-800 mb-8">
+//               <h1 className="text-lg font-bold text-gray-800 mb-8">
 //                 Application Timeline
 //               </h1>
 
