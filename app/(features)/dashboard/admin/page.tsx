@@ -19,7 +19,7 @@ const AdminDashboard = () => {
   ];
 
   return (
-    <main className="md:w-4xl mx-auto mt-3 p-4 flex flex-col gap-4">
+    <main className="md:w-4xl mx-auto mt-3 p-4 flex flex-col gap-4 text-[#0a0a0a]">
       <h1 className="font-bold text-2xl">Admin Command Center</h1>
       <div className="md:grid md:grid-cols-3 gap-4">
         <section className="flex flex-col gap-4">
@@ -75,9 +75,7 @@ const AdminDashboard = () => {
                   key={index}
                   className="text-gray-600 text-sm flex gap-3 items-start"
                 >
-                  <span>
-                    {/* image for the action */}
-                  </span>
+                  <span>{/* image for the action */}</span>
                   <div>
                     <p>{activity.action}</p>
                     <span className="text-xs text-gray-500">

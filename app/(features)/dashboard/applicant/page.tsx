@@ -29,7 +29,7 @@ const ApplicationDashboard = ({
   applicationCycle = "G7 November Intake",
 }: DashboardProps) => {
   return (
-    <main className="md:w-4xl mx-auto mt-3 p-4">
+    <main className="md:w-4xl mx-auto mt-3 p-4  text-[#0a0a0a]">
       {/* Welcome Section */}
       <div className="mb-6">
         <h1 className="font-bold text-2xl">Welcome, {userName}!</h1>
