@@ -7,3 +7,11 @@ export interface ApplicationCycle{
     close:boolean,
 
 }
+
+export interface CreateNewApplicationCycle{
+    cycleName:string,
+    startDate:string,
+    endDate:string
+    country:string,
+
+}
