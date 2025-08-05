@@ -1,4 +1,5 @@
 "use client";
+import { useForm } from "react-hook-form";
 import { ApplicationFormValues } from "./types";
 
 interface Props {
@@ -14,57 +15,92 @@ export default function Step2CodingProfiles({
   next,
   back,
 }: Props) {
-  return (
-    <div className="">
-       
-      <div className=" px-6 ">
-         <p className="text-black mb-3">Coding Profiles</p>
-        <div className="flex justify-start ">
-          <div className="">
-            <label htmlFor="codeforces">Codeforces</label>
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<ApplicationFormValues>({
+    defaultValues: {
+      codeforces: data.codeforces,
+      leetcode: data.leetcode,
+      github: data.github,
+    },
+  });
 
-            <input
-              className="input  rounded p-1 shadow-gray-400 shadow"
-              id="codeforces"
-              value={data.codeforces}
-              onChange={(e) => setData({ ...data, codeforces: e.target.value })}
-            />
-          </div>
+  const onSubmit = (formData: ApplicationFormValues) => {
+    setData({ ...data, ...formData });
+    next();
+  };
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <div className="px-6">
+        <p className="text-black mb-3">Coding Profiles</p>
+        <div className="flex justify-start gap-4">
+          {/* Codeforces */}
           <div>
-            <label htmlFor="LeetCode" className="center">
-              LeetCode
-            </label>
+            <label htmlFor="codeforces">Codeforces</label>
             <input
-              className="input  rounded p-1 shadow-gray-400 shadow"
-              id="LeetCode"
-              value={data.leetcode}
-              onChange={(e) => setData({ ...data, leetcode: e.target.value })}
+              className="input rounded p-1 shadow-gray-400 shadow"
+              id="codeforces"
+              {...register("codeforces", {
+                required: "Codeforces username is required",
+              })}
             />
+            {errors.codeforces && (
+              <p className="text-red-500 text-sm">
+                {errors.codeforces.message}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <label htmlFor="leetcode">LeetCode</label>
+            <input
+              className="input rounded p-1 shadow-gray-400 shadow"
+              id="leetcode"
+              {...register("leetcode", {
+                required: "LeetCode username is required",
+              })}
+            />
+            {errors.leetcode && (
+              <p className="text-red-500 text-sm">
+                {errors.leetcode.message}
+              </p>
+            )}
           </div>
         </div>
+
         <div className="flex-col mt-5">
-          <label htmlFor="GitHub" className="block ">GitHub</label>
+          <label htmlFor="github" className="block">
+            GitHub
+          </label>
           <input
-            className="input  rounded p-1 shadow-gray-400 shadow w-full "
-            id="GitHub"
-            value={data.github}
-            onChange={(e) => setData({ ...data, github: e.target.value })}
+            className="input rounded p-1 shadow-gray-400 shadow w-full"
+            id="github"
+            {...register("github", {
+              required: "GitHub username is required",
+            })}
           />
+          {errors.github && (
+            <p className="text-red-500 text-sm">{errors.github.message}</p>
+          )}
         </div>
       </div>
-      <div className=" bg-gray-100 py-3 mt-2">
+
+      <div className="bg-gray-100 py-3 mt-2">
         <div className="px-6 flex justify-between">
-          <button className="bg-gray-200 p-2 px-4  rounded" onClick={back}>
+          <button type="button" className="bg-gray-200 p-2 px-4 rounded" onClick={back}>
             Back
           </button>
           <button
+            type="submit"
             className="btn-primary bg-[#4F46E5] p-2 px-10 rounded text-amber-50"
-            onClick={next}
           >
             Next: Essay and Resume
           </button>
         </div>
       </div>
-    </div>
+    </form>
   );
 }

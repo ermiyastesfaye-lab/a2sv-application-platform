@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { ApplicationFormValues } from "./types";
-
+import { useForm } from "react-hook-form";
 interface Props {
   data: ApplicationFormValues;
   setData: (d: ApplicationFormValues) => void;
@@ -10,13 +10,27 @@ interface Props {
 
 export default function Step3EssaysResume({ data, setData, back }: Props) {
   const [submitting, setSubmitting] = useState(false);
+const {
+register,
+handleSubmit,
+formState: { errors },
+setValue,
+watch,
+} = useForm<ApplicationFormValues>({
+defaultValues: data,
+});
+ const resumeFile = watch("resume");
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
     setData({ ...data, resume: file });
   };
-
-  const handleSubmit = async () => {
+  
+  const onsubmit = async (formData: ApplicationFormValues) => {
+    if (!formData.resume) {
+      alert("Please upload your resume.");
+      return;
+    }
     setSubmitting(true);
 
     const formDataObj = new FormData();
@@ -40,7 +54,7 @@ export default function Step3EssaysResume({ data, setData, back }: Props) {
   };
 
   return (
-    <div className="">
+    <form onSubmit={handleSubmit(onsubmit)}>
       <div className="px-6">
         <p className="text-1xl font-bold mb-2 text-black"> Essays & Resume </p>
         <div className="mb-4">
@@ -48,16 +62,25 @@ export default function Step3EssaysResume({ data, setData, back }: Props) {
           <textarea
             className="input w-full h-24   rounded  shadow-gray-400 shadow p-1"
             value={data.essay1}
+            {...register("essay1", { required: "This field is required." })}
             onChange={(e) => setData({ ...data, essay1: e.target.value })}
+            
           />
+          {errors.essay1 && (
+            <p className="text-red-500 text-sm">{errors.essay1.message}</p>
+          )}
         </div>
         <div className="mb-4  border-b-neutral-400  ">
           <p className="">Why do you want to join us?</p>
           <textarea
             className="input  rounded  shadow-gray-400 shadow w-full h-24 p-1"
             value={data.essay2}
+            {...register("essay2", { required: "This field is required." })}
             onChange={(e) => setData({ ...data, essay2: e.target.value })}
           />
+          {errors.essay2 && (
+            <p className="text-red-500 text-sm">{errors.essay2.message}</p>
+          )}
         </div>
 
         <div className="mb-6">
@@ -97,13 +120,13 @@ export default function Step3EssaysResume({ data, setData, back }: Props) {
           </button>
           <button
             className="btn-primary bg-[#4F46E5] p-2 px-10 rounded text-amber-50"
-            onClick={handleSubmit}
+            type="submit"
             disabled={submitting}
           >
             {submitting ? "Submitting..." : "Submit"}
           </button>
         </div>
       </div>
-    </div>
+    </form>
   );
 }
