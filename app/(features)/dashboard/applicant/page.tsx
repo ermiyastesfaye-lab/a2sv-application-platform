@@ -51,7 +51,7 @@ const ApplicationDashboard = ({
           </button>
         </div>
 
-        {/* Right Column: Profile & Checklist */}
+        {/* Profile & Checklist */}
         <div className="flex flex-col gap-4 col-span-2">
           {/* Profile Completion */}
           <section className="bg-white p-5 rounded-lg shadow-lg">

@@ -13,6 +13,8 @@ const ApplicantStatusPage = () => {
     updated_at: "2023-10-28T00:00:00.000Z",
   };
 
+  
+
   const status = applicationData.status;
   const getTimelineStages = (status: string) => ({
     isSubmitted: [
