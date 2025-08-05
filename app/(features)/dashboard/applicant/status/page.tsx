@@ -34,7 +34,7 @@ const ApplicantStatusPage = () => {
 
   return (
     <>
-      <main className="md:w-4xl mx-auto mt-5 p-4">
+      <main className="md:w-4xl mx-auto mt-5 p-4 text-[#0a0a0a]">
         <div className="mb-6">
           <h1 className="font-bold text-2xl mb-2">Your Application Progress</h1>
           <p className="text-gray-600 text-sm">
