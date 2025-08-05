@@ -26,7 +26,7 @@ const ApplicationDashboard = () => {
           <div className="flex flex-col gap-4 col-span-2">
             <section className="bg-white p-5 rounded-lg shadow-lg">
               <h3 className="font-bold text-lg mb-3">Complete Your Profile</h3>
-              <span className="text-sm text-gray-700 bg-indigo-200 rounded-full px-2 py-1">
+              <span className="text-sm text-gray-700 bg-indigo-200 rounded-full px-2">
                 {75}% COMPLETE
               </span>
               <div className="w-full bg-gray-200 rounded-full h-2 my-2">
@@ -45,20 +45,20 @@ const ApplicationDashboard = () => {
             <section className="bg-white p-5 rounded-lg shadow-lg">
               <h3 className="font-bold text-lg mb-3">Application Checklist</h3>
               <ul className="text-sm text-gray-500">
-                <li className="flex gap-2 align-middle">
+                <li className="flex gap-2 items-center">
                   <CiCircleCheck /> <span>Create an Account</span>
                 </li>
-                <li className="flex gap-2">
+                <li className="flex gap-2  items-center">
                   <CiCircleCheck /> <span>Fill Personal information</span>
                 </li>
-                <li className="flex gap-2">
+                <li className="flex gap-2 items-center">
                   <CiCircleCheck />
                   <span> Submit Coding Profiles</span>
                 </li>
-                <li className="flex gap-2">
+                <li className="flex gap-2 items-center">
                   <CiCircleCheck /> <span>Write Essays</span>
                 </li>
-                <li className="flex gap-2">
+                <li className="flex gap-2 items-center">
                   <CiCircleCheck /> <span>Upload Resume</span>
                 </li>
               </ul>
