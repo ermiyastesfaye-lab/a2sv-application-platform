@@ -75,7 +75,9 @@ const AdminDashboard = () => {
                   key={index}
                   className="text-gray-600 text-sm flex gap-3 items-start"
                 >
-                  <span>🔔</span>
+                  <span>
+                    {/* image for the action */}
+                  </span>
                   <div>
                     <p>{activity.action}</p>
                     <span className="text-xs text-gray-500">
