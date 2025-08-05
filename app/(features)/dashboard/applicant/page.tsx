@@ -6,7 +6,7 @@ const ApplicationDashboard = () => {
   return (
     <>
       {/* header */}
-      <main className="md:w-4xl mx-auto mt-5 p-4">
+      <main className="md:w-4xl mx-auto mt-3 p-4">
         <div className="mb-6">
           <h1 className="font-bold text-2xl">Welcome, John!</h1>
           <p className="text-gray-600 text-sm">
@@ -19,7 +19,7 @@ const ApplicationDashboard = () => {
             <p className="text-sm mb-4">
               It's time to submit your application and show us your potential
             </p>
-            <button className="bg-white p-2 text-indigo-800 rounded font-semibold hover:bg-gray-200">
+            <button className="bg-white py-2 px-4 text-indigo-800 rounded font-semibold hover:bg-gray-200 text-[15px]">
               Start Application
             </button>
           </div>
@@ -44,7 +44,7 @@ const ApplicationDashboard = () => {
             </section>
             <section className="bg-white p-5 rounded-lg shadow-lg">
               <h3 className="font-bold text-lg mb-3">Application Checklist</h3>
-              <ul className="text-sm text-gray-500">
+              <ul className="text-sm text-gray-500 flex flex-col gap-2">
                 <li className="flex gap-2 items-center">
                   <CiCircleCheck /> <span>Create an Account</span>
                 </li>

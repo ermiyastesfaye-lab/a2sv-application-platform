@@ -1,38 +1,36 @@
+import { TimelineItem } from "@/app/components/TimelineItem";
 import React from "react";
 
 const ApplicantStatusPage = () => {
-  const stages = [
-    {
-      id: 1,
-      title: "Application Submitted",
-      date: "October 26, 2023",
-      description:
-        "Your application has been successfully submitted. We're excited to learn more about you!",
-      status: "completed",
-    },
-    {
-      id: 2,
-      title: "Under Review",
-      date: "Current Stage",
-      description:
-        "Our team is currently reviewing your application. This may take a few days. Thank you for your patience.",
-      status: "current",
-    },
-    {
-      id: 3,
-      title: "Interview Stage",
-      date: "",
-      description: "",
-      status: "upcoming",
-    },
-    {
-      id: 4,
-      title: "Decision Made",
-      date: "",
-      description: "",
-      status: "upcoming",
-    },
-  ];
+  const applicationData = {
+    id: "382db91c-270b-493f-902f-5f33694a4c2f",
+    status: "in_progress",
+    school: "Addis Ababa Science and Technology University",
+    degree: "Computer Science",
+    submitted_at: "2023-10-26T00:00:00.000Z",
+    updated_at: "2023-10-28T00:00:00.000Z",
+    leetcode_handle: "example_user",
+    codeforces_handle: "example_coder",
+    essay_why_a2sv: "I want to improve my skills...",
+    essay_about_you: "I am a passionate developer...",
+    resume_url: "https://example.com/resume.pdf",
+  };
+
+  const status = applicationData.status;
+  const statusStages = {
+    isSubmitted: [
+      "in_progress",
+      "under_review",
+      "interview",
+      "decision_made",
+    ].includes(status),
+    isUnderReview: ["under_review", "interview", "decision_made"].includes(
+      status
+    ),
+    isInterview: ["interview", "decision_made"].includes(status),
+    isDecisionMade: status === "decision_made",
+  };
+
   return (
     <>
       <main className="md:w-4xl mx-auto mt-5 p-4">
@@ -43,76 +41,36 @@ const ApplicantStatusPage = () => {
           </p>
         </div>
         <div className="md:grid md:grid-cols-6 gap-6">
-          <div className="col-span-4 bg-white rounded-lg p-4 max-h-110">
-            <div>
-              <h1 className="text-lg font-bold text-gray-800 mb-8">
-                Application Timeline
-              </h1>
+          <div className="col-span-4 bg-white rounded-lg p-8 max-h-110">
+            <div className="space-y-6">
+              <TimelineItem
+                title="Application Submitted"
+                description="Your application has been successfully submitted. We're excited to learn more about you!"
+                date={applicationData.submitted_at}
+                isCompleted={statusStages.isSubmitted}
+                isCurrent={status === "in_progress"}
+              />
 
-              <div className="relative">
-                {/* Vertical line */}
-                <div className="absolute left-5 top-0 h-full w-0.5 bg-gray-200"></div>
+              <TimelineItem
+                title="Under Review"
+                description="Our team is currently reviewing your application. This may take a few days. Thank you for your patience."
+                isCompleted={statusStages.isUnderReview}
+                isCurrent={status === "under_review"}
+              />
 
-                {stages.map((stage, index) => (
-                  <div key={stage.id} className="relative pl-12 pb-4 last:pb-0">
-                    {/* Circle indicator */}
-                    <div
-                      className={`absolute left-0 top-0 h-4 w-4 rounded-full border-4 
-              ${
-                stage.status === "completed"
-                  ? "border-green-500 bg-green-500"
-                  : stage.status === "current"
-                  ? "border-blue-500 bg-white"
-                  : "border-gray-300 bg-white"
-              }`}
-                    ></div>
+              <TimelineItem
+                title="Interview Stage"
+                description="If selected, you'll be invited for an interview to further discuss your application."
+                isCompleted={statusStages.isInterview}
+                isCurrent={status === "interview"}
+              />
 
-                    {/* Content */}
-                    <div
-                      className={`p-3 rounded-lg ${
-                        stage.status === "current"
-                          ? "bg-blue-50 border border-blue-100"
-                          : ""
-                      }`}
-                    >
-                      <div className="flex justify-between items-start">
-                        <h3
-                          className={`font-semibold ${
-                            stage.status === "current"
-                              ? "text-blue-700"
-                              : "text-gray-800"
-                          }`}
-                        >
-                          {stage.title}
-                        </h3>
-                        {stage.date && (
-                          <span
-                            className={`text-sm ${
-                              stage.status === "current"
-                                ? "text-blue-600"
-                                : "text-gray-500"
-                            }`}
-                          >
-                            {stage.date}
-                          </span>
-                        )}
-                      </div>
-
-                      {stage.description && (
-                        <p
-                          className={`mt-2  className="text-gray-600 text-sm ${
-                            stage.status === "current"
-                              ? "text-blue-800"
-                              : "text-gray-600"
-                          }`}
-                        >
-                          {stage.description}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <TimelineItem
+                title="Decision Made"
+                description="The final decision on your application will be communicated to you."
+                isCompleted={statusStages.isDecisionMade}
+                isCurrent={status === "decision_made"}
+              />
             </div>
           </div>
           <div className="flex flex-col gap-4 col-span-2">
@@ -150,7 +108,9 @@ const ApplicantStatusPage = () => {
                 When you wait, it's a great time to prepare Practice your
                 problem-solving skills as platforms like LeetCode and Codeforces
               </p>
-              <a href="#" className="text-[15px]">Read our interview prep guide →</a>
+              <a href="#" className="text-[15px]">
+                Read our interview prep guide →
+              </a>
             </section>
           </div>
         </div>
@@ -160,3 +120,4 @@ const ApplicantStatusPage = () => {
 };
 
 export default ApplicantStatusPage;
+
