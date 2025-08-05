@@ -1,4 +1,6 @@
 import { TimelineItem } from "@/app/components/TimelineItem";
+import { GoCheckCircle } from "react-icons/go";
+import { GrFormSchedule } from "react-icons/gr";
 import React from "react";
 
 const ApplicantStatusPage = () => {
@@ -76,18 +78,24 @@ const ApplicantStatusPage = () => {
           <div className="flex flex-col gap-4 col-span-2">
             <section className="bg-white p-5 rounded-lg shadow-lg">
               <h3 className="font-bold text-lg mb-3">Recent Activitiy</h3>
-              <div className="text-gray-600">
-                <span></span>
+              <div className="text-gray-600 flex items-center gap-3">
+                <span>
+                  <GoCheckCircle size={25} className=" text-green-600" />
+                </span>
                 <div>
                   <p>application submitted</p>
+                  {/* submitted date */}
                   <span className="text-sm">some date</span>
                 </div>
               </div>
 
-              <div>
-                <span></span>
+              <div className="text-gray-600 flex items-center gap-2">
+                <span>
+                  <GrFormSchedule size={28} />
+                </span>
                 <div className="text-gray-600">
                   <p>Interview Scheduled</p>
+                  {/* interview date */}
                   <span className="text-sm">some date</span>
                 </div>
               </div>
