@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import ApplicationCycleList from "./ApplicationCycleList";
 import { applicationCycle } from "@/data/application-cycle";
 import PaginationControls from "./PaginationControls";
+import { useRouter } from "next/navigation";
 
 const ITEMS_PER_PAGE = 6;
 
@@ -23,11 +24,16 @@ const ApplicationCycleWrapper = () => {
     }
   };
 
+  const router = useRouter();
+
   return (
     <>
       <div className="flex items-center justify-start gap-8 mb-6">
         <h1 className="ml-0 text-2xl font-bold">Application Cycles</h1>
-        <button className="text font-medium px-3 py-2 bg-[#4F46E5] hover:bg-indigo-700 text-white ml-150 rounded-md">
+        <button
+          className="text font-medium px-3 py-2 bg-[#4F46E5] hover:bg-indigo-700 text-white ml-150 rounded-md"
+          onClick={() => router.push("/createApplicationCycle")}
+        >
           Create New Cycle
         </button>
       </div>

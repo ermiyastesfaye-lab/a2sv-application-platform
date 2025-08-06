@@ -2,7 +2,7 @@ import CycleForm from "@/app/components/CreateApplicationCycle";
 
 export default function Home() {
   return (
-    <section className="p-12 ml-60">
+    <section className="p-12">
       <div className="grid items-start gap-6">
         {" "}
         <div className="flex flex-col gap-2">
