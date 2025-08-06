@@ -9,9 +9,19 @@ export interface ApplicationCycle{
 }
 
 
+
 export interface PaginationControlsProps {
     currentPage: number;
     totalPages: number;
     onPageChange: (page: number) => void;
   }
   
+
+export interface CreateNewApplicationCycle{
+    cycleName:string,
+    startDate:string,
+    endDate:string
+    country:string,
+
+}
+
