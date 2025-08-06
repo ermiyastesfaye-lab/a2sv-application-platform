@@ -27,6 +27,9 @@ const Login = () => {
         email: form.email,
         password: form.password,
       }).unwrap();
+      if (res && res.data && res.data.access) {
+        localStorage.setItem("token", res.data.access);
+      }
       alert("User Logged in successfully");
       router.push("/application");
     } catch (err: any) {
@@ -116,7 +119,7 @@ const Login = () => {
             type="submit"
             className="w-full py-2 mt-2 bg-[#4F46E5] text-white font-semibold rounded-lg transition-colors cursor-pointer"
           >
-            Sign in
+            {isLoading ? "Signing in..." : "Sign in"}
           </button>
         </form>
       </div>
