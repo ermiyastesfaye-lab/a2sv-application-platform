@@ -36,7 +36,7 @@ const Signup = () => {
         password: form.password,
       }).unwrap();
       alert("User created successfully!");
-      router.push("/application");
+      router.push("/auth/login");
     } catch (err: any) {
       console.log(err);
     }
