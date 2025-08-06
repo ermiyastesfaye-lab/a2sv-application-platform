@@ -11,15 +11,12 @@ const ApplicantStatusPage = () => {
     degree: "Computer Science",
     submitted_at: "2023-10-26T00:00:00.000Z",
     updated_at: "2023-10-28T00:00:00.000Z",
-    leetcode_handle: "example_user",
-    codeforces_handle: "example_coder",
-    essay_why_a2sv: "I want to improve my skills...",
-    essay_about_you: "I am a passionate developer...",
-    resume_url: "https://example.com/resume.pdf",
   };
 
+  
+
   const status = applicationData.status;
-  const statusStages = {
+  const getTimelineStages = (status: string) => ({
     isSubmitted: [
       "in_progress",
       "under_review",
@@ -31,11 +28,13 @@ const ApplicantStatusPage = () => {
     ),
     isInterview: ["interview", "decision_made"].includes(status),
     isDecisionMade: status === "decision_made",
-  };
+  });
+
+  const statusStages = getTimelineStages(status);
 
   return (
     <>
-      <main className="md:w-4xl mx-auto mt-5 p-4">
+      <main className="md:w-4xl mx-auto mt-5 p-4 text-[#0a0a0a]">
         <div className="mb-6">
           <h1 className="font-bold text-2xl mb-2">Your Application Progress</h1>
           <p className="text-gray-600 text-sm">
@@ -128,4 +127,3 @@ const ApplicantStatusPage = () => {
 };
 
 export default ApplicantStatusPage;
-
