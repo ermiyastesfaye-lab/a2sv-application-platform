@@ -5,6 +5,8 @@ export interface ApplicationCycle{
     country:string,
     is_active:'Active'|'Closed'
     close:boolean,
+    id:string,
+    refetchCycles: () => void,
 
 }
 
