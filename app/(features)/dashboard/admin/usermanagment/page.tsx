@@ -1,38 +1,34 @@
+"use client";
 import AdminUser from "@/app/components/AdminUser";
 import React from "react";
 import Button from "@/app/components/Butt";
 import UserTable from "@/app/components/AdminUser/UserTable.tsx/UserTable";
+import { useGetAllUsersQuery } from "@/lib/redux/slices/adminSlice";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const UserManagment = () => {
-  const users = [
-    {
-      id: 1,
-      name: "John Doe",
-      email: "joghn@2q4d.c",
-      role: "Manager",
-      status: "Active" as "Active",
-    },
-    {
-      id: 2,
-      name: "Jane Smith",
-      email: "jane@a1sv.org",
-      role: "Reviewer",
-      status: "Inactive" as "Inactive",
-    },
-    {
-      id: 3,
-      name: "Alice Johnson",
-      email: "",
-      role: "Applicant",
-      status: "Active" as "Active",
-    },
-  ];
+  const [page, setPage] = useState(1);
+  const limit = 100;
+  const { data, isLoading, isError } = useGetAllUsersQuery({
+    page: page,
+    limit: limit,
+  });
+  console.log(data?.data.users);
+  const users = data?.data.users || [];
+
+  const router = useRouter();
 
   return (
     <AdminUser
       title="User Management"
       text="Administer and manage all users on the platform"
-      actionButton={<Button text="Create New User" />}
+      actionButton={
+        <Button
+          text="Create New User"
+          onclick={() => router.push("/dashboard/admin/createuser")}
+        />
+      }
     >
       <div className="flex gap-4 shadow-lg mb-6 bg-white rounded-lg p-4">
         <input
@@ -45,7 +41,7 @@ const UserManagment = () => {
         </button>
       </div>
 
-      <UserTable users={users} />
+      {users && <UserTable users={users} />}
     </AdminUser>
   );
 };
