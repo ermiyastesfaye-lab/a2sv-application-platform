@@ -13,7 +13,7 @@ const ApplicationCycleWrapper = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const router = useRouter();
 
-  const { data, isLoading, isError } = useGetCyclesQuery({
+  const { data, isLoading, isError, refetch } = useGetCyclesQuery({
     page: currentPage,
     limit: ITEMS_PER_PAGE,
   });
@@ -65,6 +65,8 @@ const ApplicationCycleWrapper = () => {
               country={"Ethiopia"} // hard coded for now
               is_active={cycle.is_active ? "Active" : "Closed"}
               close={!cycle.is_active}
+              id={`${cycle.id}`}
+              refetchCycles={refetch}
             />
           ))}
         </div>

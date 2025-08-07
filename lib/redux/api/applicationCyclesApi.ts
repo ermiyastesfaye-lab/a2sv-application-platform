@@ -1,6 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import {  GetCycleResponse } from '@/lib/types/applicationCycles';
-import type { RootState } from '@/lib/redux/store';
 
 export const cyclesApi = createApi({
   reducerPath: 'cyclesApi',
@@ -8,9 +7,8 @@ export const cyclesApi = createApi({
     baseUrl: 'https://a2sv-application-platform-backend-team1.onrender.com/',
     prepareHeaders: (headers, { getState }) => {
      
-      const token =
-        (getState() as RootState).auth?.token 
-       
+   
+      const token = localStorage.getItem('token');
       if (token) {
         headers.set('Authorization', `Bearer ${token}`);
       }
