@@ -2,7 +2,7 @@ import ApplicationCycleWrapper from "@/app/components/ApplicationCycles/Applicat
 
 export default function ApplicationCyclePage() {
   return (
-    <section className="px-6 pr-20">
+    <section className="p-6">
       <ApplicationCycleWrapper />
     </section>
   );

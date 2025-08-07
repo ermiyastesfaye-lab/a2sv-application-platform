@@ -1,14 +1,14 @@
 
 export interface ApplicationCycle{
-    cycleName:string,
-    intake:string,
+    name:string,
+    description:string,
     country:string,
-    status:'Active'|'Closed'
+    is_active:'Active'|'Closed'
     close:boolean,
+    id:string,
+    refetchCycles: () => void,
 
 }
-
-
 
 export interface PaginationControlsProps {
     currentPage: number;
@@ -18,10 +18,10 @@ export interface PaginationControlsProps {
   
 
 export interface CreateNewApplicationCycle{
-    cycleName:string,
-    startDate:string,
-    endDate:string
-    country:string,
+    name: string;
+    country: string;
+    start_date: string;
+    end_date: string;
 
 }
 

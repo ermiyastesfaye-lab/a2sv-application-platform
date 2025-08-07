@@ -1,29 +1,72 @@
 import { ApplicationCycle } from "@/types/applicationCycle";
+import { useActivateCycleMutation } from "@/lib/redux/api/adminApi";
+import { useDeleteCycleMutation } from "@/lib/redux/api/adminApi";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 const ApplicationCycleList: React.FC<ApplicationCycle> = ({
-  cycleName,
-  intake,
+  name,
+  description,
   country,
-  status,
+  is_active,
   close,
+  id,
+  refetchCycles,
 }) => {
+  const [activateCycle, { isLoading: isActivating }] =
+    useActivateCycleMutation();
+  const [deleteCycle, { isLoading: isDeleting }] = useDeleteCycleMutation();
+
+  const handleActivate = async () => {
+    try {
+      await activateCycle({ cycleId: id }).unwrap();
+      refetchCycles();
+      console.log("Cycle activated");
+    } catch (error) {
+      console.error("Activation failed:", error);
+    }
+  };
+  const router = useRouter();
+  const handleUpdateCycle = () => {
+    router.push(`/editApplicationCycle/${id}`);
+  };
+
+  const handleDelete = async () => {
+    try {
+      await deleteCycle({ cycleId: id }).unwrap();
+      refetchCycles();
+      console.log("Cycle deleted");
+    } catch (error) {
+      console.log("Deletion failed", error);
+    }
+  };
+
   return (
     <div className="p-5 bg-white rounded-lg shadow-xl">
       <div className="flex justify-between items-center">
-        <h3 className="font-semibold text-gray-900">{cycleName}</h3>
+        <h3 className="font-semibold text-gray-900">{name}</h3>
 
-        <button
-          className={`text-xs font-medium px-2 py-1  rounded-md ${
-            close
-              ? `bg-[#4F46E5] hover:bg-indigo-700`
-              : `bg-orange-500 hover:bg-orange-700`
-          } text-white`}
-        >
-          Close
-        </button>
+        <section className="flex flex-row flex-nowrap items-center gap-1">
+          <button
+            onClick={handleUpdateCycle}
+            className="text-xs font-medium px-2 py-1  bg-green-400 rounded-md"
+          >
+            {" "}
+            Update
+          </button>
+          <button
+            onClick={close ? handleActivate : handleDelete}
+            className={`text-xs font-medium px-2 py-1  rounded-md ${
+              close
+                ? `bg-[#4F46E5] hover:bg-indigo-700`
+                : `bg-orange-500 hover:bg-orange-700`
+            } text-white`}
+          >
+            {close ? "Open" : "Delete"}
+          </button>
+        </section>
       </div>
-      <p className="text-gray-600 mt-2">{intake}</p>
+      <p className="text-gray-600 mt-2">{description}</p>
       <div className="flex justify-between items-center mt-4 text-sm">
         <p className="text-gray-500">
           Country:{" "}
@@ -33,12 +76,12 @@ const ApplicationCycleList: React.FC<ApplicationCycle> = ({
           Status:{" "}
           <span
             className={
-              status === "Active"
+              is_active === "Active"
                 ? "text-green-600 font-semibold"
                 : "text-gray-500 font-semibold"
             }
           >
-            {status}
+            {is_active}
           </span>
         </p>
       </div>

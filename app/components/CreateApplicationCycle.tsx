@@ -1,7 +1,8 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { CreateNewApplicationCycle } from "@/types/applicationCycle";
+import { useCreateCycleMutation } from "@/lib/redux/api/adminApi";
 
 const CycleForm = () => {
   const {
@@ -11,9 +12,28 @@ const CycleForm = () => {
     formState: { errors },
   } = useForm<CreateNewApplicationCycle>();
 
-  const onSubmit = (data: CreateNewApplicationCycle) => {
-    reset();
-    console.log(data);
+  const [createCycle, { isLoading, isSuccess, isError }] =
+    useCreateCycleMutation();
+  const [dateError, setDateError] = useState("");
+
+  const onSubmit = async (data: CreateNewApplicationCycle) => {
+    setDateError("");
+
+    const start = new Date(data.start_date);
+    const end = new Date(data.end_date);
+
+    if (start >= end) {
+      setDateError("Start date must be earlier than end date.");
+      return;
+    }
+
+    try {
+      await createCycle(data).unwrap();
+      reset();
+      console.log("cycle created successfully");
+    } catch (error) {
+      console.error("Error creating cycle:", error);
+    }
   };
 
   return (
@@ -22,19 +42,19 @@ const CycleForm = () => {
       onSubmit={handleSubmit(onSubmit)}
       className="p-6 bg-white rounded-lg shadow-sm w-full max-w-4xl space-y-6"
     >
-      <div className="grid grid-cols-2 gap-4 ">
+      <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium mb-1 text-gray-700">
             Cycle Name
           </label>
           <input
             type="text"
-            {...register("cycleName", { required: "Cycle name is required" })}
-            className="w-full  rounded-md px-3 py-2 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            {...register("name", { required: "Cycle name is required" })}
+            className="w-full rounded-md px-3 py-2 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:outline-none"
           />
-          {errors.cycleName && (
-            <p className="text-red-500 text-sm mt-1">
-              {errors.cycleName.message}
+          {errors.name && (
+            <p className="text-rose-500/90 text-sm mt-1">
+              {errors.name.message}
             </p>
           )}
         </div>
@@ -46,10 +66,10 @@ const CycleForm = () => {
           <input
             type="text"
             {...register("country", { required: "Country is required" })}
-            className="w-full rounded-md px-3 py-2 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            className="w-full rounded-md px-3 py-2 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:outline-none"
           />
           {errors.country && (
-            <p className="text-red-500 text-sm mt-1">
+            <p className="text-rose-500/90 text-sm mt-1">
               {errors.country.message}
             </p>
           )}
@@ -64,12 +84,12 @@ const CycleForm = () => {
           <input
             type="text"
             onFocus={(e) => (e.target.type = "date")}
-            {...register("startDate", { required: "Start date is required" })}
-            className="w-full   rounded-md px-3 py-2 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            {...register("start_date", { required: "Start date is required" })}
+            className="w-full rounded-md px-3 py-2 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:outline-none"
           />
-          {errors.startDate && (
-            <p className="text-red-500 text-sm mt-1">
-              {errors.startDate.message}
+          {errors.start_date && (
+            <p className="text-rose-500/90 text-sm mt-1">
+              {errors.start_date.message}
             </p>
           )}
         </div>
@@ -81,15 +101,32 @@ const CycleForm = () => {
           <input
             type="text"
             onFocus={(e) => (e.target.type = "date")}
-            {...register("endDate", { required: "End date is required" })}
-            className="w-full rounded-md px-3 py-2 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            {...register("end_date", { required: "End date is required" })}
+            className="w-full rounded-md px-3 py-2 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:outline-none"
           />
-          {errors.endDate && (
-            <p className="text-red-500 text-sm mt-1">
-              {errors.endDate.message}
+          {errors.end_date && (
+            <p className="text-rose-500/90 text-sm mt-1">
+              {errors.end_date.message}
             </p>
           )}
         </div>
+      </div>
+
+      {/* Date range validation error */}
+      {dateError && (
+        <p className="text-rose-500/90 text-sm -mt-4">{dateError}</p>
+      )}
+
+      <div className="pt-2">
+        {isLoading && <p className="text-sm text-blue-500">Submitting...</p>}
+        {isSuccess && (
+          <p className="text-sm text-green-600">Cycle created successfully!</p>
+        )}
+        {isError && (
+          <p className="text-sm text-rose-500/90">
+            Something went wrong. Please try again.
+          </p>
+        )}
       </div>
 
       <div className="bg-[#F9FAFB] -mx-6 -mb-6 px-6 py-4 flex justify-end gap-3">
