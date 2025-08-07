@@ -1,12 +1,15 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import {
+  CreateCycleRequest,
+  CycleResponse,
+} from "@/lib/types/applicationCycles";
 
 export const adminApi = createApi({
   reducerPath: "adminApi",
   baseQuery: fetchBaseQuery({
     baseUrl: "https://a2sv-application-platform-backend-team1.onrender.com/",
     prepareHeaders: (headers) => {
-      const token =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiMTg0NjFkMS03YTE2LTRkYzUtOTliNS0wNmNlMzY4NTYwMDAiLCJleHAiOjE3NTQ1NTk0MjgsInR5cGUiOiJhY2Nlc3MifQ.XHKhT6RTdKnJrhk8jdNyGle-4InKQiPrLXbhb5Syls0";
+      const token = localStorage.getItem("token");
 
       if (token) {
         headers.set("Authorization", `Bearer ${token}`);
@@ -16,6 +19,16 @@ export const adminApi = createApi({
     },
   }),
   endpoints: (builder) => ({
+    createCycle: builder.mutation<
+      { success: boolean; data: CycleResponse },
+      CreateCycleRequest
+    >({
+      query: (newCycle) => ({
+        url: "/admin/cycles",
+        method: "POST",
+        body: newCycle,
+      }),
+    }),
     getAllUsers: builder.query({
       query: ({ page = 1, limit = 5 }) =>
         `admin/users?page=${page}&limit=${limit}`,
@@ -43,13 +56,29 @@ export const adminApi = createApi({
         body: { ...userData },
       }),
     }),
+    editCycle: builder.mutation({
+      query: ({ id, cycleData }) => {
+        console.log("cycleData in mutation query:", cycleData);
+        return {
+          url: `/cycles/${id}`,
+          method: "PUT",
+          body: cycleData,
+        };
+      },
+    }),
+    getCycleById: builder.query({
+      query: (id) => `/cycles/${id}`,
+    }),
   }),
 });
 
 export const {
+  useCreateCycleMutation,
   useGetAllUsersQuery,
   useGetUserByIdQuery,
   useCreateUserMutation,
   useUpdateUserMutation,
   useDeleteUserMutation,
+  useEditCycleMutation,
+  useGetCycleByIdQuery,
 } = adminApi;

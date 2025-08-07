@@ -2,7 +2,8 @@ import { authApi } from "@/app/(features)/auth/services/auth";
 import { configureStore } from "@reduxjs/toolkit";
 
 import { setupListeners } from "@reduxjs/toolkit/query";
-import { adminApi } from "./api/adminApi";
+// import { adminApi } from "./api/adminApi";
+import { adminApi } from "./slices/adminSlice";
 import { cyclesApi } from "./api/applicationCyclesApi";
 
 export const store = configureStore({

@@ -6,16 +6,23 @@ import UserTable from "@/app/components/AdminUser/UserTable.tsx/UserTable";
 import { useGetAllUsersQuery } from "@/lib/redux/slices/adminSlice";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import PaginationControls from "@/app/components/ApplicationCycles/PaginationControls";
 
 const UserManagment = () => {
-  const [page, setPage] = useState(1);
-  const limit = 100;
+  const [page, setCurrentPage] = useState(1);
+  const limit = 5;
   const { data, isLoading, isError } = useGetAllUsersQuery({
     page: page,
     limit: limit,
   });
-  console.log(data?.data.users);
   const users = data?.data.users || [];
+  const totalCount = data?.data.total_count || 0;
+  // console.log(data?.data);
+  const handlePageChange = (page: number) => {
+    if (page >= 1 && page <= Math.ceil(totalCount / limit)) {
+      setCurrentPage(page);
+    }
+  };
 
   const router = useRouter();
 
@@ -42,6 +49,11 @@ const UserManagment = () => {
       </div>
 
       {users && <UserTable users={users} />}
+      <PaginationControls
+        currentPage={page}
+        onPageChange={handlePageChange}
+        totalPages={Math.ceil(totalCount / limit)}
+      />
     </AdminUser>
   );
 };
