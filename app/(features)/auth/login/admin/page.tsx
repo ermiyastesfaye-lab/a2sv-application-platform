@@ -1,20 +1,18 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useRegisterMutation } from "../services/auth";
+import { useLoginAdminMutation, useLoginMutation } from "../../services/auth";
 
-const Signup = () => {
+const Login = () => {
   const router = useRouter();
-  const [register, { data, error, isError, isLoading, isSuccess }] =
-    useRegisterMutation();
-  const [form, setForm] = React.useState({
-    fullName: "",
+  const [login, { data, error, isError, isLoading, isSuccess }] =
+    useLoginAdminMutation();
+  const [form, setForm] = useState({
     email: "",
     password: "",
-    confirmPassword: "",
   });
   const [formError, setFormError] = React.useState("");
 
@@ -22,21 +20,18 @@ const Signup = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
     setFormError("");
   };
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (form.password !== form.confirmPassword) {
-      setFormError("Passwords do not match");
-      return;
-    }
     try {
-      const res = await register({
-        full_name: form.fullName,
+      const res = await login({
         email: form.email,
         password: form.password,
       }).unwrap();
-      alert("User created successfully!");
-      router.push("/auth/login");
+      if (res && res.data && res.data.access) {
+        localStorage.setItem("token", res.data.access);
+      }
+      alert("Admin Logged in successfully");
+      router.push("/dashboard/admin");
     } catch (err: any) {
       console.log(err);
     }
@@ -55,69 +50,62 @@ const Signup = () => {
           />
         </div>
         <h2 className="text-2xl font-semibold text-center mb-1 text-black">
-          Create a new applicant account
+          Sign in to your account
         </h2>
         <div className="flex justify-center text-sm mb-6">
-          <p className="text-gray-900">Or </p>
+          <Link href="/" className="hover:underline mr-1 text-[#4F46E5]">
+            Back to Home
+          </Link>
+          <div style={{ borderRight: "1px solid #4F46E5" }}></div>
           <Link
-            href="/auth/login"
+            href="/auth/signup"
             className="hover:underline ml-1 text-[#4F46E5]"
           >
-            sign in to your existing account
+            Create a new applicant account
           </Link>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <input
-              type="text"
-              name="fullName"
-              placeholder="Full name"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 placeholder-gray-500 text-black"
-              style={{ "--tw-ring-color": "#4F46E5" } as React.CSSProperties}
-              required
-              autoComplete="username"
-              value={form.fullName}
-              onChange={handleChange}
-            />
-          </div>
-          <div>
-            <input
-              type="email"
               name="email"
-              placeholder="Email address"
+              type="email"
+              placeholder="user@example.com"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 placeholder-gray-500 text-black"
               style={{ "--tw-ring-color": "#4F46E5" } as React.CSSProperties}
               required
-              autoComplete="username"
               value={form.email}
               onChange={handleChange}
+              autoComplete="username"
             />
           </div>
           <div>
             <input
-              type="password"
               name="password"
-              placeholder="Password"
+              type="password"
+              placeholder="password123"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 placeholder-gray-500 text-black"
               style={{ "--tw-ring-color": "#4F46E5" } as React.CSSProperties}
               required
-              autoComplete="new-password"
+              autoComplete="current-password"
               value={form.password}
               onChange={handleChange}
             />
           </div>
-          <div>
-            <input
-              type="password"
-              name="confirmPassword"
-              placeholder="Confirm Password"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 placeholder-gray-500 text-black"
-              style={{ "--tw-ring-color": "#4F46E5" } as React.CSSProperties}
-              required
-              autoComplete="new-password"
-              value={form.confirmPassword}
-              onChange={handleChange}
-            />
+          <div className="flex items-center justify-between">
+            <label className="flex items-center text-sm">
+              <input
+                type="checkbox"
+                className="mr-2 cursor-pointer"
+                style={{ accentColor: "#4F46E5" }}
+              />
+              <p className="text-black">Remember me</p>
+            </label>
+            <Link
+              href="/auth/forgot-password"
+              className="hover:underline text-sm text-[#4F46E5]"
+            >
+              Forgot your password?
+            </Link>
           </div>
           {formError && <div className="text-red-500 text-sm">{formError}</div>}
           {isError && error && (
@@ -130,9 +118,8 @@ const Signup = () => {
           <button
             type="submit"
             className="w-full py-2 mt-2 bg-[#4F46E5] text-white font-semibold rounded-lg transition-colors cursor-pointer"
-            disabled={isLoading}
           >
-            {isLoading ? "Creating..." : "Create account"}
+            {isLoading ? "Signing in..." : "Sign in"}
           </button>
         </form>
       </div>
@@ -140,4 +127,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default Login;

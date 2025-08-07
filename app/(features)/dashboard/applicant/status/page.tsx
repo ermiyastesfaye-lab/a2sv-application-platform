@@ -6,82 +6,127 @@ import { GrFormSchedule } from "react-icons/gr";
 import {
   useGetApplicationStatusQuery,
   useGetApplicationDetailsQuery,
+  useSubmitApplicationMutation,
+  useDeleteApplicationMutation,
 } from "@/lib/redux/api/clientApi";
-import React from "react";
+import React, { useState } from "react";
 import ErrorPage from "@/app/error";
 import LoadingPage from "@/app/components/LoadingPage";
 import { useRouter } from "next/navigation";
-import { InProgressActionButtons } from "./ActionButtons";
 
 interface StatusPageProps {
   status?: string;
 }
 
 const ApplicantStatusPage = ({ status: initialStatus }: StatusPageProps) => {
-  const {
-    data: statusResponse,
-    isLoading: statusLoading,
-    error: statusError,
-  } = useGetApplicationStatusQuery();
   const router = useRouter();
+  const [mockStatus, setMockStatus] = useState("in_progress"); // Change this to test different statuses
 
+  // Temporary mock data - replace with real API calls when ready
+  const mockApplication = {
+    id: "382db91c-270b-493f-902f-5f33694a4c2f",
+    status: mockStatus,
+    school: "Addis Ababa Science and Technology University",
+    degree: "B.Sc. in Software Engineering",
+    leetcode_handle: "Infinidrix",
+    codeforces_handle: "Infinidrix",
+    essay_why_a2sv:
+      "I want to join A2SV to strengthen my skills in Data Structures and Algorithms...",
+    essay_about_you:
+      "I'm a dedicated software engineering student who loves solving problems...",
+    resume_url: "https://example.com/resume.pdf",
+    submitted_at:
+      mockStatus !== "in_progress" ? "2023-10-26T00:00:00.000Z" : "",
+    updated_at: "2023-10-28T00:00:00.000Z",
+  };
+
+  // Uncomment these when using real API
+  /*
+  const { data: statusResponse } = useGetApplicationStatusQuery();
   const applicationId = statusResponse?.data?.id;
-
-  const {
-    data: detailsResponse,
-    isLoading: detailsLoading,
-    error: detailsError,
-  } = useGetApplicationDetailsQuery(applicationId!, {
+  const { data: detailsResponse } = useGetApplicationDetailsQuery(applicationId!, {
     skip: !applicationId,
   });
+  const [submitApplication] = useSubmitApplicationMutation();
+  const [deleteApplication] = useDeleteApplicationMutation();
+  */
 
-  const status = initialStatus || statusResponse?.data?.status || "not_started";
-  const applicationData = detailsResponse?.data || statusResponse?.data;
+  // For testing - use mock data instead of API
+  const status = initialStatus || mockApplication.status;
+  const applicationData = mockApplication; // Or detailsResponse?.data when using real API
 
-  const getTimelineStages = (status: string) => ({
-    isInProgress: {
-      isCompleted: false,
-      isCurrent: status === "in_progress",
-    },
-    isSubmitted: {
-      isCompleted: ["under_review", "interview", "decision_made"].includes(
-        status
-      ),
-      isCurrent: status === "submitted",
-    },
-    isUnderReview: {
-      isCompleted: ["interview", "decision_made"].includes(status),
-      isCurrent: status === "under_review",
-    },
-    isInterview: {
-      isCompleted: status === "decision_made",
-      isCurrent: status === "interview",
-    },
-    isDecisionMade: {
-      isCompleted: false,
-      isCurrent: status === "decision_made",
-    },
-  });
+ const getTimelineStages = (status: string) => ({
+   isInProgress: {
+     isCompleted: false,
+     isCurrent: status === "in_progress",
+   },
+   isSubmitted: {
+     isCompleted: ["under_review", "interview", "decision_made"].includes(
+       status
+     ),
+     isCurrent: status === "submitted",
+   },
+   isUnderReview: {
+     isCompleted: ["interview", "decision_made"].includes(status),
+     isCurrent: status === "under_review",
+   },
+   isInterview: {
+     isCompleted: status === "decision_made",
+     isCurrent: status === "interview",
+   },
+   isDecisionMade: {
+     isCompleted: false,
+     isCurrent: status === "decision_made",
+   },
+ });
 
-  if (statusLoading || detailsLoading) return <LoadingPage />;
-  if (statusError || detailsError) return <ErrorPage />;
-  if (!applicationData)
-    return (
-      <div className="text-center mt-40 text-gray-600">
-        <p className="text-xl mb-4">No application found</p>
-        <a
-          href="application"
-          className="text-indigo-600 underline font-medium"
-        >
-          Start a new application →
-        </a>
-      </div>
-    );
+
+  // Mock handlers - replace with real API calls when ready
+  const handleSubmit = () => {
+    alert("Application submitted (mock)");
+    setMockStatus("submitted");
+  };
+
+  const handleDelete = () => {
+    if (confirm("Are you sure you want to delete this application?")) {
+      alert("Application deleted (mock)");
+      router.push("/dashboard/applicant");
+    }
+  };
+
+  const handleEdit = () => {
+    alert("Redirecting to edit page (mock)");
+    // router.push(`/application/edit/${mockApplication.id}`);
+  };
 
   const statusStages = getTimelineStages(status);
 
   return (
-    <main className="md:w-3xl mx-auto mt-2 p-4 text-[#0a0a0a] pb-30">
+    <main className="md:w-4xl mx-auto p-4 text-[#0a0a0a] pb-40">
+      {/* Debug Panel - Remove in production */}
+      <div className="fixed bottom-4 right-4 bg-white p-4 shadow-lg rounded-lg z-50 border border-gray-200">
+        <h4 className="font-bold mb-2 text-sm">TESTING MODE</h4>
+        <div className="flex gap-2 flex-wrap">
+          {[
+            "in_progress",
+            "submitted",
+            "under_review",
+            "interview",
+            "decision_made",
+          ].map((s) => (
+            <button
+              key={s}
+              onClick={() => setMockStatus(s)}
+              className={`px-3 py-1 text-xs rounded ${
+                status === s ? "bg-blue-600 text-white" : "bg-gray-200"
+              }`}
+            >
+              {s}
+            </button>
+          ))}
+        </div>
+      </div>
+
       <div className="mb-6">
         <h1 className="font-bold text-2xl mb-2">Your Application Progress</h1>
         <p className="text-gray-600 text-sm">
@@ -89,17 +134,36 @@ const ApplicantStatusPage = ({ status: initialStatus }: StatusPageProps) => {
         </p>
       </div>
 
-      <div className="md:grid md:grid-cols-6 gap-6 max-h-110">
-     
-        <div className="col-span-4 bg-white rounded-lg p-4">
-          <div className="space-y-3">
+      <div className="md:grid md:grid-cols-6 gap-6">
+        {/* Timeline Column */}
+        <div className="col-span-4 bg-white rounded-lg p-5 max-h-110">
+          <div className="space-y-2">
             <TimelineItem
               title="Application In Progress"
               description={
                 <>
                   <p>We're currently processing your application...</p>
                   {status === "in_progress" && (
-                    <InProgressActionButtons applicationId={applicationId!} />
+                    <div className="flex gap-3 my-2">
+                      <button
+                        onClick={handleDelete}
+                        className="px-4 py-2 text-red-600 border border-red-400 rounded hover:bg-red-50"
+                      >
+                        Delete
+                      </button>
+                      <button
+                        onClick={handleEdit}
+                        className="px-4 py-2 text-blue-600 border border-blue-400 rounded hover:bg-blue-50"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={handleSubmit}
+                        className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+                      >
+                        Submit
+                      </button>
+                    </div>
                   )}
                 </>
               }
@@ -145,10 +209,17 @@ const ApplicantStatusPage = ({ status: initialStatus }: StatusPageProps) => {
             <div className="text-gray-600 flex items-center gap-3">
               <GoCheckCircle size={25} className="text-green-600" />
               <div>
-                <p>Application submitted</p>
-                <span className="text-sm">
-                  {new Date(applicationData.submitted_at).toLocaleDateString()}
-                </span>
+                <p>
+                  Application{" "}
+                  {status === "in_progress" ? "started" : "submitted"}
+                </p>
+                {status !== "in_progress" && (
+                  <span className="text-sm">
+                    {new Date(
+                      applicationData.submitted_at
+                    ).toLocaleDateString()}
+                  </span>
+                )}
               </div>
             </div>
 
@@ -158,10 +229,7 @@ const ApplicantStatusPage = ({ status: initialStatus }: StatusPageProps) => {
                 <div>
                   <p>Interview Scheduled</p>
                   <span className="text-sm">
-                    {detailsResponse?.data &&
-                      new Date(
-                        detailsResponse?.data?.updated_at
-                      ).toLocaleDateString()}
+                    {new Date(applicationData.updated_at).toLocaleDateString()}
                   </span>
                 </div>
               </div>
@@ -178,7 +246,7 @@ const ApplicantStatusPage = ({ status: initialStatus }: StatusPageProps) => {
           </section>
 
           {status === "in_progress" && (
-            <section className="p-5 rounded-lg shadow-lg bg-indigo-700 text-white">
+            <section className="p-3 rounded-lg shadow-lg bg-indigo-700 text-white">
               <h3 className="font-bold text-lg mb-3">
                 Your Application is in Progress
               </h3>
@@ -193,7 +261,7 @@ const ApplicantStatusPage = ({ status: initialStatus }: StatusPageProps) => {
           )}
 
           {status === "submitted" && (
-            <section className="p-5 rounded-lg shadow-lg bg-indigo-700 text-white">
+            <section className="p-3 rounded-lg shadow-lg bg-indigo-700 text-white">
               <h3 className="font-bold text-lg mb-3">Application Submitted</h3>
               <p className="text-sm mb-2">
                 Thank you for submitting your application! The team will review
@@ -206,7 +274,7 @@ const ApplicantStatusPage = ({ status: initialStatus }: StatusPageProps) => {
           )}
 
           {(status === "under_review" || status === "interview") && (
-            <section className="p-5 rounded-lg shadow-lg bg-indigo-700 text-white">
+            <section className="p-3 rounded-lg shadow-lg bg-indigo-700 text-white">
               <h3 className="font-bold text-lg mb-3">
                 Get Ready for the{" "}
                 {status === "interview" ? "Interview" : "Next Steps"}!
@@ -223,7 +291,7 @@ const ApplicantStatusPage = ({ status: initialStatus }: StatusPageProps) => {
           )}
 
           {status === "decision_made" && (
-            <section className="p-5 rounded-lg shadow-lg bg-indigo-700 text-white">
+            <section className="p-3 rounded-lg shadow-lg bg-indigo-700 text-white">
               <h3 className="font-bold text-lg mb-3">Final Decision Made</h3>
               <p className="text-sm mb-2">
                 The evaluation process is complete. Please check your email or
@@ -236,6 +304,30 @@ const ApplicantStatusPage = ({ status: initialStatus }: StatusPageProps) => {
           )}
         </div>
       </div>
+      {status === "in_progress" && (
+        <div className="sticky bottom-6 mt-8 bg-gray-50 p-4 rounded-lg border border-gray-200  shadow-sm">
+          <div className="flex gap-3 justify-end">
+            <button
+              onClick={handleDelete}
+              className="px-4 py-2 text-red-600 border border-red-600 rounded hover:bg-red-50"
+            >
+              Delete
+            </button>
+            <button
+              onClick={handleEdit}
+              className="px-4 py-2 text-blue-600 border border-blue-600 rounded hover:bg-blue-50"
+            >
+              Edit
+            </button>
+            <button
+              onClick={handleSubmit}
+              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            >
+              Submit Application
+            </button>
+          </div>
+        </div>
+      )}
     </main>
   );
 };

@@ -1,6 +1,9 @@
 "use client";
-
-import { useGetApplicationStatusQuery } from "@/lib/redux/api/clientApi";
+import {
+  useGetApplicationStatusQuery,
+  useGetCyclesClientQuery,
+  useGetProfileQuery,
+} from "@/lib/redux/api/clientApi";
 import WelcomePage from "./components/WelcomePage";
 import StatusPage from "./components/StatusPage";
 import LoadingPage from "@/app/components/LoadingPage";
@@ -9,22 +12,33 @@ import ErrorPage from "./components/ErrorPage";
 export default function ApplicantDashboardPage() {
   const {
     data: statusResponse,
-    isLoading,
+    isLoading: statusLoading,
     isError,
     error,
   } = useGetApplicationStatusQuery();
 
-  if (isLoading) return <LoadingPage />;
+  const {
+    data: cyclesResponse,
+    isLoading: cyclesLoading,
+    error: cyclesError,
+  } = useGetCyclesClientQuery(null);
+  const { data:profileData, isLoading:profileLoading, error: profileError } = useGetProfileQuery(null);
+
+  if (statusLoading || cyclesLoading || profileLoading) return <LoadingPage />;
 
   const isNotFound =
     isError && error && "status" in error && (error as any).status === 404;
 
+  const cycles = cyclesResponse?.data?.cycles || [];
+  const name = profileData?.data?.full_name;
+  const activeCycle = cycles.find((cycle: any) => cycle.is_active);
+
   if (isNotFound) {
     return (
       <WelcomePage
-        userName="John Doe"
+        userName={name}
         profileCompletion={75}
-        applicationCycle="G7 November Intake"
+        applicationCycle={activeCycle?.name || "No Active Cycle"}
         checklist={[
           { label: "Create an Account", completed: true },
           { label: "Fill Personal Information", completed: false },
@@ -37,8 +51,10 @@ export default function ApplicantDashboardPage() {
   }
 
   if (statusResponse?.success && statusResponse?.data) {
-    return <StatusPage status={statusResponse?.data?.status} />;
+    return <StatusPage status={statusResponse.data.status} />;
   }
 
-  return <ErrorPage message={(error as any)?.data?.message} />;
+  return (
+    <ErrorPage message={(error as any)?.data?.message || "Unknown error"} />
+  );
 }

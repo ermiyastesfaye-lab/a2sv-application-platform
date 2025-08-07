@@ -4,6 +4,7 @@ import CTASection from "./components/CTASection";
 import HeroSection from "./components/HeroSection";
 import JourneySteps from "./components/JourneySteps";
 import LogoSection from "./components/LogoSection";
+
 export default function Home() {
   return (
     <div>
