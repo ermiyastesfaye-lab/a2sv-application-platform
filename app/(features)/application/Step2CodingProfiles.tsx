@@ -1,10 +1,11 @@
+
 "use client";
 import { useForm } from "react-hook-form";
-import { ApplicationFormValues } from "./types";
+import { StartApplicationForm } from "./types";
 
 interface Props {
-  data: ApplicationFormValues;
-  setData: (d: ApplicationFormValues) => void;
+  data: StartApplicationForm;
+  setData: (d: StartApplicationForm) => void;
   next: () => void;
   back: () => void;
 }
@@ -19,15 +20,15 @@ export default function Step2CodingProfiles({
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<ApplicationFormValues>({
+  } = useForm<StartApplicationForm>({
     defaultValues: {
-      codeforces: data.codeforces,
-      leetcode: data.leetcode,
-      github: data.github,
+      codeforces_handle: data.codeforces_handle,
+      leetcode_handle: data.leetcode_handle,
+     
     },
   });
 
-  const onSubmit = (formData: ApplicationFormValues) => {
+  const onSubmit = (formData: StartApplicationForm) => {
     setData({ ...data, ...formData });
     next();
   };
@@ -43,35 +44,33 @@ export default function Step2CodingProfiles({
             <input
               className="input rounded p-1 shadow-gray-400 shadow"
               id="codeforces"
-              {...register("codeforces", {
+              {...register("codeforces_handle", {
                 required: "Codeforces username is required",
               })}
             />
-            {errors.codeforces && (
+            {errors.codeforces_handle && (
               <p className="text-red-500 text-sm">
-                {errors.codeforces.message}
+                {errors.codeforces_handle.message}
               </p>
             )}
           </div>
 
           <div>
-            <label htmlFor="leetcode">LeetCode</label>
+            <label htmlFor="leetcode_handle">LeetCode</label>
             <input
               className="input rounded p-1 shadow-gray-400 shadow"
-              id="leetcode"
-              {...register("leetcode", {
+              id="leetcode_handle"
+              {...register("leetcode_handle", {
                 required: "LeetCode username is required",
               })}
             />
-            {errors.leetcode && (
-              <p className="text-red-500 text-sm">
-                {errors.leetcode.message}
-              </p>
+            {errors.leetcode_handle && (
+              <p className="text-red-500 text-sm">{errors.leetcode_handle.message}</p>
             )}
           </div>
         </div>
 
-        <div className="flex-col mt-5">
+        {/* <div className="flex-col mt-5">
           <label htmlFor="github" className="block">
             GitHub
           </label>
@@ -85,12 +84,16 @@ export default function Step2CodingProfiles({
           {errors.github && (
             <p className="text-red-500 text-sm">{errors.github.message}</p>
           )}
-        </div>
+        </div> */}
       </div>
 
       <div className="bg-gray-100 py-3 mt-2">
         <div className="px-6 flex justify-between">
-          <button type="button" className="bg-gray-200 p-2 px-4 rounded" onClick={back}>
+          <button
+            type="button"
+            className="bg-gray-200 p-2 px-4 rounded"
+            onClick={back}
+          >
             Back
           </button>
           <button

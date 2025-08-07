@@ -24,7 +24,7 @@ const ApplicationDashboard = ({
 }: DashboardProps) => {
   return (
     <main className="md:w-4xl mx-auto mt-3 p-4  text-[#0a0a0a]">
-      {/* Welcome Section */}
+  
       <div className="mb-6">
         <h1 className="font-bold text-2xl">Welcome, {userName}!</h1>
         <p className="text-gray-600 text-sm">
@@ -32,20 +32,20 @@ const ApplicationDashboard = ({
         </p>
       </div>
 
-      {/* Main Grid */}
+
       <div className="md:grid md:grid-cols-6 gap-6">
-        {/* Application Banner */}
+  
         <div className="col-span-4 bg-gradient-to-r from-indigo-600 to-purple-500 text-white p-6 rounded-lg shadow md:max-h-48 mb-3">
           <h2 className="text-2xl font-bold mb-2">{applicationCycle}</h2>
           <p className="text-sm mb-4">
             It's time to submit your application and show us your potential
           </p>
           <button className="bg-white py-2 px-4 text-indigo-800 rounded font-semibold hover:bg-gray-200 text-[15px]">
-            <Link href="/applications"> Start Application</Link>
+            <Link href="/application"> Start Application</Link>
           </button>
         </div>
 
-        {/* Profile & Checklist */}
+      
         <div className="flex flex-col gap-4 col-span-2">
           {/* Profile Completion */}
           <section className="bg-white p-5 rounded-lg shadow-lg">

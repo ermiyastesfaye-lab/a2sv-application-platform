@@ -10,8 +10,8 @@ import {
 import React from "react";
 import ErrorPage from "@/app/error";
 import LoadingPage from "@/app/components/LoadingPage";
-import { useRouter } from "next/navigation";
 import { InProgressActionButtons } from "./ActionButtons";
+import Link from "next/link";
 
 interface StatusPageProps {
   status?: string;
@@ -23,7 +23,6 @@ const ApplicantStatusPage = ({ status: initialStatus }: StatusPageProps) => {
     isLoading: statusLoading,
     error: statusError,
   } = useGetApplicationStatusQuery();
-  const router = useRouter();
 
   const applicationId = statusResponse?.data?.id;
 
@@ -68,20 +67,20 @@ const ApplicantStatusPage = ({ status: initialStatus }: StatusPageProps) => {
   if (!applicationData)
     return (
       <div className="text-center mt-40 text-gray-600">
-        <p className="text-xl mb-4">No application found</p>
-        <a
+        <p className="mb-4">No application found</p>
+        <Link
           href="application"
           className="text-indigo-600 underline font-medium"
         >
           Start a new application →
-        </a>
+        </Link>
       </div>
     );
 
   const statusStages = getTimelineStages(status);
 
   return (
-    <main className="md:w-3xl mx-auto mt-2 p-4 text-[#0a0a0a] pb-30">
+    <main className="md:w-4xl mx-auto mt-2 p-4 text-[#0a0a0a] pb-40">
       <div className="mb-6">
         <h1 className="font-bold text-2xl mb-2">Your Application Progress</h1>
         <p className="text-gray-600 text-sm">
@@ -89,9 +88,8 @@ const ApplicantStatusPage = ({ status: initialStatus }: StatusPageProps) => {
         </p>
       </div>
 
-      <div className="md:grid md:grid-cols-6 gap-6 max-h-110">
-     
-        <div className="col-span-4 bg-white rounded-lg p-4">
+      <div className="md:grid md:grid-cols-6 gap-6">
+        <div className="col-span-4 bg-white rounded-lg p-4 max-h-120">
           <div className="space-y-3">
             <TimelineItem
               title="Application In Progress"
@@ -140,7 +138,7 @@ const ApplicantStatusPage = ({ status: initialStatus }: StatusPageProps) => {
 
         {/* Activity Column */}
         <div className="flex flex-col gap-4 col-span-2">
-          <section className="bg-white p-5 rounded-lg shadow-lg">
+          <section className="bg-white p-5 rounded shadow-lg">
             <h3 className="font-bold text-lg mb-3">Recent Activity</h3>
             <div className="text-gray-600 flex items-center gap-3">
               <GoCheckCircle size={25} className="text-green-600" />
@@ -168,7 +166,7 @@ const ApplicantStatusPage = ({ status: initialStatus }: StatusPageProps) => {
             )}
           </section>
 
-          <section className="bg-white p-5 rounded-lg shadow-lg">
+          <section className="bg-white p-5 rounded shadow-lg">
             <h3 className="font-bold text-lg mb-3">Important Updates</h3>
             <p className="text-gray-600 text-sm">
               {status === "decision_made"
@@ -178,7 +176,7 @@ const ApplicantStatusPage = ({ status: initialStatus }: StatusPageProps) => {
           </section>
 
           {status === "in_progress" && (
-            <section className="p-5 rounded-lg shadow-lg bg-indigo-700 text-white">
+            <section className="p-5 rounded shadow-lg bg-indigo-700 text-white">
               <h3 className="font-bold text-lg mb-3">
                 Your Application is in Progress
               </h3>
@@ -186,27 +184,27 @@ const ApplicantStatusPage = ({ status: initialStatus }: StatusPageProps) => {
                 You've started your application – great job! Make sure to fill
                 in all the required details.
               </p>
-              <a href="#" className="text-[15px] underline text-blue-700">
+              <a href="#" className="text-[15px] underline text-white">
                 Go to application form →
               </a>
             </section>
           )}
 
           {status === "submitted" && (
-            <section className="p-5 rounded-lg shadow-lg bg-indigo-700 text-white">
+            <section className="p-5 rounded shadow-lg bg-indigo-700 text-white">
               <h3 className="font-bold text-lg mb-3">Application Submitted</h3>
               <p className="text-sm mb-2">
                 Thank you for submitting your application! The team will review
                 it and notify you of the next steps.
               </p>
-              <a href="#" className="text-[15px] underline text-green-700">
+              <a href="#" className="text-[15px] underline text-white">
                 Learn what happens next →
               </a>
             </section>
           )}
 
           {(status === "under_review" || status === "interview") && (
-            <section className="p-5 rounded-lg shadow-lg bg-indigo-700 text-white">
+            <section className="p-5 rounded shadow-lg bg-indigo-700 text-white">
               <h3 className="font-bold text-lg mb-3">
                 Get Ready for the{" "}
                 {status === "interview" ? "Interview" : "Next Steps"}!
@@ -223,7 +221,7 @@ const ApplicantStatusPage = ({ status: initialStatus }: StatusPageProps) => {
           )}
 
           {status === "decision_made" && (
-            <section className="p-5 rounded-lg shadow-lg bg-indigo-700 text-white">
+            <section className="p-5 rounded shadow-lg bg-indigo-700 text-white">
               <h3 className="font-bold text-lg mb-3">Final Decision Made</h3>
               <p className="text-sm mb-2">
                 The evaluation process is complete. Please check your email or

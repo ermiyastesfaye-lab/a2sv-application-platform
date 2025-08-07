@@ -51,7 +51,7 @@ export default function ApplicantDashboardPage() {
   }
 
   if (statusResponse?.success && statusResponse?.data) {
-    return <StatusPage status={statusResponse.data.status} />;
+    return <StatusPage status={statusResponse.data?.status} />;
   }
 
   return (

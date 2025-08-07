@@ -3,6 +3,10 @@ import {
   ApplicationStatusResponse,
 } from "@/types/application";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import type {
+  StartApplicationForm,
+  ApplicationResponse,
+} from "@/app/(features)/application/types";
 
 export const applicationsApi = createApi({
   reducerPath: "applicationsApi",
@@ -16,6 +20,17 @@ export const applicationsApi = createApi({
   }),
   tagTypes: ["Application"],
   endpoints: (builder) => ({
+    createApplication: builder.mutation<ApplicationResponse, FormData>({
+      query: (formData) => {
+       
+        return {
+          url: "/applications/",
+          method: "POST",
+          body: formData,
+        };
+      },
+    }),
+
     getApplicationDetails: builder.query<ApplicationDetailsResponse, string>({
       query: (applicationId) => `/applications/${applicationId}`,
       providesTags: ["Application"],
@@ -56,6 +71,7 @@ export const applicationsApi = createApi({
 });
 
 export const {
+  useCreateApplicationMutation,
   useGetCyclesClientQuery,
   useGetApplicationStatusQuery,
   useGetApplicationDetailsQuery,
