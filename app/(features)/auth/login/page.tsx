@@ -31,7 +31,7 @@ const Login = () => {
         localStorage.setItem("token", res.data.access);
       }
       alert("User Logged in successfully");
-      router.push("/application");
+      router.push("/dashboard/applicant");
     } catch (err: any) {
       console.log(err);
     }

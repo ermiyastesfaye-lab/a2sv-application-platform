@@ -1,6 +1,8 @@
 import { ApplicationCycle } from "@/types/applicationCycle";
-import { useActivateCycleMutation } from "@/lib/redux/api/adminApi";
-import { useDeleteCycleMutation } from "@/lib/redux/api/adminApi";
+import {
+  useActivateCycleMutation,
+  useDeleteCycleMutation,
+} from "@/lib/redux/slices/adminSlice";
 import { useRouter } from "next/navigation";
 import React from "react";
 
@@ -28,7 +30,7 @@ const ApplicationCycleList: React.FC<ApplicationCycle> = ({
   };
   const router = useRouter();
   const handleUpdateCycle = () => {
-    router.push(`/editApplicationCycle/${id}`);
+    router.push(`/dashboard/admin/editApplicationCycle/${id}`);
   };
 
   const handleDelete = async () => {
