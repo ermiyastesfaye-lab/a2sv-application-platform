@@ -5,9 +5,11 @@ import { setupListeners } from "@reduxjs/toolkit/query";
 // import { adminApi } from "./api/adminApi";
 import { adminApi } from "./slices/adminSlice";
 import { cyclesApi } from "./api/applicationCyclesApi";
+import { applicationsApi } from "./api/clientApi";
 
 export const store = configureStore({
   reducer: {
+    [applicationsApi.reducerPath]: applicationsApi.reducer,
     [authApi.reducerPath]: authApi.reducer,
     [adminApi.reducerPath]: adminApi.reducer,
     [cyclesApi.reducerPath]: cyclesApi.reducer,
@@ -16,7 +18,8 @@ export const store = configureStore({
     getDefaultMiddleware().concat(
       authApi.middleware,
       adminApi.middleware,
-      cyclesApi.middleware
+      cyclesApi.middleware,
+      applicationsApi.middleware
     ),
 });
 
