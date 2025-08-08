@@ -37,7 +37,7 @@ export default function ApplicantDashboardPage() {
     return (
       <WelcomePage
         userName={name}
-        profileCompletion={75}
+        profileCompletion={20}
         applicationCycle={activeCycle?.name || "No Active Cycle"}
         checklist={[
           { label: "Create an Account", completed: true },
