@@ -9,7 +9,8 @@ export const adminApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: "https://a2sv-application-platform-backend-team1.onrender.com/",
     prepareHeaders: (headers) => {
-      const token = localStorage.getItem("token");
+      const token =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiMTg0NjFkMS03YTE2LTRkYzUtOTliNS0wNmNlMzY4NTYwMDAiLCJleHAiOjE3NTQ2Mzc0MTIsInR5cGUiOiJhY2Nlc3MifQ.SlBrxQqSD7ABv0dpblYidslo3NLgiVfNZxkeqysFDNA";
 
       if (token) {
         headers.set("Authorization", `Bearer ${token}`);
@@ -57,12 +58,12 @@ export const adminApi = createApi({
       }),
     }),
     editCycle: builder.mutation({
-      query: ({ id, cycleData }) => {
+      query: ({ id, ...cycleData }) => {
         console.log("cycleData in mutation query:", cycleData);
         return {
-          url: `/cycles/${id}`,
+          url: `admin/cycles/${id}`,
           method: "PUT",
-          body: cycleData,
+          body: { ...cycleData },
         };
       },
     }),

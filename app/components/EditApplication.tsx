@@ -32,6 +32,7 @@ const EditCycleForm = ({ editCycleId }: EditCycleFormProps) => {
         name: data?.data.name,
         start_date: data?.data.start_date,
         end_date: data?.data.end_date,
+        description: data?.data.description,
       });
     }
   }, [data, reset]);
@@ -54,6 +55,7 @@ const EditCycleForm = ({ editCycleId }: EditCycleFormProps) => {
         name: data.name,
         start_date: data.start_date,
         end_date: data.end_date,
+        description: data.description,
       }).unwrap();
 
       console.log("Cycle updated successfully", response);
@@ -91,18 +93,21 @@ const EditCycleForm = ({ editCycleId }: EditCycleFormProps) => {
 
         <div>
           <label className="block text-sm font-medium mb-1 text-gray-700">
-            Country
+            Description
           </label>
           <input
             type="text"
-            // {...register("country", { required: "Country is required" })}
+            {...register("description", {
+              required: "Description is required",
+            })}
             className="w-full rounded-md px-3 py-2 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:outline-none"
           />
-          {/* {errors.country && (
-            <p className="text-rose-500/90 text-sm mt-1">
-              {errors.country.message}
-            </p>
-          )} */}
+          {errors.description &&
+            typeof errors.description.message === "string" && (
+              <p className="text-rose-500/90 text-sm mt-1">
+                {errors.description.message}
+              </p>
+            )}
         </div>
       </div>
 
