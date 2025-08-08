@@ -8,8 +8,7 @@ export const adminApi = createApi({
     baseUrl: 'https://a2sv-application-platform-backend-team1.onrender.com/',
     prepareHeaders: (headers, { getState }) => {
      
-      const token =
-        (getState() as RootState).auth?.token 
+      const token = localStorage.getItem('token');
       if (token) {
         headers.set('Authorization', `Bearer ${token}`);
       }
@@ -24,7 +23,20 @@ export const adminApi = createApi({
         body: newCycle,
       }),
     }),
+    activateCycle: builder.mutation<{ success: boolean; message:string}, {cycleId:string}>({
+      query: ({cycleId}) => ({
+        url: `/admin/cycles/${cycleId}/activate`,
+        method: 'PATCH'
+      }),
+    }),
+
+    deleteCycle: builder.mutation<{ success: boolean; message:string}, {cycleId:string}>({
+      query: ({cycleId}) => ({
+        url: `/admin/cycles/${cycleId}`,
+        method: 'DELETE'
+      }),
+    }),
   }),
 });
 
-export const { useCreateCycleMutation} = adminApi;
+export const { useCreateCycleMutation, useActivateCycleMutation,useDeleteCycleMutation } = adminApi;
