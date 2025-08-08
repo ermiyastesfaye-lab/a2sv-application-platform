@@ -131,7 +131,6 @@ export default function Step3EssaysResume({ data, setData, back }: Props) {
               className="hidden"
               id="file-upload"
               type="file"
-              accept=".pdf"
               onChange={handleFileChange}
             />
           </div>

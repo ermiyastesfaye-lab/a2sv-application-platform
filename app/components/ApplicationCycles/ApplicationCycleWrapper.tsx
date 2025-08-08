@@ -13,7 +13,7 @@ const ApplicationCycleWrapper = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const router = useRouter();
 
-  const { data, isLoading, isError } = useGetCyclesQuery({
+  const { data, isLoading, isError, refetch } = useGetCyclesQuery({
     page: currentPage,
     limit: ITEMS_PER_PAGE,
   });
@@ -47,7 +47,7 @@ const ApplicationCycleWrapper = () => {
           className="bg-[#4F46E5] text-white hover:bg-[#4338CA] rounded-[6px] font-light
           h-[36px] sm:h-[40px] px-4 sm:px-6 min-w-[30px] sm:min-w-[168px]
           text-sm sm:text-base flex items-center justify-center transition-colors duration-200"
-          onClick={() => router.push("/createApplicationCycle")}
+          onClick={() => router.push("/dashboard/admin/createApplicationCycle")}
         >
           Create New Cycle
         </button>
@@ -65,6 +65,8 @@ const ApplicationCycleWrapper = () => {
               country={"Ethiopia"} // hard coded for now
               is_active={cycle.is_active ? "Active" : "Closed"}
               close={!cycle.is_active}
+              id={`${cycle.id}`}
+              refetchCycles={refetch}
             />
           ))}
         </div>

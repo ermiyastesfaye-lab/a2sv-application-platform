@@ -1,23 +1,45 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { CreateNewApplicationCycle } from "@/types/applicationCycle";
-import { useCreateCycleMutation } from "@/lib/redux/slices/adminSlice";
+import { useSearchParams } from "next/navigation";
 
-const CycleForm = () => {
+import {
+  useGetCycleByIdQuery,
+  useEditCycleMutation,
+} from "@/lib/redux/slices/adminSlice";
+
+interface EditCycleFormProps {
+  editCycleId: string | null;
+}
+
+const EditCycleForm = ({ editCycleId }: EditCycleFormProps) => {
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<CreateNewApplicationCycle>();
+  } = useForm();
 
-  const [createCycle, { isLoading, isSuccess, isError }] =
-    useCreateCycleMutation();
+  const { data, isLoading: isFetching } = useGetCycleByIdQuery(editCycleId);
+
+  const [editCycle, { isLoading, isSuccess, isError }] = useEditCycleMutation();
+
   const [dateError, setDateError] = useState("");
 
-  const onSubmit = async (data: CreateNewApplicationCycle) => {
+  useEffect(() => {
+    if (data?.data) {
+      reset({
+        name: data?.data.name,
+        start_date: data?.data.start_date,
+        end_date: data?.data.end_date,
+        description: data?.data.description,
+      });
+    }
+  }, [data, reset]);
+
+  const onSubmit = async (data: any) => {
     setDateError("");
+    console.log("Form Data:", data);
 
     const start = new Date(data.start_date);
     const end = new Date(data.end_date);
@@ -28,13 +50,23 @@ const CycleForm = () => {
     }
 
     try {
-      await createCycle(data).unwrap();
-      reset();
-      console.log("cycle created successfully");
+      const response = await editCycle({
+        id: editCycleId,
+        name: data.name,
+        start_date: data.start_date,
+        end_date: data.end_date,
+        description: data.description,
+      }).unwrap();
+
+      console.log("Cycle updated successfully", response);
     } catch (error) {
-      console.error("Error creating cycle:", error);
+      console.error("Error updating cycle:", error);
     }
   };
+
+  if (isFetching) {
+    return <p>Loading cycle data...</p>;
+  }
 
   return (
     <form
@@ -54,25 +86,28 @@ const CycleForm = () => {
           />
           {errors.name && (
             <p className="text-rose-500/90 text-sm mt-1">
-              {errors.name.message}
+              {typeof errors.name?.message === "string" && errors.name.message}
             </p>
           )}
         </div>
 
         <div>
           <label className="block text-sm font-medium mb-1 text-gray-700">
-            Country
+            Description
           </label>
           <input
             type="text"
-            {...register("country", { required: "Country is required" })}
+            {...register("description", {
+              required: "Description is required",
+            })}
             className="w-full rounded-md px-3 py-2 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:outline-none"
           />
-          {errors.country && (
-            <p className="text-rose-500/90 text-sm mt-1">
-              {errors.country.message}
-            </p>
-          )}
+          {errors.description &&
+            typeof errors.description.message === "string" && (
+              <p className="text-rose-500/90 text-sm mt-1">
+                {errors.description.message}
+              </p>
+            )}
         </div>
       </div>
 
@@ -89,7 +124,8 @@ const CycleForm = () => {
           />
           {errors.start_date && (
             <p className="text-rose-500/90 text-sm mt-1">
-              {errors.start_date.message}
+              {typeof errors.start_date?.message === "string" &&
+                errors.start_date.message}
             </p>
           )}
         </div>
@@ -104,15 +140,14 @@ const CycleForm = () => {
             {...register("end_date", { required: "End date is required" })}
             className="w-full rounded-md px-3 py-2 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:outline-none"
           />
-          {errors.end_date && (
+          {errors.end_date?.message && (
             <p className="text-rose-500/90 text-sm mt-1">
-              {errors.end_date.message}
+              {errors.end_date.message as string}
             </p>
           )}
         </div>
       </div>
 
-      {/* Date range validation error */}
       {dateError && (
         <p className="text-rose-500/90 text-sm -mt-4">{dateError}</p>
       )}
@@ -120,7 +155,7 @@ const CycleForm = () => {
       <div className="pt-2">
         {isLoading && <p className="text-sm text-blue-500">Submitting...</p>}
         {isSuccess && (
-          <p className="text-sm text-green-600">Cycle created successfully!</p>
+          <p className="text-sm text-green-600">Cycle updated successfully!</p>
         )}
         {isError && (
           <p className="text-sm text-rose-500/90">
@@ -141,11 +176,11 @@ const CycleForm = () => {
           type="submit"
           className="px-4 py-2 rounded-md text-white bg-[#4F46E5] hover:bg-indigo-700"
         >
-          Save Cycle
+          Save Changes
         </button>
       </div>
     </form>
   );
 };
 
-export default CycleForm;
+export default EditCycleForm;
