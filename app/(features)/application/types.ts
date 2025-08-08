@@ -1,16 +1,4 @@
-// export interface ApplicationFormValues {
-//   idNumber: string;
-//   university: string;
-//   degree: string;
 
-//   codeforces: string;
-//   leetcode: string;
-//   github: string;
-
-//   essay1: string;
-//   essay2: string;
-//   resume: File | null;
-// }
 export interface StartApplicationForm {
   school: string;
   degree: string;
@@ -19,7 +7,7 @@ export interface StartApplicationForm {
   essay_why_a2sv: string;
   essay_about_you: string;
   student_id: string;
-  resume: File; 
+  resume: File;
   country: string;
 }
 
@@ -37,6 +25,8 @@ export interface ApplicationResponse {
     resume_url: string;
     submitted_at: string;
     updated_at: string;
+    student_id:string,
+    country: string
   };
   message: string;
 }
