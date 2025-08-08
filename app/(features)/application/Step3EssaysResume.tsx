@@ -120,7 +120,6 @@ const onSubmit = async () => {
               className="hidden"
               id="file-upload"
               type="file"
-              accept=".pdf"
               onChange={handleFileChange}
             />
           </div>
