@@ -19,6 +19,11 @@ const UserTable = ({ users }: UserTableProps) => {
   const router = useRouter();
   const [deleteUser] = useDeleteUserMutation();
   const handleDelete = async (id: any) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this user? This action cannot be undone."
+    );
+
+    if (!confirmDelete) return;
     try {
       const response = await deleteUser(id);
       console.log(response);
