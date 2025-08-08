@@ -9,9 +9,7 @@ export const adminApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: "https://a2sv-application-platform-backend-team1.onrender.com/",
     prepareHeaders: (headers) => {
-      const token =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiMTg0NjFkMS03YTE2LTRkYzUtOTliNS0wNmNlMzY4NTYwMDAiLCJleHAiOjE3NTQ2Mzc0MTIsInR5cGUiOiJhY2Nlc3MifQ.SlBrxQqSD7ABv0dpblYidslo3NLgiVfNZxkeqysFDNA";
-
+      const token = localStorage.getItem("token");
       if (token) {
         headers.set("Authorization", `Bearer ${token}`);
         headers.set("Accept", "application/json");
@@ -28,6 +26,25 @@ export const adminApi = createApi({
         url: "/admin/cycles",
         method: "POST",
         body: newCycle,
+      }),
+    }),
+    activateCycle: builder.mutation<
+      { success: boolean; message: string },
+      { cycleId: string }
+    >({
+      query: ({ cycleId }) => ({
+        url: `/admin/cycles/${cycleId}/activate`,
+        method: "PATCH",
+      }),
+    }),
+
+    deleteCycle: builder.mutation<
+      { success: boolean; message: string },
+      { cycleId: string }
+    >({
+      query: ({ cycleId }) => ({
+        url: `/admin/cycles/${cycleId}`,
+        method: "DELETE",
       }),
     }),
     getAllUsers: builder.query({
@@ -82,4 +99,6 @@ export const {
   useDeleteUserMutation,
   useEditCycleMutation,
   useGetCycleByIdQuery,
+  useActivateCycleMutation,
+  useDeleteCycleMutation,
 } = adminApi;
