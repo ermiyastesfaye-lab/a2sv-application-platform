@@ -22,7 +22,6 @@ export const applicationsApi = createApi({
   endpoints: (builder) => ({
     createApplication: builder.mutation<ApplicationResponse, FormData>({
       query: (formData) => {
-       
         return {
           url: "/applications/",
           method: "POST",
@@ -31,10 +30,22 @@ export const applicationsApi = createApi({
       },
     }),
 
-    getApplicationDetails: builder.query<ApplicationDetailsResponse, string>({
-      query: (applicationId) => `/applications/${applicationId}`,
+    updateApplication: builder.mutation<
+      ApplicationResponse,
+      { id: string; body: FormData }>({
+      query: ({ id, body }) => ({
+        url: `/applications/${id}`,
+        method: "PUT",
+        body,
+      }),
+    }),
+
+    getApplicationDetails: builder.query<ApplicationResponse, string>({
+      query: (id) => `/applications/${id}`,
       providesTags: ["Application"],
     }),
+
+
     getApplicationStatus: builder.query<ApplicationStatusResponse, void>({
       query: () => "applications/my-status",
       providesTags: ["Application"],
@@ -58,9 +69,11 @@ export const applicationsApi = createApi({
       }),
       invalidatesTags: ["Application"],
     }),
+
     getCyclesClient: builder.query({
       query: () => `/cycles`,
     }),
+
     getProfile: builder.query({
       query: () => ({
         url: `profile/me`,
@@ -72,6 +85,7 @@ export const applicationsApi = createApi({
 
 export const {
   useCreateApplicationMutation,
+  useUpdateApplicationMutation,
   useGetCyclesClientQuery,
   useGetApplicationStatusQuery,
   useGetApplicationDetailsQuery,

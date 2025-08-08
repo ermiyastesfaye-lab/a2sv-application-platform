@@ -36,31 +36,60 @@ const ApplicantStatusPage = ({ status: initialStatus }: StatusPageProps) => {
 
   const status = initialStatus || statusResponse?.data?.status || "not_started";
   const applicationData = detailsResponse?.data || statusResponse?.data;
+ 
 
+  // const getTimelineStages = (status: string) => ({
+  //   isInProgress: {
+  //     isCompleted: false,
+  //     isCurrent: status === "in_progress",
+  //   },
+  //   isSubmitted: {
+  //     isCompleted: ["pending_review", "interview", "decision_made"].includes(
+  //       status
+  //     ),
+  //     isCurrent: status === "submitted",
+  //   },
+  //   isUnderReview: {
+  //     isCompleted: ["interview", "decision_made"].includes(status),
+  //     isCurrent: status === "pending_review",
+  //   },
+  //   isInterview: {
+  //     isCompleted: status === "decision_made",
+  //     isCurrent: status === "interview",
+  //   },
+  //   isDecisionMade: {
+  //     isCompleted: false,
+  //     isCurrent: status === "decision_made",
+  //   },
+  // });
   const getTimelineStages = (status: string) => ({
     isInProgress: {
-      isCompleted: false,
+      isCompleted: [
+        "submitted",
+        "pending_review",
+        "accepted",
+        "rejected",
+      ].includes(status),
       isCurrent: status === "in_progress",
     },
     isSubmitted: {
-      isCompleted: ["under_review", "interview", "decision_made"].includes(
-        status
-      ),
+      isCompleted: ["pending_review", "accepted", "rejected"].includes(status),
       isCurrent: status === "submitted",
     },
     isUnderReview: {
-      isCompleted: ["interview", "decision_made"].includes(status),
-      isCurrent: status === "under_review",
+      isCompleted: ["accepted", "rejected"].includes(status),
+      isCurrent: status === "pending_review",
     },
-    isInterview: {
-      isCompleted: status === "decision_made",
-      isCurrent: status === "interview",
-    },
+      // isInterview: {
+      //   isCompleted: status === "decision_made",
+      //   isCurrent: status === "interview",
+      // },
     isDecisionMade: {
       isCompleted: false,
-      isCurrent: status === "decision_made",
+      isCurrent: ["accepted", "rejected"].includes(status),
     },
   });
+
 
   if (statusLoading || detailsLoading) return <LoadingPage />;
   if (statusError || detailsError) return <ErrorPage />;
@@ -69,7 +98,7 @@ const ApplicantStatusPage = ({ status: initialStatus }: StatusPageProps) => {
       <div className="text-center mt-40 text-gray-600">
         <p className="mb-4">No application found</p>
         <Link
-          href="application"
+          href="/application"
           className="text-indigo-600 underline font-medium"
         >
           Start a new application →
@@ -80,7 +109,7 @@ const ApplicantStatusPage = ({ status: initialStatus }: StatusPageProps) => {
   const statusStages = getTimelineStages(status);
 
   return (
-    <main className="md:w-4xl mx-auto mt-2 p-4 text-[#0a0a0a] pb-40">
+    <main className="md:w-4xl mx-auto mt-2 p-5 text-[#0a0a0a] pb-40">
       <div className="mb-6">
         <h1 className="font-bold text-2xl mb-2">Your Application Progress</h1>
         <p className="text-gray-600 text-sm">
@@ -89,7 +118,7 @@ const ApplicantStatusPage = ({ status: initialStatus }: StatusPageProps) => {
       </div>
 
       <div className="md:grid md:grid-cols-6 gap-6">
-        <div className="col-span-4 bg-white rounded-lg p-4 max-h-120">
+        <div className="col-span-4 bg-white rounded-lg p-7 h-fit shadow-lg">
           <div className="space-y-3">
             <TimelineItem
               title="Application In Progress"
@@ -120,18 +149,23 @@ const ApplicantStatusPage = ({ status: initialStatus }: StatusPageProps) => {
               isCurrent={statusStages.isUnderReview.isCurrent}
             />
 
-            <TimelineItem
+            {/* <TimelineItem
               title="Interview Stage"
               description="If selected, you'll be invited for an interview to further discuss your application."
               isCompleted={statusStages.isInterview.isCompleted}
               isCurrent={statusStages.isInterview.isCurrent}
-            />
-
+            /> */}
             <TimelineItem
-              title="Decision Made"
-              description="The final decision on your application will be communicated to you."
-              isCompleted={statusStages.isDecisionMade.isCompleted}
-              isCurrent={statusStages.isDecisionMade.isCurrent}
+              title="Final Decision"
+              description={
+                status === "accepted"
+                  ? "Congratulations! You’ve been accepted."
+                  : status === "rejected"
+                  ? "We regret to inform you that your application was not successful."
+                  : "Final decision will be communicated soon."
+              }
+              isCompleted={["accepted", "rejected"].includes(status)}
+              isCurrent={["accepted", "rejected"].includes(status)}
             />
           </div>
         </div>
@@ -150,7 +184,7 @@ const ApplicantStatusPage = ({ status: initialStatus }: StatusPageProps) => {
               </div>
             </div>
 
-            {statusStages.isInterview && (
+            {/* {statusStages.isInterview && (
               <div className="text-gray-600 flex items-center gap-2 mt-3">
                 <GrFormSchedule size={28} />
                 <div>
@@ -163,7 +197,7 @@ const ApplicantStatusPage = ({ status: initialStatus }: StatusPageProps) => {
                   </span>
                 </div>
               </div>
-            )}
+            )} */}
           </section>
 
           <section className="bg-white p-5 rounded shadow-lg">
@@ -184,7 +218,10 @@ const ApplicantStatusPage = ({ status: initialStatus }: StatusPageProps) => {
                 You've started your application – great job! Make sure to fill
                 in all the required details.
               </p>
-              <a href="#" className="text-[15px] underline text-white">
+              <a
+                href="/application"
+                className="text-[15px] underline text-white"
+              >
                 Go to application form →
               </a>
             </section>
@@ -192,7 +229,7 @@ const ApplicantStatusPage = ({ status: initialStatus }: StatusPageProps) => {
 
           {status === "submitted" && (
             <section className="p-5 rounded shadow-lg bg-indigo-700 text-white">
-              <h3 className="font-bold text-lg mb-3">Application Submitted</h3>
+              <h3 className="font-bold text-lg mb-3">Application Started</h3>
               <p className="text-sm mb-2">
                 Thank you for submitting your application! The team will review
                 it and notify you of the next steps.
@@ -203,7 +240,7 @@ const ApplicantStatusPage = ({ status: initialStatus }: StatusPageProps) => {
             </section>
           )}
 
-          {(status === "under_review" || status === "interview") && (
+          {(status === "pending_review" || status === "interview") && (
             <section className="p-5 rounded shadow-lg bg-indigo-700 text-white">
               <h3 className="font-bold text-lg mb-3">
                 Get Ready for the{" "}
@@ -214,24 +251,22 @@ const ApplicantStatusPage = ({ status: initialStatus }: StatusPageProps) => {
                 problem-solving skills on platforms like LeetCode and
                 Codeforces.
               </p>
-              <a href="#" className="text-[15px] underline">
+              {/* <a href="#" className="text-[15px] underline">
                 Read our interview prep guide →
-              </a>
+              </a> */}
             </section>
           )}
 
-          {status === "decision_made" && (
+          {status === "accepted" || status === "rejected" ? (
             <section className="p-5 rounded shadow-lg bg-indigo-700 text-white">
               <h3 className="font-bold text-lg mb-3">Final Decision Made</h3>
-              <p className="text-sm mb-2">
-                The evaluation process is complete. Please check your email or
-                dashboard for the final outcome.
+              <p className="text-gray-600 text-sm">
+                {status === "accepted"
+                  ? "Your application has been accepted! Check your email for the next steps."
+                  : "Your application was not successful. Thank you for applying."}
               </p>
-              <a href="#" className="text-[15px] underline text-gray-800">
-                View your decision →
-              </a>
             </section>
-          )}
+          ) : null}
         </div>
       </div>
     </main>

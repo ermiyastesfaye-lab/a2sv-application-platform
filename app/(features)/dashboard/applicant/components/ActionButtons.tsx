@@ -20,7 +20,7 @@ export const InProgressActionButtons: React.FC<ActionButtonsProps> = ({
   const [submitApplication] = useSubmitApplicationMutation();
   const [deleteApplication] = useDeleteApplicationMutation();
 
-  // dialog state
+
   const [showConfirm, setShowConfirm] = useState(false);
 
   const handleSubmit = async () => {
@@ -44,7 +44,7 @@ export const InProgressActionButtons: React.FC<ActionButtonsProps> = ({
   };
 
   const handleEdit = () => {
-    router.push(`/application`);
+    router.push(`/application/edit/${applicationId}`);
   };
 
   return (
