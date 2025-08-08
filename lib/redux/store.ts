@@ -6,19 +6,23 @@ import { adminApi } from "./api/adminApi";
 import { cyclesApi } from "./api/applicationCyclesApi";
 import { applicationsApi } from "./api/clientApi";
 
+import { analyticsApi } from "./api/analyticsApi";
+
 export const store = configureStore({
   reducer: {
     [applicationsApi.reducerPath]: applicationsApi.reducer,
     [authApi.reducerPath]: authApi.reducer,
     [adminApi.reducerPath]: adminApi.reducer,
     [cyclesApi.reducerPath]: cyclesApi.reducer,
+    [analyticsApi.reducerPath] : analyticsApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
       authApi.middleware,
       adminApi.middleware,
       cyclesApi.middleware,
-      applicationsApi.middleware
+      applicationsApi.middleware,
+      analyticsApi.middleware,
     ),
 });
 
