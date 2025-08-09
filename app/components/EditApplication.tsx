@@ -65,7 +65,11 @@ const EditCycleForm = ({ editCycleId }: EditCycleFormProps) => {
   };
 
   if (isFetching) {
-    return <p>Loading cycle data...</p>;
+    <div className="flex items-center justify-center h-64 mt-13">
+      <p className="text-sm sm:text-base text-gray-600 animate-pulse">
+        Loading cycle data...
+      </p>
+    </div>;
   }
 
   return (

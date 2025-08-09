@@ -1,10 +1,9 @@
-
+"use client";
 import Link from "next/link";
 import React from "react";
+import { useGetAllUsersQuery } from "@/lib/redux/slices/adminSlice";
 
 const AdminDashboard = () => {
-  
-  const totalUsers = 125;
   const totalApplicants = 1204;
   const activeCycles = 1;
   const recentActivities = [
@@ -18,6 +17,11 @@ const AdminDashboard = () => {
     },
   ];
 
+  const { data, isLoading, isError } = useGetAllUsersQuery({
+    page: 1,
+    limit: 5,
+  });
+
   return (
     <main className="md:w-4xl mx-auto mt-3 p-4 flex flex-col gap-4 text-[#0a0a0a]">
       <h1 className="font-bold text-2xl">Admin Command Center</h1>
@@ -25,7 +29,13 @@ const AdminDashboard = () => {
         <section className="flex flex-col gap-4">
           <div className="bg-gradient-to-r from-indigo-600 to-purple-500 rounded-lg p-4 text-white shadow-lg">
             <p className="text-sm">Total Users</p>
-            <span className="text-lg font-semibold">{totalUsers}</span>
+            <span className="text-lg font-semibold">
+              {isLoading
+                ? "Loading..."
+                : isError
+                ? "Failed to load"
+                : data?.data?.total_count ?? 0}
+            </span>
           </div>
           <div className="bg-white rounded p-4 min-h-60 shadow-lg">
             <h3 className="font-bold text-lg mb-3">Manage Users</h3>
@@ -54,7 +64,7 @@ const AdminDashboard = () => {
             </p>
 
             <Link
-              href="/admin/cycles"
+              href="/dashboard/admin/applicationCycle"
               className="text-indigo-600 text-sm hover:text-indigo-900"
             >
               Go to Cycles →

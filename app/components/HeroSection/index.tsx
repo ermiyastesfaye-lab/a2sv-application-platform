@@ -1,4 +1,5 @@
 import React from "react";
+import StartButton from "./startApplicationbtn";
 
 const HeroSection = () => {
   return (
@@ -33,9 +34,7 @@ const HeroSection = () => {
             fast-tracked to a software engineering career at the world's leading
             tech companies.
           </h3>
-          <button className="bg-[#4F46E5] px-6 py-3 rounded-md font-semibold mt-6">
-            Start Your Application
-          </button>
+        <StartButton/>
         </div>
       </div>
     </section>

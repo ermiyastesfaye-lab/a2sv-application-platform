@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { CreateNewApplicationCycle } from "@/types/applicationCycle";
 import { useCreateCycleMutation } from "@/lib/redux/slices/adminSlice";
+import { useRouter } from "next/navigation";
 
 const CycleForm = () => {
   const {
@@ -12,11 +13,13 @@ const CycleForm = () => {
     formState: { errors },
   } = useForm<CreateNewApplicationCycle>();
 
-  const [createCycle, { isLoading, isSuccess, isError }] =
+  const [createCycle, { isLoading, isSuccess, isError, reset: resetFetch }] =
     useCreateCycleMutation();
   const [dateError, setDateError] = useState("");
+  const router = useRouter();
 
   const onSubmit = async (data: CreateNewApplicationCycle) => {
+    resetFetch();
     setDateError("");
 
     const start = new Date(data.start_date);
@@ -32,8 +35,15 @@ const CycleForm = () => {
       reset();
       console.log("cycle created successfully");
     } catch (error) {
-      console.error("Error creating cycle:", error);
+      console.warn("Error creating cycle:", error);
     }
+  };
+
+  const handleCancel = () => {
+    resetFetch();
+    setDateError("");
+    reset();
+    router.push("/dashboard/admin/applicationCycle");
   };
 
   return (
@@ -61,16 +71,18 @@ const CycleForm = () => {
 
         <div>
           <label className="block text-sm font-medium mb-1 text-gray-700">
-            Country
+            Description
           </label>
           <input
             type="text"
-            {...register("country", { required: "Country is required" })}
+            {...register("description", {
+              required: "Description is required",
+            })}
             className="w-full rounded-md px-3 py-2 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:outline-none"
           />
-          {errors.country && (
+          {errors.description && (
             <p className="text-rose-500/90 text-sm mt-1">
-              {errors.country.message}
+              {errors.description.message}
             </p>
           )}
         </div>
@@ -112,7 +124,6 @@ const CycleForm = () => {
         </div>
       </div>
 
-      {/* Date range validation error */}
       {dateError && (
         <p className="text-rose-500/90 text-sm -mt-4">{dateError}</p>
       )}
@@ -132,7 +143,7 @@ const CycleForm = () => {
       <div className="bg-[#F9FAFB] -mx-6 -mb-6 px-6 py-4 flex justify-end gap-3">
         <button
           type="button"
-          onClick={() => reset()}
+          onClick={handleCancel}
           className="px-4 py-2 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-100"
         >
           Cancel

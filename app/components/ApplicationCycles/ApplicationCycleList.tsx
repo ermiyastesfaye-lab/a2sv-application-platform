@@ -1,7 +1,9 @@
+"use client";
 import { ApplicationCycle } from "@/types/applicationCycle";
 import {
   useActivateCycleMutation,
   useDeleteCycleMutation,
+  useDeactivateCycleMutation,
 } from "@/lib/redux/slices/adminSlice";
 import { useRouter } from "next/navigation";
 import React from "react";
@@ -18,6 +20,8 @@ const ApplicationCycleList: React.FC<ApplicationCycle> = ({
   const [activateCycle, { isLoading: isActivating }] =
     useActivateCycleMutation();
   const [deleteCycle, { isLoading: isDeleting }] = useDeleteCycleMutation();
+  const [deactivateCycle, { isLoading: isDeactiving }] =
+    useDeactivateCycleMutation();
 
   const handleActivate = async () => {
     try {
@@ -42,29 +46,43 @@ const ApplicationCycleList: React.FC<ApplicationCycle> = ({
       console.log("Deletion failed", error);
     }
   };
+  const handleClose = async () => {
+    try {
+      await deactivateCycle({ cycleId: id }).unwrap();
+      refetchCycles();
+      console.log("Cycle deactivated");
+    } catch (error) {
+      console.log("Deactivation failed", error);
+    }
+  };
 
   return (
     <div className="p-5 bg-white rounded-lg shadow-xl">
       <div className="flex justify-between items-center">
         <h3 className="font-semibold text-gray-900">{name}</h3>
 
-        <section className="flex flex-row flex-nowrap items-center gap-1">
+        <section className="flex flex-row flex-nowrap items-center gap-1 px-2">
           <button
             onClick={handleUpdateCycle}
-            className="text-xs font-medium px-2 py-1  bg-green-400 rounded-md"
+            className="text-xs font-medium px-2 py-1 hover:bg-blue-300 rounded-md bg-blue-200"
           >
-            {" "}
             Update
           </button>
           <button
-            onClick={close ? handleActivate : handleDelete}
-            className={`text-xs font-medium px-2 py-1  rounded-md ${
+            onClick={close ? handleActivate : handleClose}
+            className={`text-xs font-medium px-2 py-1 rounded-md ${
               close
-                ? `bg-[#4F46E5] hover:bg-indigo-700`
-                : `bg-orange-500 hover:bg-orange-700`
-            } text-white`}
+                ? "bg-emerald-100 text-emerald-800 hover:bg-emerald-200"
+                : "bg-orange-100 text-orange-800 hover:bg-orange-200"
+            }`}
           >
-            {close ? "Open" : "Delete"}
+            {close ? "Open" : "Close"}
+          </button>
+          <button
+            onClick={handleDelete}
+            className="text-xs font-medium px-2 py-1 bg-red-200 rounded-md hover:bg-red-300"
+          >
+            Delete
           </button>
         </section>
       </div>
@@ -90,5 +108,4 @@ const ApplicationCycleList: React.FC<ApplicationCycle> = ({
     </div>
   );
 };
-
 export default ApplicationCycleList;

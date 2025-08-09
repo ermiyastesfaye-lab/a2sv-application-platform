@@ -15,11 +15,9 @@ export default function Home({ params }: PageProps) {
       <div className="w-full max-w-5xl grid items-start gap-6">
         <div className="flex flex-col gap-2">
           <h1 className="font-bold text-xl sm:text-2xl md:text-3xl">
-            Create new cycle
+            Update cycle
           </h1>
-          <p className="text-gray-500">
-            Use this form to create a new cycle and assign periods.
-          </p>
+          <p className="text-gray-500">Use this form to edit a cycle.</p>
         </div>
         <EditCycleForm editCycleId={id} />
       </div>
