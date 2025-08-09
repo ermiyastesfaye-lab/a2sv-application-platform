@@ -1,13 +1,50 @@
+import { useState } from "react";
+import { useUpdateProfileMutation } from "@/lib/redux/api/profileApi";
 import Input from "./Input";
 
-const InfoForm = () => {
+interface UserProfile {
+  id: string;
+  full_name: string;
+  email: string;
+  role: string;
+  profile_picture_url?: string | null;
+}
+
+interface InfoFormProps {
+  userProfile?: UserProfile;
+}
+
+const InfoForm = ({ userProfile }: InfoFormProps) => {
+  const [updateProfile, { isLoading }] = useUpdateProfileMutation();
+  const [formData, setFormData] = useState({
+    full_name: userProfile?.full_name || "",
+    email: userProfile?.email || "",
+  });
+
+  const handleInputChange = (field: string, value: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await updateProfile(formData).unwrap();
+      alert("Profile updated successfully!");
+    } catch (error) {
+      alert("Error updating profile. Please try again.");
+    }
+  };
+
   return (
     <div className="border-t border-gray-200 pt-6">
       <h2 className="text-lg font-semibold text-gray-900 mb-4">
         Personal Information
       </h2>
 
-      <div className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label
             htmlFor="fullName"
@@ -15,7 +52,12 @@ const InfoForm = () => {
           >
             Full name
           </label>
-          <Input type="text" id="fullName" defaultValue="Abebe Kebede" />
+          <Input
+            type="text"
+            id="fullName"
+            value={formData.full_name}
+            onChange={(e) => handleInputChange("full_name", e.target.value)}
+          />
         </div>
 
         <div>
@@ -25,7 +67,12 @@ const InfoForm = () => {
           >
             Email address
           </label>
-          <Input type="email" id="email" defaultValue="abe@a2sv.org" />
+          <Input
+            type="email"
+            id="email"
+            value={formData.email}
+            onChange={(e) => handleInputChange("email", e.target.value)}
+          />
         </div>
 
         <div>
@@ -38,18 +85,22 @@ const InfoForm = () => {
           <Input
             type="text"
             id="role"
-            defaultValue="Applicant"
+            value={userProfile?.role || ""}
             disabled
             className="w-full px-3 py-1 border border-gray-100 rounded-xl text-gray-500 cursor-not-allowed"
           />
         </div>
-      </div>
 
-      <div className="flex justify-end mt-6 bg-gray-50 text-black">
-        <button className="px-4 py-2 bg-[#4f46e5] text-white rounded-lg font-medium transition-colors cursor-pointer hover:bg-[#4338ca]">
-          Save Changes
-        </button>
-      </div>
+        <div className="flex justify-end mt-6 bg-gray-50 text-black">
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="px-4 py-2 bg-[#4f46e5] text-white rounded-lg font-medium transition-colors cursor-pointer hover:bg-[#4338ca] disabled:bg-gray-400"
+          >
+            {isLoading ? "Saving..." : "Save Changes"}
+          </button>
+        </div>
+      </form>
     </div>
   );
 };
