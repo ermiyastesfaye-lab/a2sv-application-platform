@@ -34,7 +34,7 @@ const AdminDashboard = () => {
             </p>
 
             <Link
-              href="/admin/users"
+              href="/dashboard/admin/usermanagment"
               className="text-indigo-600 text-sm hover:text-indigo-900"
             >
               Go to Users →
@@ -54,7 +54,7 @@ const AdminDashboard = () => {
             </p>
 
             <Link
-              href="/admin/cycles"
+              href="/dashboard/admin/applicationCycle"
               className="text-indigo-600 text-sm hover:text-indigo-900"
             >
               Go to Cycles →

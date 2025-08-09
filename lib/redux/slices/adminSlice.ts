@@ -1,13 +1,15 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import {
+  CreateCycleRequest,
+  CycleResponse,
+} from "@/lib/types/applicationCycles";
 
 export const adminApi = createApi({
   reducerPath: "adminApi",
   baseQuery: fetchBaseQuery({
     baseUrl: "https://a2sv-application-platform-backend-team1.onrender.com/",
     prepareHeaders: (headers) => {
-      const token =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiMTg0NjFkMS03YTE2LTRkYzUtOTliNS0wNmNlMzY4NTYwMDAiLCJleHAiOjE3NTQ1NTk0MjgsInR5cGUiOiJhY2Nlc3MifQ.XHKhT6RTdKnJrhk8jdNyGle-4InKQiPrLXbhb5Syls0";
-
+      const token = localStorage.getItem("token");
       if (token) {
         headers.set("Authorization", `Bearer ${token}`);
         headers.set("Accept", "application/json");
@@ -16,8 +18,41 @@ export const adminApi = createApi({
     },
   }),
   endpoints: (builder) => ({
+    createCycle: builder.mutation<
+      { success: boolean; data: CycleResponse },
+      CreateCycleRequest
+    >({
+      query: (newCycle) => ({
+        url: "/admin/cycles",
+        method: "POST",
+        body: newCycle,
+      }),
+    }),
+    activateCycle: builder.mutation<
+      { success: boolean; message: string },
+      { cycleId: string }
+    >({
+      query: ({ cycleId }) => ({
+        url: `/admin/cycles/${cycleId}/activate`,
+        method: "PATCH",
+      }),
+    }),
+
+    deleteCycle: builder.mutation<
+      { success: boolean; message: string },
+      { cycleId: string }
+    >({
+      query: ({ cycleId }) => ({
+        url: `/admin/cycles/${cycleId}`,
+        method: "DELETE",
+      }),
+    }),
     getAllUsers: builder.query({
       query: ({ page = 1, limit = 5 }) =>
+        `admin/users?page=${page}&limit=${limit}`,
+    }),
+    getAllUserNoFilter: builder.query({
+      query: ({ page = 1, limit = 100 }) =>
         `admin/users?page=${page}&limit=${limit}`,
     }),
     getUserById: builder.query({
@@ -43,13 +78,29 @@ export const adminApi = createApi({
         body: { ...userData },
       }),
     }),
+    editCycle: builder.mutation({
+      query: ({ id, ...cycleData }) => ({
+        url: `admin/cycles/${id}`,
+        method: "PUT",
+        body: { ...cycleData },
+      }),
+    }),
+    getCycleById: builder.query({
+      query: (id) => `/cycles/${id}`,
+    }),
   }),
 });
 
 export const {
+  useCreateCycleMutation,
   useGetAllUsersQuery,
+  useGetAllUserNoFilterQuery,
   useGetUserByIdQuery,
   useCreateUserMutation,
   useUpdateUserMutation,
   useDeleteUserMutation,
+  useEditCycleMutation,
+  useGetCycleByIdQuery,
+  useActivateCycleMutation,
+  useDeleteCycleMutation,
 } = adminApi;

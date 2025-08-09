@@ -1,7 +1,8 @@
 
 "use client";
 import { useForm } from "react-hook-form";
-import { StartApplicationForm } from "./types";
+import { StartApplicationForm } from "../../../types";
+import { useEffect } from "react";
 
 interface Props {
   data: StartApplicationForm;
@@ -19,6 +20,7 @@ export default function Step2CodingProfiles({
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<StartApplicationForm>({
     defaultValues: {
@@ -27,6 +29,9 @@ export default function Step2CodingProfiles({
      
     },
   });
+    useEffect(() => {
+      reset(data);
+    }, [data, reset]);
 
   const onSubmit = (formData: StartApplicationForm) => {
     setData({ ...data, ...formData });

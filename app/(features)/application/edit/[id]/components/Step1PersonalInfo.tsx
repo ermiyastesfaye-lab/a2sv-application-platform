@@ -1,7 +1,8 @@
 
 "use client";
 import { useForm } from "react-hook-form";
-import { StartApplicationForm } from "./types";
+import { StartApplicationForm } from "../../../types";
+import { useEffect } from "react";
 
 interface Props {
   data: StartApplicationForm;
@@ -13,15 +14,19 @@ export default function Step1PersonalInfo({ data, setData, next }: Props) {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<StartApplicationForm>({
     defaultValues: {
       student_id: data.student_id,
       school: data.school,
       degree: data.degree,
-      country: data.country, 
+      country: data.country,
     },
   });
+  useEffect(() => {
+    reset(data);
+  }, [data, reset]);
 
   const onSubmit = (formData: StartApplicationForm) => {
     setData({ ...data, ...formData });

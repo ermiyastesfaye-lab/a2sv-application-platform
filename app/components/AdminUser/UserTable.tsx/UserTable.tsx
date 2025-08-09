@@ -1,7 +1,7 @@
 "use client";
 import { useDeleteUserMutation } from "@/lib/redux/slices/adminSlice";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 interface User {
   id: number;
@@ -18,11 +18,23 @@ interface UserTableProps {
 const UserTable = ({ users }: UserTableProps) => {
   const router = useRouter();
   const [deleteUser] = useDeleteUserMutation();
+  const [displayedUsers, setDisplayedUsers] = useState<User[]>([]);
+  useEffect(() => {
+    setDisplayedUsers(users);
+  }, [users]);
+
   const handleDelete = async (id: any) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this user? This action cannot be undone."
+    );
+
+    if (!confirmDelete) return;
     try {
       const response = await deleteUser(id);
       console.log(response);
+      setDisplayedUsers((prev) => prev.filter((u) => u.id !== id));
     } catch (error) {
+      alert("Failed to Delete User");
       console.error("Failed to Delete User", error);
     }
   };
@@ -39,7 +51,7 @@ const UserTable = ({ users }: UserTableProps) => {
           </tr>
         </thead>
         <tbody>
-          {users.map((user) => (
+          {displayedUsers.map((user) => (
             <tr key={user.id} className="border-b border-gray-200">
               <td className="px-4 py-3 flex items-center gap-3">
                 <img
