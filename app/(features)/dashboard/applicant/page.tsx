@@ -2,7 +2,7 @@
 import {
   useGetApplicationStatusQuery,
   useGetCyclesClientQuery,
-  useGetProfileQuery,
+  useGetProfileQuery,  
 } from "@/lib/redux/api/clientApi";
 import WelcomePage from "./components/WelcomePage";
 import StatusPage from "./components/StatusPage";
@@ -37,7 +37,7 @@ export default function ApplicantDashboardPage() {
     return (
       <WelcomePage
         userName={name}
-        profileCompletion={20}
+        profileCompletion={75}
         applicationCycle={activeCycle?.name || "No Active Cycle"}
         checklist={[
           { label: "Create an Account", completed: true },

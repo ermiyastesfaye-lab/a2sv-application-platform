@@ -1,26 +1,26 @@
 'use client';
 import { useState } from "react";
-import { ApplicationFormValues } from "./types";
+import { StartApplicationForm } from "./types";
 import Step1 from "./Step1PersonalInfo";
 import Step2 from "./Step2CodingProfiles";
 import Step3 from "./Step3EssaysResume";
 import Progress from "./Progress";
 
-const defaultValues: ApplicationFormValues = {
-  idNumber: "",
-  university: "",
+const defaultValues: StartApplicationForm = {
+  student_id: "",
+  school: "",
   degree: "",
-  codeforces: "",
-  leetcode: "",
-  github: "",
-  essay1: "",
-  essay2: "",
-  resume: null,
+  codeforces_handle: "",
+  leetcode_handle: "",
+  essay_why_a2sv: "",
+  essay_about_you: "",
+  country: "",
+  resume: null as unknown as File, 
 };
 
 export default function ApplicationForm() {
   const [step, setStep] = useState(1);
-  const [formData, setFormData] = useState<ApplicationFormValues>(defaultValues);
+  const [formData, setFormData] = useState<StartApplicationForm>(defaultValues);
 
   const next = () => setStep((prev) => prev + 1);
   const back = () => setStep((prev) => prev - 1);

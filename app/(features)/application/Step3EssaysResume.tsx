@@ -1,5 +1,4 @@
 "use client";
-
 import { StartApplicationForm } from "./types";
 import { useForm } from "react-hook-form";
 import { useCreateApplicationMutation } from "@/lib/redux/api/clientApi";
@@ -32,36 +31,48 @@ export default function Step3EssaysResume({ data, setData, back }: Props) {
     }
   };
 
-const onSubmit = async () => {
-  if (!data.resume) {
-    alert("Please upload your resume.");
-    return;
-  }
+  const onSubmit = async () => {
+    if (!data.resume) {
+      alert("Please upload your resume.");
+      return;
+    }
+    
+    if(typeof data?.resume !== "string"){
+       if (!data.resume.name.endsWith(".pdf")) {
+         alert("Only PDF files are accepted for resumes.");
+         return;
+       }
+       const maxSize = 5 * 1024 * 1024;
+       if (data.resume.size > maxSize) {
+         alert("Resume file size must be less than 5MB");
+         return;
+       }
+    }
 
-  const formData = new FormData();
-  formData.append("resume", data.resume);
-  formData.append("school", data.school);
-  formData.append("degree", data.degree);
-  formData.append("student_id", data.student_id);
-  formData.append("leetcode_handle", data.leetcode_handle);
-  formData.append("codeforces_handle", data.codeforces_handle);
-  formData.append("essay_why_a2sv", data.essay_why_a2sv);
-  formData.append("essay_about_you", data.essay_about_you);
-  formData.append("country", data.country); 
+    const formData = new FormData();
+    formData.append("resume", data.resume);
+    formData.append("school", data.school);
+    formData.append("degree", data.degree);
+    formData.append("student_id", data.student_id);
+    formData.append("leetcode_handle", data.leetcode_handle);
+    formData.append("codeforces_handle", data.codeforces_handle);
+    formData.append("essay_why_a2sv", data.essay_why_a2sv);
+    formData.append("essay_about_you", data.essay_about_you);
+    formData.append("country", data.country);
 
-  for (let [key, value] of formData.entries()) {
-    console.log(`${key}:`, value);
-  }
+    // for (let [key, value] of formData.entries()) {
+    //   console.log(`${key}:`, value);
+    // }
 
-  try {
-    await startApplication(formData).unwrap(); 
-    alert("Application submitted successfully!");
-    router.push("/dashboard/applicant");
-  } catch (error) {
-    alert("Submission failed.");
-    console.error(error);
-  }
-};
+    try {
+      await startApplication(formData).unwrap();
+      alert("Application submitted successfully!");
+      router.push("/dashboard/applicant");
+    } catch (error) {
+      alert("Submission failed.");
+      console.error(error);
+    }
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -146,7 +157,7 @@ const onSubmit = async () => {
             type="submit"
             disabled={isLoading}
           >
-            {isLoading ? "Submitting..." : "Submit"}
+            {isLoading ? "Creating..." : "Create"}
           </button>
         </div>
       </div>

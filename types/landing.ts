@@ -1,4 +1,3 @@
-
 export interface JourneyStep {
     logo: string; 
     phase:string
