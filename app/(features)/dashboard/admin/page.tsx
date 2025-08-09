@@ -1,10 +1,14 @@
-
+"use client";
 import Link from "next/link";
 import React from "react";
+import {
+  useGetAllUsersQuery,
+  useGetAnalyticesQuery,
+} from "@/lib/redux/slices/adminSlice";
+
+import { useGetActiveCyclesQuery } from "@/lib/redux/api/applicationCyclesApi";
 
 const AdminDashboard = () => {
-  
-  const totalUsers = 125;
   const totalApplicants = 1204;
   const activeCycles = 1;
   const recentActivities = [
@@ -18,6 +22,23 @@ const AdminDashboard = () => {
     },
   ];
 
+  const { data, isLoading, isError } = useGetAllUsersQuery({
+    page: 1,
+    limit: 5,
+  });
+
+  const {
+    data: totalApplicant,
+    isLoading: isLoadingApplicant,
+    isError: isErrorApplicant,
+  } = useGetAnalyticesQuery({});
+
+  const {
+    data: totalActiveCycles,
+    isLoading: isLoadingActiveCycles,
+    isError: isErrorActiveCycles,
+  } = useGetActiveCyclesQuery({});
+
   return (
     <main className="md:w-4xl mx-auto mt-3 p-4 flex flex-col gap-4 text-[#0a0a0a]">
       <h1 className="font-bold text-2xl">Admin Command Center</h1>
@@ -25,7 +46,13 @@ const AdminDashboard = () => {
         <section className="flex flex-col gap-4">
           <div className="bg-gradient-to-r from-indigo-600 to-purple-500 rounded-lg p-4 text-white shadow-lg">
             <p className="text-sm">Total Users</p>
-            <span className="text-lg font-semibold">{totalUsers}</span>
+            <span className="text-lg font-semibold">
+              {isLoading
+                ? "Loading..."
+                : isError
+                ? "Failed to load"
+                : data?.data?.total_count ?? 0}
+            </span>
           </div>
           <div className="bg-white rounded p-4 min-h-60 shadow-lg">
             <h3 className="font-bold text-lg mb-3">Manage Users</h3>
@@ -45,7 +72,13 @@ const AdminDashboard = () => {
         <section className="flex flex-col gap-4 ">
           <div className="bg-green-600 rounded-lg p-4 text-white shadow-lg">
             <p className="text-sm">Total Applicants (G7)</p>
-            <span className="text-lg font-semibold">{totalApplicants}</span>
+            <span className="text-lg font-semibold">
+              {isLoadingApplicant
+                ? "Loading..."
+                : isErrorApplicant
+                ? "Failed to load"
+                : totalApplicant?.data?.total_applicants ?? 0}
+            </span>
           </div>
           <div className="bg-white rounded p-4 min-h-60 shadow-lg">
             <h3 className="font-bold text-lg mb-3">Manage Cycles</h3>
@@ -65,7 +98,13 @@ const AdminDashboard = () => {
         <section className="flex flex-col gap-4">
           <div className="bg-amber-500 rounded-lg p-4 text-white shadow-lg">
             <p className="text-sm">Active Cycles</p>
-            <span className="text-lg font-semibold">{activeCycles}</span>
+            <span className="text-lg font-semibold">
+              {isLoadingActiveCycles
+                ? "Loading..."
+                : isErrorActiveCycles
+                ? "Failed to load"
+                : totalActiveCycles?.data?.total_count ?? 0}
+            </span>
           </div>
           <div className="bg-white rounded p-4 min-h-60 shadow-lg">
             <h3 className="font-bold text-lg mb-3">Recent Admin Activities</h3>
