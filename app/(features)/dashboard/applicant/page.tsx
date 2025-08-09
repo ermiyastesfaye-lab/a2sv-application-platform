@@ -2,7 +2,7 @@
 import {
   useGetApplicationStatusQuery,
   useGetCyclesClientQuery,
-  useGetProfileQuery,
+  useGetProfileQuery,  
 } from "@/lib/redux/api/clientApi";
 import WelcomePage from "./components/WelcomePage";
 import StatusPage from "./components/StatusPage";
