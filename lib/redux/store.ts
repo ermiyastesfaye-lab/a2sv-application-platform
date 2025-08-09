@@ -17,6 +17,7 @@ import profileReducer from "./slices/profileSlice";
 
 import { applicationsApi } from "./api/clientApi";
 
+
 import { analyticsApi } from "./api/analyticsApi";
 
 export const store = configureStore({
