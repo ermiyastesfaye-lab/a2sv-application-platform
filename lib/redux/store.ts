@@ -10,6 +10,14 @@ import { managersApi } from "./api/managerApi";
 
 import { applicationsApi } from "./api/clientApi";
 
+import { reviewerApi } from "./api/reviewerApi";
+import { profileApi } from "./api/profileApi";
+import reviewerReducer from "./slices/reviewerSlice";
+import profileReducer from "./slices/profileSlice";
+
+import { applicationsApi } from "./api/clientApi";
+
+import { analyticsApi } from "./api/analyticsApi";
 
 export const store = configureStore({
   reducer: {
@@ -17,7 +25,14 @@ export const store = configureStore({
     [authApi.reducerPath]: authApi.reducer,
     [adminApi.reducerPath]: adminApi.reducer,
     [cyclesApi.reducerPath]: cyclesApi.reducer,
-    [managersApi.reducerPath]:managersApi.reducer,
+    [managersApi.reducerPath]: managersApi.reducer,
+
+    [reviewerApi.reducerPath]: reviewerApi.reducer,
+    [profileApi.reducerPath]: profileApi.reducer,
+    reviewer: reviewerReducer,
+    profile: profileReducer,
+
+    [analyticsApi.reducerPath]: analyticsApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -25,8 +40,13 @@ export const store = configureStore({
       adminApi.middleware,
       cyclesApi.middleware,
       managersApi.middleware,
-      applicationsApi.middleware
+      applicationsApi.middleware,
 
+      reviewerApi.middleware,
+      profileApi.middleware,
+
+      applicationsApi.middleware,
+      analyticsApi.middleware
     ),
 });
 
