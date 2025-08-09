@@ -1,10 +1,11 @@
+
 "use client";
 import { useForm } from "react-hook-form";
-import { ApplicationFormValues } from "./types";
+import { StartApplicationForm } from "./types";
 
 interface Props {
-  data: ApplicationFormValues;
-  setData: (d: ApplicationFormValues) => void;
+  data: StartApplicationForm;
+  setData: (d: StartApplicationForm) => void;
   next: () => void;
 }
 
@@ -13,15 +14,16 @@ export default function Step1PersonalInfo({ data, setData, next }: Props) {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<ApplicationFormValues>({
+  } = useForm<StartApplicationForm>({
     defaultValues: {
-      idNumber: data.idNumber,
-      university: data.university,
+      student_id: data.student_id,
+      school: data.school,
       degree: data.degree,
+      country: data.country, 
     },
   });
 
-  const onSubmit = (formData: ApplicationFormValues) => {
+  const onSubmit = (formData: StartApplicationForm) => {
     setData({ ...data, ...formData });
     next();
   };
@@ -30,17 +32,21 @@ export default function Step1PersonalInfo({ data, setData, next }: Props) {
     <form onSubmit={handleSubmit(onSubmit)} className="">
       <div className="px-6 mb-4">
         <p className="text-black mb-3">Personal Information</p>
+
+        {/* Row 1: ID + School */}
         <div className="flex mb-4 gap-4">
           {/* ID Number */}
           <div>
-            <label htmlFor="idNumber">ID Number</label>
+            <label htmlFor="student_id">ID Number</label>
             <input
               className="input rounded p-1 shadow-gray-400 shadow-xs"
-              id="idNumber"
-              {...register("idNumber", { required: "ID Number is required" })}
+              id="student_id"
+              {...register("student_id", { required: "ID Number is required" })}
             />
-            {errors.idNumber && (
-              <p className="text-red-500 text-sm">{errors.idNumber.message}</p>
+            {errors.student_id && (
+              <p className="text-red-500 text-sm">
+                {errors.student_id.message}
+              </p>
             )}
           </div>
 
@@ -50,28 +56,44 @@ export default function Step1PersonalInfo({ data, setData, next }: Props) {
             <input
               className="input rounded p-1 shadow-gray-400 shadow-xs"
               id="university"
-              {...register("university", {
+              {...register("school", {
                 required: "University is required",
               })}
             />
-            {errors.university && (
-              <p className="text-red-500 text-sm">
-                {errors.university.message}
-              </p>
+            {errors.school && (
+              <p className="text-red-500 text-sm">{errors.school.message}</p>
             )}
           </div>
         </div>
 
-        {/* Degree Program */}
-        <label htmlFor="degree">Degree Program</label>
-        <input
-          className="w-full input rounded p-1 shadow-gray-400 shadow-xs"
-          id="degree"
-          {...register("degree", { required: "Degree is required" })}
-        />
-        {errors.degree && (
-          <p className="text-red-500 text-sm">{errors.degree.message}</p>
-        )}
+        {/* Row 2: Degree + Country */}
+        <div className="flex mb-4 gap-4">
+          {/* Degree Program */}
+          <div>
+            <label htmlFor="degree">Degree Program</label>
+            <input
+              className="input w-full rounded p-1 shadow-gray-400 shadow-xs"
+              id="degree"
+              {...register("degree", { required: "Degree is required" })}
+            />
+            {errors.degree && (
+              <p className="text-red-500 text-sm">{errors.degree.message}</p>
+            )}
+          </div>
+
+          {/* Country */}
+          <div>
+            <label htmlFor="country">Country</label>
+            <input
+              className="input w-full rounded p-1 shadow-gray-400 shadow-xs"
+              id="country"
+              {...register("country", { required: "Country is required" })}
+            />
+            {errors.country && (
+              <p className="text-red-500 text-sm">{errors.country.message}</p>
+            )}
+          </div>
+        </div>
       </div>
 
       <div className="flex justify-end bg-gray-100 py-3 mt-2">
