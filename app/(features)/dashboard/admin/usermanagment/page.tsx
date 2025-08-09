@@ -1,31 +1,71 @@
 "use client";
 import AdminUser from "@/app/components/AdminUser";
-import React from "react";
 import Button from "@/app/components/Butt";
 import UserTable from "@/app/components/AdminUser/UserTable.tsx/UserTable";
-import { useGetAllUsersQuery } from "@/lib/redux/slices/adminSlice";
+import { useGetAllUserNoFilterQuery } from "@/lib/redux/slices/adminSlice";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import PaginationControls from "@/app/components/ApplicationCycles/PaginationControls";
+import LoadingPage from "@/app/components/LoadingPage";
+import ErrorPage from "../../applicant/components/ErrorPage";
 
 const UserManagment = () => {
+  const [search, setSearch] = useState("");
+  const [role, setRole] = useState("All Roles");
+  const roles = ["All Roles", "Admin", "Reviewer", "Manager"];
   const [page, setCurrentPage] = useState(1);
   const limit = 5;
-  const { data, isLoading, isError } = useGetAllUsersQuery({
-    page: page,
-    limit: limit,
+  const {
+    data: allUsersData,
+    isLoading,
+    isError,
+  } = useGetAllUserNoFilterQuery({
+    page: 1,
+    limit: 1000,
   });
-  const users = data?.data.users || [];
-  const totalCount = data?.data.total_count || 0;
-  // console.log(data?.data);
+  const allUsers = allUsersData?.data.users || [];
+  const filteredUsers = useMemo(() => {
+    return allUsers.filter((user: any) => {
+      const matchesSearch =
+        user.full_name.toLowerCase().includes(search.toLowerCase()) ||
+        user.email.toLowerCase().includes(search.toLowerCase());
+
+      const matchesRole =
+        role === "All Roles"
+          ? true
+          : user.role.toLowerCase() === role.toLowerCase();
+
+      return matchesSearch && matchesRole;
+    });
+  }, [allUsers, search, role]);
+
+  const paginatedUsers = useMemo(() => {
+    const start = (page - 1) * limit;
+    return filteredUsers.slice(start, start + limit);
+  }, [filteredUsers, page, limit]);
+  const totalPages = Math.ceil(filteredUsers.length / limit);
+
+  console.log(allUsers);
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value);
+    setCurrentPage(1);
+  };
+
+  const handleRoleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setRole(e.target.value);
+    setCurrentPage(1);
+  };
+
   const handlePageChange = (page: number) => {
-    if (page >= 1 && page <= Math.ceil(totalCount / limit)) {
+    if (page >= 1 && page <= totalPages) {
+      console.log(page);
       setCurrentPage(page);
     }
   };
 
   const router = useRouter();
-
+  if (isError) return <ErrorPage />;
   return (
     <AdminUser
       title="User Management"
@@ -41,18 +81,32 @@ const UserManagment = () => {
         <input
           type="text"
           placeholder="Search users by name or email..."
+          value={search}
+          onChange={handleSearchChange}
           className="w-full border rounded-lg border-gray-200 p-2 text-sm outline-none focus:border-gray-400"
         />
-        <button className="shrink-0 bg-indigo-100 px-8 py-2 rounded-lg hover:bg-indigo-300">
-          All Roles
-        </button>
+        <select
+          value={role}
+          onChange={handleRoleChange}
+          className="shrink-0 bg-indigo-100 px-4 py-2 rounded-lg outline-none"
+        >
+          {roles.map((r) => (
+            <option
+              className="bg-white outline-none hover:bg-indigo-100"
+              key={r}
+              value={r}
+            >
+              {r}
+            </option>
+          ))}
+        </select>
       </div>
 
-      {users && <UserTable users={users} />}
+      {isLoading ? <LoadingPage /> : <UserTable users={paginatedUsers} />}
       <PaginationControls
         currentPage={page}
         onPageChange={handlePageChange}
-        totalPages={Math.ceil(totalCount / limit)}
+        totalPages={totalPages}
       />
     </AdminUser>
   );
