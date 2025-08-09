@@ -4,7 +4,18 @@ export interface CreateCycleRequest {
     end_date: string;
     country?: string; 
   }
-  
+  {
+    "success": true,
+    "data": {
+        "id": 1,
+        "name": "G7 Intake",
+        "start_date": "2025-07-18",
+        "end_date": "2025-07-19",
+        "is_active": true,
+        "created_at": "2025-07-25T23:04:47.117922+03:00"
+    },
+    "message": "Cycle G7 Intake is now active."
+}
   export interface CycleResponse {
     id: number;
     name: string;
@@ -33,7 +44,7 @@ export interface CreateCycleRequest {
   }
   
   export interface GetCycleResponse {
-    success: boolean;
+  success: boolean;
   data: CycleData;
   message: string;
   }

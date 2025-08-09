@@ -30,7 +30,7 @@ const ApplicationCycleList: React.FC<ApplicationCycle> = ({
   };
   const router = useRouter();
   const handleUpdateCycle = () => {
-    router.push(`/editApplicationCycle/${id}`);
+    router.push(`/dashboard/admin/editApplicationCycle/${id}`);
   };
 
   const handleDelete = async () => {
