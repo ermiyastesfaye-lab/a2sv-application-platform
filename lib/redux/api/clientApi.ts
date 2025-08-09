@@ -11,7 +11,7 @@ import type {
 export const applicationsApi = createApi({
   reducerPath: "applicationsApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: process.env.NEXT_PUBLIC_API_URL,
+    baseUrl: "https://a2sv-application-platform-backend-team1.onrender.com/",
     prepareHeaders: (headers, { getState }) => {
       const token = localStorage.getItem("token");
       if (token) headers.set("Authorization", `Bearer ${token}`);
@@ -32,7 +32,8 @@ export const applicationsApi = createApi({
 
     updateApplication: builder.mutation<
       ApplicationResponse,
-      { id: string; body: FormData }>({
+      { id: string; body: FormData }
+    >({
       query: ({ id, body }) => ({
         url: `/applications/${id}`,
         method: "PUT",
@@ -44,7 +45,6 @@ export const applicationsApi = createApi({
       query: (id) => `/applications/${id}`,
       providesTags: ["Application"],
     }),
-
 
     getApplicationStatus: builder.query<ApplicationStatusResponse, void>({
       query: () => "applications/my-status",
