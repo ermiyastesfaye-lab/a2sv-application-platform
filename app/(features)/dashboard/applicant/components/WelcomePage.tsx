@@ -1,5 +1,4 @@
 "use client";
-
 import Link from "next/link";
 import React from "react";
 import { CiCircleCheck } from "react-icons/ci";
@@ -67,7 +66,6 @@ const ApplicationDashboard = ({
             </Link>
           </section>
 
-          {/* Application Checklist */}
           <section className="bg-white p-5 rounded-lg shadow-lg">
             <h3 className="font-bold text-lg mb-3">Application Checklist</h3>
             <ul className="text-sm text-gray-500 flex flex-col gap-2">
@@ -86,7 +84,7 @@ const ApplicationDashboard = ({
             </ul>
           </section>
 
-          {/* Resources */}
+        
           <section className="bg-white p-5 rounded-lg shadow-lg mb-24">
             <h3 className="font-bold text-lg mb-3">Helpful Resources</h3>
             <div className="flex flex-col gap-1">
