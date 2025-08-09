@@ -34,7 +34,7 @@ const HeroSection = () => {
             fast-tracked to a software engineering career at the world's leading
             tech companies.
           </h3>
-        <StartButton/>
+          <StartButton />
         </div>
       </div>
     </section>

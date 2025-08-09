@@ -1,7 +1,7 @@
 "use client";
 import CycleForm from "@/app/components/CreateApplicationCycle";
 import { useRouter } from "next/navigation";
-import { ArrowLeft } from "lucide-react"; // import icon
+import { ArrowLeft } from "lucide-react";
 
 export default function Home() {
   const router = useRouter();
@@ -9,16 +9,14 @@ export default function Home() {
   return (
     <section className="p-4 sm:p-12 flex justify-center">
       <div className="w-full max-w-5xl grid items-start gap-6">
-        {/* Back button */}
         <button
           onClick={() => router.push("/dashboard/admin/applicationCycle")}
           className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 w-fit"
         >
-          <ArrowLeft size={18} /> {/* icon instead of ← */}
+          <ArrowLeft size={18} />
           Back to Application Cycles
         </button>
 
-        {/* Title & description */}
         <div className="flex flex-col gap-2">
           <h1 className="font-bold text-xl sm:text-2xl md:text-3xl">
             Create new cycle
@@ -28,7 +26,6 @@ export default function Home() {
           </p>
         </div>
 
-        {/* Form */}
         <CycleForm />
       </div>
     </section>

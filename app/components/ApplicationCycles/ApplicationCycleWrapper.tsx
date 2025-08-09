@@ -74,6 +74,7 @@ const ApplicationCycleWrapper = () => {
               close={!cycle.is_active}
               id={`${cycle.id}`}
               refetchCycles={refetch}
+              className="w-full max-w-[350px] min-w-[280px] min-h-[180px]"
             />
           ))}
         </div>

@@ -5,7 +5,8 @@ import {
   useDeleteCycleMutation,
   useDeactivateCycleMutation,
 } from "@/lib/redux/slices/adminSlice";
-import { useRouter } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import React from "react";
 
 const ApplicationCycleList: React.FC<ApplicationCycle> = ({
@@ -23,6 +24,26 @@ const ApplicationCycleList: React.FC<ApplicationCycle> = ({
   const [deactivateCycle, { isLoading: isDeactiving }] =
     useDeactivateCycleMutation();
 
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const [showSuccess, setShowSuccess] = useState("");
+
+  useEffect(() => {
+    if (
+      searchParams.get("success") === "cycle-created" ||
+      searchParams.get("success") === "cycle-updated"
+    ) {
+      setShowSuccess(searchParams.get("success") || "");
+
+      const timeout = setTimeout(() => {
+        setShowSuccess("");
+        router.replace("/dashboard/admin/applicationCycle");
+      }, 3000);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [searchParams, router]);
+
   const handleActivate = async () => {
     try {
       await activateCycle({ cycleId: id }).unwrap();
@@ -32,7 +53,7 @@ const ApplicationCycleList: React.FC<ApplicationCycle> = ({
       console.error("Activation failed:", error);
     }
   };
-  const router = useRouter();
+
   const handleUpdateCycle = () => {
     router.push(`/dashboard/admin/editApplicationCycle/${id}`);
   };
@@ -57,8 +78,14 @@ const ApplicationCycleList: React.FC<ApplicationCycle> = ({
   };
 
   return (
-    <div className="p-5 bg-white rounded-lg shadow-xl">
-      <div className="flex justify-between items-center">
+    <div className="p-5 bg-white rounded-lg shadow-xl     w-full max-w-[350px] min-w-[280px] min-h-[180px] flex flex-col justify-between">
+      {showSuccess && (
+        <div className="fixed top-5 right-5 z-50 rounded-lg bg-green-500 px-4 py-3 text-white shadow-lg transition-all">
+          Application cycle{" "}
+          {showSuccess === "cycle-created" ? "created" : "updated"} successfully
+        </div>
+      )}
+      <div className="flex justify-between items-center  ">
         <h3 className="font-semibold text-gray-900">{name}</h3>
 
         <section className="flex flex-row flex-nowrap items-center gap-1 px-2">

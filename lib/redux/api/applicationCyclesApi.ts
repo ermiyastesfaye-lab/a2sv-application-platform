@@ -6,12 +6,11 @@ import {  GetCycleResponse } from '@/lib/types/applicationCycles';
 export const cyclesApi = createApi({
   reducerPath: "cyclesApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://a2sv-application-platform-backend-team2.onrender.com/",
+    baseUrl: "https://a2sv-application-platform-backend-team1.onrender.com/",
     prepareHeaders: (headers, { getState }) => {
 
-     
-      const token  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5ZTFlODJiNS1mYWRmLTRiOTEtOGUzNi04N2ViNmViMzE0NWQiLCJleHAiOjE3NTQ3NDM4NzQsInR5cGUiOiJhY2Nlc3MifQ.NUaw9ji-PPwJpZAqz6_2jCm0XPzHm9atJggwXogUxvo'
-      //const token = localStorage.getItem('token');
+
+      const token = localStorage.getItem('token');
       if (token) {
         headers.set("Authorization", `Bearer ${token}`);
       }
@@ -24,7 +23,12 @@ export const cyclesApi = createApi({
         query: ({ page, limit }) => `/cycles?page=${page}&limit=${limit}`,
       }
     ),
+
+    getActiveCycles: builder.query({
+      query: () => `/cycles/active/`,
+    }),
   }),
+
 });
 
-export const { useGetCyclesQuery } = cyclesApi;
+export const { useGetCyclesQuery, useGetActiveCyclesQuery } = cyclesApi;

@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 
 import {
   useGetCycleByIdQuery,
@@ -26,6 +26,8 @@ const EditCycleForm = ({ editCycleId }: EditCycleFormProps) => {
 
   const [dateError, setDateError] = useState("");
 
+  const router = useRouter();
+
   useEffect(() => {
     if (data?.data) {
       reset({
@@ -46,6 +48,7 @@ const EditCycleForm = ({ editCycleId }: EditCycleFormProps) => {
 
     if (start >= end) {
       setDateError("Start date must be earlier than end date.");
+      console.log(dateError);
       return;
     }
 
@@ -59,8 +62,14 @@ const EditCycleForm = ({ editCycleId }: EditCycleFormProps) => {
       }).unwrap();
 
       console.log("Cycle updated successfully", response);
-    } catch (error) {
-      console.error("Error updating cycle:", error);
+      router.push("/dashboard/admin/applicationCycle?success=cycle-updated");
+    } catch (err: any) {
+      if (err?.data?.message === "Cycle with this name already exists.") {
+        setDateError(err.data.message);
+      } else {
+        setDateError("Something went wrong. Please try again.");
+      }
+      console.warn("Error creating cycle:", err);
     }
   };
 
@@ -72,6 +81,10 @@ const EditCycleForm = ({ editCycleId }: EditCycleFormProps) => {
     </div>;
   }
 
+  const handleCancel = () => {
+    setDateError("");
+    reset();
+  };
   return (
     <form
       noValidate
@@ -158,20 +171,20 @@ const EditCycleForm = ({ editCycleId }: EditCycleFormProps) => {
 
       <div className="pt-2">
         {isLoading && <p className="text-sm text-blue-500">Submitting...</p>}
-        {isSuccess && (
+        {/*  {isSuccess && (
           <p className="text-sm text-green-600">Cycle updated successfully!</p>
-        )}
-        {isError && (
+        )} */}
+        {/*   {isError && (
           <p className="text-sm text-rose-500/90">
             Something went wrong. Please try again.
           </p>
-        )}
+        )} */}
       </div>
 
       <div className="bg-[#F9FAFB] -mx-6 -mb-6 px-6 py-4 flex justify-end gap-3">
         <button
           type="button"
-          onClick={() => reset()}
+          onClick={handleCancel}
           className="px-4 py-2 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-100"
         >
           Cancel
