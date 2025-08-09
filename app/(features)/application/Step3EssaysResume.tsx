@@ -157,7 +157,7 @@ export default function Step3EssaysResume({ data, setData, back }: Props) {
             type="submit"
             disabled={isLoading}
           >
-            {isLoading ? "Submitting..." : "Submit"}
+            {isLoading ? "Creating..." : "Create"}
           </button>
         </div>
       </div>

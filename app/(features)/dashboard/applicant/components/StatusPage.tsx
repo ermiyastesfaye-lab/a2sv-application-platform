@@ -1,5 +1,4 @@
 "use client";
-
 import { TimelineItem } from "@/app/components/TimelineItem";
 import { GoCheckCircle } from "react-icons/go";
 import { GrFormSchedule } from "react-icons/gr";
@@ -25,7 +24,6 @@ const ApplicantStatusPage = ({ status: initialStatus }: StatusPageProps) => {
   } = useGetApplicationStatusQuery();
 
   const applicationId = statusResponse?.data?.id;
-
   const {
     data: detailsResponse,
     isLoading: detailsLoading,
@@ -38,30 +36,7 @@ const ApplicantStatusPage = ({ status: initialStatus }: StatusPageProps) => {
   const applicationData = detailsResponse?.data || statusResponse?.data;
  
 
-  // const getTimelineStages = (status: string) => ({
-  //   isInProgress: {
-  //     isCompleted: false,
-  //     isCurrent: status === "in_progress",
-  //   },
-  //   isSubmitted: {
-  //     isCompleted: ["pending_review", "interview", "decision_made"].includes(
-  //       status
-  //     ),
-  //     isCurrent: status === "submitted",
-  //   },
-  //   isUnderReview: {
-  //     isCompleted: ["interview", "decision_made"].includes(status),
-  //     isCurrent: status === "pending_review",
-  //   },
-  //   isInterview: {
-  //     isCompleted: status === "decision_made",
-  //     isCurrent: status === "interview",
-  //   },
-  //   isDecisionMade: {
-  //     isCompleted: false,
-  //     isCurrent: status === "decision_made",
-  //   },
-  // });
+
   const getTimelineStages = (status: string) => ({
     isInProgress: {
       isCompleted: [
@@ -234,9 +209,9 @@ const ApplicantStatusPage = ({ status: initialStatus }: StatusPageProps) => {
                 Thank you for submitting your application! The team will review
                 it and notify you of the next steps.
               </p>
-              <a href="#" className="text-[15px] underline text-white">
+              <Link href="#" className="text-[15px] underline text-white">
                 Learn what happens next →
-              </a>
+              </Link>
             </section>
           )}
 
@@ -251,9 +226,9 @@ const ApplicantStatusPage = ({ status: initialStatus }: StatusPageProps) => {
                 problem-solving skills on platforms like LeetCode and
                 Codeforces.
               </p>
-              {/* <a href="#" className="text-[15px] underline">
+              <Link href="#" className="text-[15px]">
                 Read our interview prep guide →
-              </a> */}
+              </Link>
             </section>
           )}
 
