@@ -51,6 +51,10 @@ export const adminApi = createApi({
       query: ({ page = 1, limit = 5 }) =>
         `admin/users?page=${page}&limit=${limit}`,
     }),
+    getAllUserNoFilter: builder.query({
+      query: ({ page = 1, limit = 100 }) =>
+        `admin/users?page=${page}&limit=${limit}`,
+    }),
     getUserById: builder.query({
       query: (id) => `admin/users/${id}`,
     }),
@@ -75,14 +79,11 @@ export const adminApi = createApi({
       }),
     }),
     editCycle: builder.mutation({
-      query: ({ id, ...cycleData }) => {
-        console.log("cycleData in mutation query:", cycleData);
-        return {
-          url: `admin/cycles/${id}`,
-          method: "PUT",
-          body: { ...cycleData },
-        };
-      },
+      query: ({ id, ...cycleData }) => ({
+        url: `admin/cycles/${id}`,
+        method: "PUT",
+        body: { ...cycleData },
+      }),
     }),
     getCycleById: builder.query({
       query: (id) => `/cycles/${id}`,
@@ -93,6 +94,7 @@ export const adminApi = createApi({
 export const {
   useCreateCycleMutation,
   useGetAllUsersQuery,
+  useGetAllUserNoFilterQuery,
   useGetUserByIdQuery,
   useCreateUserMutation,
   useUpdateUserMutation,

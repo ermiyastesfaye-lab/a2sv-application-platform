@@ -5,15 +5,14 @@ import { setupListeners } from "@reduxjs/toolkit/query";
 // import { adminApi } from "./api/adminApi";
 import { adminApi } from "./slices/adminSlice";
 import { cyclesApi } from "./api/applicationCyclesApi";
-
 // import { reviewerApi } from "./api/reviewerApi";
 import { profileApi } from "./api/profileApi";
 // import reviewerReducer from "./slices/reviewerSlice";
 import profileReducer from "./slices/profileSlice";
 
-import { applicationsApi } from "./api/clientApi";
+import { managersApi } from "./api/managerApi";
 
-import { analyticsApi } from "./api/analyticsApi";
+import { applicationsApi } from "./api/clientApi";
 
 
 export const store = configureStore({
@@ -23,13 +22,13 @@ export const store = configureStore({
     [adminApi.reducerPath]: adminApi.reducer,
     [cyclesApi.reducerPath]: cyclesApi.reducer,
 
-    // [reviewerApi.reducerPath]: reviewerApi.reducer,
-    [profileApi.reducerPath]: profileApi.reducer,
-    // reviewer: reviewerReducer,
-    profile: profileReducer,
+    [managersApi.reducerPath]:managersApi.reducer,
 
-    [analyticsApi.reducerPath] : analyticsApi.reducer,
-
+//     [reviewerApi.reducerPath]: reviewerApi.reducer,
+ [profileApi.reducerPath]: profileApi.reducer,
+//     reviewer: reviewerReducer,
+//     profile: profileReducer,
+// >>>>>>> main
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -37,12 +36,13 @@ export const store = configureStore({
       adminApi.middleware,
       cyclesApi.middleware,
 
-      // reviewerApi.middleware,
-      profileApi.middleware,
-
+      managersApi.middleware,
       applicationsApi.middleware,
-      analyticsApi.middleware,
 
+// 
+//       reviewerApi.middleware,
+     profileApi.middleware
+// 
     ),
 });
 
