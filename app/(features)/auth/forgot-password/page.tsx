@@ -1,15 +1,30 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
+import { useForgotPasswordMutation } from "../../../../lib/redux/api/auth";
 import Image from "next/image";
 
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 const ForgotPassword = () => {
-  const router = useRouter();
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const [email, setEmail] = useState("");
+  const [success, setSuccess] = useState("");
+  const [error, setError] = useState("");
+  const [forgotPassword, { isLoading }] = useForgotPasswordMutation();
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    router.push("/auth/set-password");
+    setSuccess("");
+    setError("");
+    try {
+      await forgotPassword({
+        email,
+        callback_url: `${window.location.origin}/auth/set-password`,
+      }).unwrap();
+      setSuccess("If your email exists, a reset link has been sent.");
+    } catch (err: any) {
+      setError(err?.data?.message || "Failed to send reset link.");
+    }
   };
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -43,16 +58,25 @@ const ForgotPassword = () => {
               style={{ "--tw-ring-color": "#4F46E5" } as React.CSSProperties}
               required
               autoComplete="username"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              disabled={isLoading}
             />
           </div>
+          {success && <p className="text-green-600 text-sm">{success}</p>}
+          {error && <p className="text-red-600 text-sm">{error}</p>}
           <button
             type="submit"
-            className="w-full py-2 mt-2 bg-[#4F46E5] text-white font-semibold rounded-lg transition-colors cursor-pointer"
+            className="w-full py-2 mt-2 bg-[#4F46E5] text-white font-semibold rounded-lg transition-colors cursor-pointer disabled:opacity-60"
+            disabled={isLoading}
           >
-            Sign in
+            {isLoading ? "Sending..." : "Sign in"}
           </button>
           <Link href="/auth/login">
-            <button className="w-full text-[#4F46E5]  font-semibold rounded-lg transition-colors cursor-pointer">
+            <button
+              type="button"
+              className="w-full text-[#4F46E5]  font-semibold rounded-lg transition-colors cursor-pointer"
+            >
               Back to login
             </button>
           </Link>

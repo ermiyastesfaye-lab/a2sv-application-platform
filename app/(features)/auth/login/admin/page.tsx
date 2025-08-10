@@ -4,7 +4,10 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useLoginAdminMutation, useLoginMutation } from "../../services/auth";
+import {
+  useLoginAdminMutation,
+  useLoginMutation,
+} from "../../../../../lib/redux/api/auth";
 
 const Login = () => {
   const router = useRouter();
