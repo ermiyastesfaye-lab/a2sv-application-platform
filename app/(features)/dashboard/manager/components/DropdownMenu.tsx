@@ -1,4 +1,7 @@
-import React, { useState, useRef, useEffect } from "react";
+"use client";
+
+import React from "react";
+import { Menu, Popover } from "@mantine/core";
 import { ChevronRightIcon } from "./Icons";
 
 interface DropdownMenuProps {
@@ -39,155 +42,96 @@ interface DropdownMenuSubItemProps {
   icon?: React.ReactNode;
 }
 
-const DropdownContext = React.createContext<{
-  isOpen: boolean;
-  setIsOpen: (open: boolean) => void;
-}>({
-  isOpen: false,
-  setIsOpen: () => {},
-});
-
-const DropdownSubContext = React.createContext<{
-  isSubOpen: boolean;
-  setIsSubOpen: (open: boolean) => void;
-}>({
-  isSubOpen: false,
-  setIsSubOpen: () => {},
-});
-
+// Root wrapper around Mantine Menu
 export const DropdownMenu: React.FC<DropdownMenuProps> = ({ children }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setIsOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
   return (
-    <DropdownContext.Provider value={{ isOpen, setIsOpen }}>
-      <div className="relative" ref={dropdownRef}>
-        {children}
-      </div>
-    </DropdownContext.Provider>
+    <Menu withinPortal position="bottom-end" offset={6} shadow="md" radius="md">
+      {children}
+    </Menu>
   );
 };
 
+// Trigger maps to Menu.Target; we keep your button + classes
 export const DropdownMenuTrigger: React.FC<DropdownMenuTriggerProps> = ({
   children,
   className = "",
 }) => {
-  const { isOpen, setIsOpen } = React.useContext(DropdownContext);
-
   return (
-    <button
-      className={`inline-flex items-center ${className}`}
-      onClick={() => setIsOpen(!isOpen)}
-    >
-      {children}
-    </button>
+    <Menu.Target>
+      <button type="button" className={`inline-flex items-center ${className}`}>
+        {children}
+      </button>
+    </Menu.Target>
   );
 };
 
+// Content maps to Menu.Dropdown; preserve ability to pass width classes like w-44
 export const DropdownMenuContent: React.FC<DropdownMenuContentProps> = ({
   children,
   className = "",
 }) => {
-  const { isOpen } = React.useContext(DropdownContext);
-
-  if (!isOpen) return null;
-
   return (
-    <div
-      className={`absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50 py-1 ${className}`}
+    <Menu.Dropdown
+      className={`rounded-lg border border-gray-200 py-1 ${className}`}
     >
       {children}
-    </div>
+    </Menu.Dropdown>
   );
 };
 
+// Item maps to Menu.Item
 export const DropdownMenuItem: React.FC<DropdownMenuItemProps> = ({
   children,
   className = "",
   onClick,
 }) => {
-  const { setIsOpen } = React.useContext(DropdownContext);
-
-  const handleClick = () => {
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
     onClick?.();
-    setIsOpen(false);
   };
-
   return (
-    <button
-      className={`w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150 ${className}`}
-      onClick={handleClick}
-    >
+    <Menu.Item onClick={handleClick} className={`text-sm ${className}`}>
       {children}
-    </button>
+    </Menu.Item>
   );
 };
 
-export const DropdownMenuSub: React.FC<DropdownMenuSubProps> = ({
-  trigger,
-  children,
-  className = "",
-}) => {
-  const [isSubOpen, setIsSubOpen] = useState(false);
-  const subRef = useRef<HTMLDivElement>(null);
-  const [position, setPosition] = useState({ top: 0, left: 0 });
-
-  const handleMouseEnter = () => {
-    setIsSubOpen(true);
-    if (subRef.current) {
-      const rect = subRef.current.getBoundingClientRect();
-      setPosition({
-        top: rect.top + window.scrollY,
-        left: rect.right + window.scrollX,
-      });
-    }
-  };
-
-  const handleMouseLeave = () => {
-    setIsSubOpen(false);
-  };
-
+// Submenu implemented using Mantine Popover for reliable click handling
+export const DropdownMenuSub: React.FC<
+  DropdownMenuSubProps & {
+    onClick?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+  }
+> = ({ trigger, children, className = "", onClick }) => {
+  const [opened, setOpened] = React.useState(false);
   return (
-    <DropdownSubContext.Provider value={{ isSubOpen, setIsSubOpen }}>
-      <div
-        className="relative"
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-        ref={subRef}
-      >
-        <button
-          className={`w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150 flex items-center justify-between ${className}`}
+    <Popover
+      opened={opened}
+      onChange={setOpened}
+      position="right-start"
+      withArrow
+      shadow="md"
+      offset={8}
+      withinPortal
+    >
+      <Popover.Target>
+        <div
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setOpened((o) => !o);
+            onClick?.(e);
+          }}
+          className={`flex items-center justify-between cursor-pointer select-none ${className}`}
+          style={{ minWidth: 160 }}
         >
-          {trigger}
-          <ChevronRightIcon className="w-4 h-4 text-gray-400" />
-        </button>
-        {isSubOpen && (
-          <div
-            className="fixed bg-white rounded-lg shadow-lg border border-gray-200 z-[200] py-1 w-48"
-            style={{
-              top: `${position.top}px`,
-              left: `${position.left}px`,
-            }}
-          >
-            {children}
-          </div>
-        )}
-      </div>
-    </DropdownSubContext.Provider>
+          <span>{trigger}</span>
+          <ChevronRightIcon className="w-4 h-4 text-gray-400 ml-2" />
+        </div>
+      </Popover.Target>
+      <Popover.Dropdown className="rounded-lg border border-gray-200 py-1 w-48 bg-white">
+        {children}
+      </Popover.Dropdown>
+    </Popover>
   );
 };
 
@@ -204,22 +148,25 @@ export const DropdownMenuSubItem: React.FC<DropdownMenuSubItemProps> = ({
   onClick,
   icon,
 }) => {
-  const { setIsOpen } = React.useContext(DropdownContext);
-  const { setIsSubOpen } = React.useContext(DropdownSubContext);
-
-  const handleClick = () => {
+  // Find the closest open popover and close it after click
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
     onClick?.();
-    setIsSubOpen(false);
-    setIsOpen(false);
+    const popover = (e.target as HTMLElement).closest("[data-popover]");
+    if (popover) {
+      const evt = new CustomEvent("mantine-popover-close", { bubbles: true });
+      popover.dispatchEvent(evt);
+    }
   };
-
   return (
-    <button
-      className={`w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150 flex items-center gap-3 ${className}`}
-      onClick={handleClick}
-    >
-      {icon && <span className="flex-shrink-0">{icon}</span>}
-      <span>{children}</span>
-    </button>
+    <div data-popover-item>
+      <Menu.Item
+        onClick={handleClick}
+        leftSection={icon}
+        className={`flex items-center gap-3 text-sm ${className}`}
+      >
+        {children}
+      </Menu.Item>
+    </div>
   );
 };
