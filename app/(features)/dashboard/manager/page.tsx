@@ -3,7 +3,6 @@
 import React, { JSX } from "react";
 import { Badge } from "./components/Badge";
 import { Card, CardContent } from "./components/Card";
-import { useGetApplicantsQuery } from "@/lib/redux/api/managerApi";
 import {
   Table,
   TableBody,
@@ -23,15 +22,27 @@ import {
 import { ChevronDownIcon, UserIcon } from "./components/Icons";
 
 const DashboardMainSection = (): JSX.Element => {
-  const { data, isLoading, isError, error } = useGetApplicantsQuery();
-  if (error) {
-    console.log(error);
-  }
   const metricCards = [
     { title: "Total Applications", value: "1,204" },
     { title: "Under Review", value: "750" },
     { title: "Interview Stage", value: "250" },
     { title: "Accepted", value: "82" },
+  ];
+
+  // Data for applications table
+  const applications = [
+    {
+      applicant: "Abel Tadesse",
+      submitted: "Oct 26, 2023",
+      reviewer: "Jane R.",
+      status: { label: "Under Review", color: "bg-yellow-100 text-yellow-800" },
+    },
+    {
+      applicant: "Bethlehem Tadesse",
+      submitted: "Oct 25, 2023",
+      reviewer: "Not Assigned",
+      status: { label: "New", color: "bg-blue-100 text-blue-800" },
+    },
   ];
 
   // Data for team performance
@@ -47,9 +58,6 @@ const DashboardMainSection = (): JSX.Element => {
       assigned: "5 Assigned / Avg. 3.1 days",
     },
   ];
-  if (isError) {
-    console.warn("Error loading applicants:", error);
-  }
 
   return (
     <div className="flex justify-center">
@@ -99,107 +107,65 @@ const DashboardMainSection = (): JSX.Element => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {isLoading ? (
-                    <TableRow>
-                      <TableCell
-                        {...({ colSpan: 5 } as any)}
-                        className="text-center"
-                      >
-                        Loading applications...
+                  {applications.map((application, index) => (
+                    <TableRow key={index}>
+                      <TableCell className="font-medium text-gray-900">
+                        {application.applicant}
+                      </TableCell>
+                      <TableCell className="text-gray-500">
+                        {application.submitted}
+                      </TableCell>
+                      <TableCell>
+                        <div className="inline-flex items-center px-3 py-1 bg-gray-100 rounded-md">
+                          <span className="text-sm text-gray-600">
+                            {application.reviewer}
+                          </span>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Badge className={application.status.color}>
+                          {application.status.label}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger className="inline-flex items-center text-indigo-600 font-medium text-sm hover:text-indigo-700">
+                            Actions
+                            <ChevronDownIcon className="w-4 h-4 ml-1" />
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent className="w-44">
+                            <DropdownMenuItem>Review</DropdownMenuItem>
+                            <DropdownMenuItem>View Details</DropdownMenuItem>
+                            <DropdownMenuSub trigger="Assign to Reviewer">
+                              <div className="px-3 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-100">
+                                Search for a reviewer
+                              </div>
+                              <DropdownMenuSubItem
+                                icon={
+                                  <UserIcon className="w-4 h-4 text-gray-400" />
+                                }
+                                onClick={() =>
+                                  console.log("Assigned to Abel Tadesse")
+                                }
+                              >
+                                Abel Tadesse
+                              </DropdownMenuSubItem>
+                              <DropdownMenuSubItem
+                                icon={
+                                  <UserIcon className="w-4 h-4 text-gray-400" />
+                                }
+                                onClick={() =>
+                                  console.log("Assigned to Alemu Messele")
+                                }
+                              >
+                                Alemu Messele
+                              </DropdownMenuSubItem>
+                            </DropdownMenuSub>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       </TableCell>
                     </TableRow>
-                  ) : error ? (
-                    <TableRow>
-                      <TableCell
-                        {...({ colSpan: 5 } as any)}
-                        className="text-center text-red-500"
-                      >
-                        Error loading applicants
-                      </TableCell>
-                    </TableRow>
-                  ) : (
-                    data?.data?.applications?.map((app) => (
-                      <TableRow key={app.id}>
-                        <TableCell className="font-medium text-gray-900">
-                          {app.applicant_name}
-                        </TableCell>
-                        <TableCell className="text-gray-500">
-                          {`Oct 26, 2023`}
-                        </TableCell>
-                        <TableCell>
-                          <div
-                            className={`inline-flex items-center px-3 py-1 rounded-md text-sm ${
-                              app.assigned_reviewer_name?.trim()
-                                ? "bg-green-100 text-green-800"
-                                : "bg-yellow-100 text-yellow-800"
-                            }`}
-                          >
-                            {app.assigned_reviewer_name?.trim()
-                              ? app.assigned_reviewer_name
-                              : "Unassigned"}
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <Badge
-                            className={
-                              app.status === "in_progress"
-                                ? "bg-yellow-100 text-yellow-800"
-                                : app.status === "pending_review"
-                                ? "bg-blue-100 text-blue-800"
-                                : app.status === "approved"
-                                ? "bg-green-100 text-green-800"
-                                : app.status === "rejected"
-                                ? "bg-red-100 text-red-800"
-                                : app.status === "submitted"
-                                ? "bg-purple-100 text-purple-800"
-                                : app.status === "accepted"
-                                ? "bg-emerald-100 text-emerald-800"
-                                : ""
-                            }
-                          >
-                            {app.status}
-                          </Badge>
-                        </TableCell>
-                        <TableCell className="text-right">
-                          <DropdownMenu>
-                            <DropdownMenuTrigger className="inline-flex items-center text-indigo-600 font-medium text-sm hover:text-indigo-700">
-                              Actions
-                              <ChevronDownIcon className="w-4 h-4 ml-1" />
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent className="w-44">
-                              <DropdownMenuItem>Review</DropdownMenuItem>
-                              <DropdownMenuItem>View Details</DropdownMenuItem>
-                              <DropdownMenuSub trigger="Assign to Reviewer">
-                                <div className="px-3 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-100">
-                                  Search for a reviewer
-                                </div>
-                                <DropdownMenuSubItem
-                                  icon={
-                                    <UserIcon className="w-4 h-4 text-gray-400" />
-                                  }
-                                  onClick={() =>
-                                    console.log("Assigned to Abel Tadesse")
-                                  }
-                                >
-                                  Abel Tadesse
-                                </DropdownMenuSubItem>
-                                <DropdownMenuSubItem
-                                  icon={
-                                    <UserIcon className="w-4 h-4 text-gray-400" />
-                                  }
-                                  onClick={() =>
-                                    console.log("Assigned to Alemu Messele")
-                                  }
-                                >
-                                  Alemu Messele
-                                </DropdownMenuSubItem>
-                              </DropdownMenuSub>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  )}
+                  ))}
                 </TableBody>
               </Table>
             </CardContent>

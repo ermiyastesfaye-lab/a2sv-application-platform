@@ -5,7 +5,6 @@ import { setupListeners } from "@reduxjs/toolkit/query";
 // import { adminApi } from "./api/adminApi";
 import { adminApi } from "./slices/adminSlice";
 import { cyclesApi } from "./api/applicationCyclesApi";
-import { managersApi } from "./api/managerApi";
 
 import { reviewerApi } from "./api/reviewerApi";
 import { profileApi } from "./api/profileApi";
