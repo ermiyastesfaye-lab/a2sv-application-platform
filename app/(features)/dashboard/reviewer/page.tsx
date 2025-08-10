@@ -76,10 +76,6 @@ export default function ReviewerDashboard() {
       router.push(`/details/reviewer/${applicationId}?mode=view`);
       return;
     }
-    if (actionLabel === "Edit") {
-      router.push(`/details/reviewer/${applicationId}`);
-      return;
-    }
     // Continue Review falls back to normal edit mode
     router.push(`/details/reviewer/${applicationId}`);
   };
@@ -215,8 +211,7 @@ export default function ReviewerDashboard() {
             let actionButton:
               | "Start Review"
               | "Continue Review"
-              | "View Details"
-              | "Edit";
+              | "View Details";
 
             if (reviewStatus?.isCompleted) {
               status = "Review Complete";
@@ -241,7 +236,7 @@ export default function ReviewerDashboard() {
               <ApplicationCard
                 key={review.application_id}
                 id={review.application_id}
-                image="/images/alumni1.png"
+                image={review.profile_picture_url || ""}
                 name={review.applicant_name}
                 submissionDate={submissionDate}
                 status={status}
@@ -256,6 +251,8 @@ export default function ReviewerDashboard() {
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
+            totalCount={totalCount}
+            pageSize={pageSize}
             onPageChange={handlePageChange}
           />
         )}

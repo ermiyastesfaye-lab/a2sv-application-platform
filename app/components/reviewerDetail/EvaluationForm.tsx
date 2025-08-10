@@ -18,6 +18,15 @@ const EvaluationForm = ({
 }: EvaluationFormProps) => {
   const router = useRouter();
   const [updateReview, { isLoading }] = useUpdateReviewMutation();
+  const [isEditMode, setIsEditMode] = useState(false);
+
+  // Debug logging
+  console.log("EvaluationForm readOnly:", readOnly);
+  console.log("EvaluationForm fromManager:", fromManager);
+  console.log("EvaluationForm isEditMode:", isEditMode);
+
+  // Determine if form should actually be read-only
+  const isActuallyReadOnly = readOnly && !isEditMode;
 
   const [formData, setFormData] = useState({
     activity_check_notes: "",
@@ -94,15 +103,42 @@ const EvaluationForm = ({
             )}
             <span
               className={`px-3 py-1 rounded-full text-xs font-medium ${
-                readOnly
+                isActuallyReadOnly
                   ? "bg-gray-100 text-gray-600"
                   : "bg-green-100 text-green-600"
               }`}
             >
-              {readOnly ? "Read Only" : "Edit Mode"}
+              {isActuallyReadOnly ? "Read Only" : "Edit Mode"}
             </span>
           </div>
         </div>
+
+        {/* Edit Your Review Button - only show when in read-only mode */}
+        {isActuallyReadOnly && (
+          <div className="mb-4 flex flex-row-reverse">
+            <button
+              type="button"
+              onClick={() => setIsEditMode(true)}
+              className="bg-blue-600 hover:bg-blue-700 text-white font-light py-1 px-3 rounded-2xl transition duration-200 cursor-pointer"
+            >
+              Edit Your Review
+            </button>
+          </div>
+        )}
+
+        {/* Cancel Edit Button - only show when in edit mode */}
+        {!isActuallyReadOnly && readOnly && (
+          <div className="mb-4 flex flex-row-reverse">
+            <button
+              type="button"
+              onClick={() => setIsEditMode(false)}
+              className="bg-gray-500 hover:bg-gray-700 text-white font-light py-1 px-3 rounded-2xl transition duration-200 mr-2 cursor-pointer"
+            >
+              Cancel Edit
+            </button>
+          </div>
+        )}
+
         <p className="text-sm text-gray-600 mb-4">review all from 100</p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -248,14 +284,18 @@ const EvaluationForm = ({
             />
           </div>
 
-          {!readOnly && (
+          {!isActuallyReadOnly && (
             <div className="pt-4">
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-purple-600 hover:bg-purple-700 disabled:bg-gray-400 text-white font-medium py-3 px-4 rounded-md transition duration-200"
+                className="w-full bg-purple-600 hover:bg-purple-700 disabled:bg-gray-400 text-white font-medium py-3 px-4 rounded-md transition duration-200 cursor-pointer"
               >
-                {isLoading ? "Saving..." : "Submit Review"}
+                {isLoading
+                  ? "Saving..."
+                  : readOnly
+                  ? "Update Review"
+                  : "Submit Review"}
               </button>
             </div>
           )}
