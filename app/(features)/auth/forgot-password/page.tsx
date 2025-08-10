@@ -70,7 +70,7 @@ const ForgotPassword = () => {
             className="w-full py-2 mt-2 bg-[#4F46E5] text-white font-semibold rounded-lg transition-colors cursor-pointer disabled:opacity-60"
             disabled={isLoading}
           >
-            {isLoading ? "Sending..." : "Sign in"}
+            {isLoading ? "Sending..." : "Send Email"}
           </button>
           <Link href="/auth/login">
             <button
