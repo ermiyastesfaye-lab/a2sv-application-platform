@@ -60,9 +60,9 @@ export default function Step3EssaysResume({ data, setData, back }: Props) {
     formData.append("essay_about_you", data.essay_about_you);
     formData.append("country", data.country);
 
-    for (let [key, value] of formData.entries()) {
-      console.log(`${key}:`, value);
-    }
+    // for (let [key, value] of formData.entries()) {
+    //   console.log(`${key}:`, value);
+    // }
 
     try {
       await startApplication(formData).unwrap();

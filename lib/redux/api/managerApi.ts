@@ -8,7 +8,7 @@ export const managersApi= createApi({
     prepareHeaders: (headers, { getState }) => {
      
 
-      const token = localStorage.getItem('token') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3YTkwZWM4MC0wZjc3LTRlNjEtYjFkMy04YTgwNjJlNDY4NzAiLCJleHAiOjE3NTQ2NzQzMjUsInR5cGUiOiJhY2Nlc3MifQ.I5NHUH6-SKmaLsQgtJgOjn0T6sWUZietZTL-g9uGhz8';
+      const token = localStorage.getItem('token') 
       if (token) {
         headers.set('Authorization', `Bearer ${token}`);
       }

@@ -5,9 +5,9 @@ import { setupListeners } from "@reduxjs/toolkit/query";
 // import { adminApi } from "./api/adminApi";
 import { adminApi } from "./slices/adminSlice";
 import { cyclesApi } from "./api/applicationCyclesApi";
-import { reviewerApi } from "./api/reviewerApi";
+// import { reviewerApi } from "./api/reviewerApi";
 import { profileApi } from "./api/profileApi";
-import reviewerReducer from "./slices/reviewerSlice";
+// import reviewerReducer from "./slices/reviewerSlice";
 import profileReducer from "./slices/profileSlice";
 
 import { managersApi } from "./api/managerApi";
@@ -22,15 +22,28 @@ export const store = configureStore({
     [authApi.reducerPath]: authApi.reducer,
     [adminApi.reducerPath]: adminApi.reducer,
     [cyclesApi.reducerPath]: cyclesApi.reducer,
-    [analyticsApi.reducerPath] : analyticsApi.reducer,
+
+    [managersApi.reducerPath]:managersApi.reducer,
+
+//     [reviewerApi.reducerPath]: reviewerApi.reducer,
+ [profileApi.reducerPath]: profileApi.reducer,
+//     reviewer: reviewerReducer,
+//     profile: profileReducer,
+// >>>>>>> main
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
       authApi.middleware,
       adminApi.middleware,
       cyclesApi.middleware,
+
+      managersApi.middleware,
       applicationsApi.middleware,
-      analyticsApi.middleware,
+
+// 
+//       reviewerApi.middleware,
+     profileApi.middleware
+// 
     ),
 });
 

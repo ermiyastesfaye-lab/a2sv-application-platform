@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import ApplicationCycleList from "./ApplicationCycleList";
-//import { applicationCycle } from "@/data/application-cycle";
 import PaginationControls from "./PaginationControls";
 import { useGetCyclesQuery } from "@/lib/redux/api/applicationCyclesApi";
 import { useRouter } from "next/navigation";
@@ -32,12 +31,22 @@ const ApplicationCycleWrapper = () => {
   };
 
   if (isLoading)
-    return <p className="text-sm sm:text-base">Loading cycles...</p>;
-  if (isError)
     return (
-      <p className="text-sm sm:text-base">Error loading application cycles.</p>
+      <div className="flex items-center justify-center h-64 mt-13">
+        <p className="text-sm sm:text-base text-gray-600 animate-pulse">
+          Loading cycles...
+        </p>
+      </div>
     );
 
+  if (isError)
+    return (
+      <div className="flex items-center justify-center h-64">
+        <p className="texedit-sm sm:text-base text-red-500 font-medium">
+          Error loading application cycles.
+        </p>
+      </div>
+    );
   return (
     <>
       <div className="px-4 sm:px-12 pt-4 mt-4 flex flex-col sm:flex-row justify-center sm:justify-between items-center w-full gap-4 sm:gap-0 text-center">
@@ -59,14 +68,13 @@ const ApplicationCycleWrapper = () => {
             <ApplicationCycleList
               key={cycle.id}
               name={cycle.name}
-              description={
-                "G8 A2SV in-Person Education.A2SV in-Person Education."
-              }
-              country={"Ethiopia"} // hard coded for now
+              description={cycle.description}
+              country={"Ethiopia"}
               is_active={cycle.is_active ? "Active" : "Closed"}
               close={!cycle.is_active}
               id={`${cycle.id}`}
               refetchCycles={refetch}
+              className="w-full max-w-[350px] min-w-[280px] min-h-[180px]"
             />
           ))}
         </div>

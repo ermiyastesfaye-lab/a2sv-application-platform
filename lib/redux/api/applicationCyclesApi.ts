@@ -9,7 +9,6 @@ export const cyclesApi = createApi({
     baseUrl: "https://a2sv-application-platform-backend-team1.onrender.com/",
     prepareHeaders: (headers, { getState }) => {
 
-     
 
       const token = localStorage.getItem('token');
       if (token) {
@@ -24,7 +23,12 @@ export const cyclesApi = createApi({
         query: ({ page, limit }) => `/cycles?page=${page}&limit=${limit}`,
       }
     ),
+
+    getActiveCycles: builder.query({
+      query: () => `/cycles/active/`,
+    }),
   }),
+
 });
 
-export const { useGetCyclesQuery } = cyclesApi;
+export const { useGetCyclesQuery, useGetActiveCyclesQuery } = cyclesApi;
