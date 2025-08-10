@@ -52,21 +52,13 @@ export const profileApi = createApi({
       }),
       providesTags: ["Profile"],
     }),
-    updateProfile: builder.mutation<ProfileResponse, UpdateProfileRequest>({
-      query: (profileData) => {
-        const formData = new FormData();
-        formData.append("full_name", profileData.full_name);
-        formData.append("email", profileData.email);
-        if (profileData.profile_picture) {
-          formData.append("profile_picture", profileData.profile_picture);
-        }
-
-        return {
-          url: "profile/me",
-          method: "PUT",
-          body: formData,
-        };
-      },
+    updateProfile: builder.mutation<ProfileResponse, FormData>({
+    
+      query: (formData) => ({
+        url: "profile/me",
+        method: "PUT",
+        body: formData,
+      }),
       invalidatesTags: ["Profile"],
     }),
     changePassword: builder.mutation<

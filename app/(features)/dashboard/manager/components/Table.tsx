@@ -18,6 +18,7 @@ interface TableBodyProps {
 interface TableRowProps {
   children: React.ReactNode;
   className?: string;
+  onClick?: React.MouseEventHandler<HTMLTableRowElement>;
 }
 
 interface TableHeadProps {
@@ -28,6 +29,7 @@ interface TableHeadProps {
 interface TableCellProps {
   children: React.ReactNode;
   className?: string;
+  onClick?: React.MouseEventHandler<HTMLTableCellElement>;
 }
 
 export const Table: React.FC<TableProps> = ({ children, className = "" }) => {
@@ -57,12 +59,16 @@ export const TableBody: React.FC<TableBodyProps> = ({
     </tbody>
   );
 };
-
 export const TableRow: React.FC<TableRowProps> = ({
   children,
   className = "",
+  onClick,
 }) => {
-  return <tr className={className}>{children}</tr>;
+  return (
+    <tr className={className} onClick={onClick}>
+      {children}
+    </tr>
+  );
 };
 
 export const TableHead: React.FC<TableHeadProps> = ({
@@ -81,9 +87,13 @@ export const TableHead: React.FC<TableHeadProps> = ({
 export const TableCell: React.FC<TableCellProps> = ({
   children,
   className = "",
+  onClick,
 }) => {
   return (
-    <td className={`px-6 py-4 whitespace-nowrap text-sm ${className}`}>
+    <td
+      className={`px-6 py-4 whitespace-nowrap text-sm ${className}`}
+      onClick={onClick}
+    >
       {children}
     </td>
   );

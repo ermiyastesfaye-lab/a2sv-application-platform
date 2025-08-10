@@ -12,9 +12,10 @@ interface UserProfile {
 
 interface InfoFormProps {
   userProfile?: UserProfile;
+  onSuccess?: () => void;
 }
 
-const InfoForm = ({ userProfile }: InfoFormProps) => {
+const InfoForm = ({ userProfile, onSuccess }: InfoFormProps) => {
   const [updateProfile, { isLoading }] = useUpdateProfileMutation();
   const [formData, setFormData] = useState({
     full_name: userProfile?.full_name || "",
@@ -31,8 +32,12 @@ const InfoForm = ({ userProfile }: InfoFormProps) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await updateProfile(formData).unwrap();
+       const data = new FormData();
+       data.append("full_name", formData.full_name);
+       data.append("email", formData.email);
+      await updateProfile(data).unwrap();
       alert("Profile updated successfully!");
+      if (onSuccess) onSuccess();
     } catch (error) {
       alert("Error updating profile. Please try again.");
     }

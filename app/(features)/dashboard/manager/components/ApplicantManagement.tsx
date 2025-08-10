@@ -1,8 +1,96 @@
-import React, { JSX } from "react";
+import React, { JSX, useState } from "react";
 import { ChevronLeftIcon } from "./Icons";
 import { Card, CardContent } from "./Card";
+import {
+  useAssignReviewerMutation,
+  useDecideApplicationMutation,
+  useGetApplicantByIdQuery,
+  useGetReviewersQuery,
+} from "@/lib/redux/api/managerApi";
+import { ParamValue } from "next/dist/server/request/params";
+import { useRouter } from "next/navigation";
+import LoadingPage from "@/app/components/LoadingPage";
 
-export const ApplicantManagement = (): JSX.Element => {
+export const ApplicantManagement = ({
+  id,
+}: {
+  id: ParamValue;
+}): JSX.Element => {
+  const { data, isLoading, isError, refetch } = useGetApplicantByIdQuery({
+    application_id: id,
+  });
+  const {
+    data: reviewersData,
+    isLoading: reviewersLoading,
+    isError: reviewersError,
+  } = useGetReviewersQuery({ page: 1, limit: 10 });
+  const [assignReviewer, { isLoading: isAssigning }] =
+    useAssignReviewerMutation();
+  const [
+    decideApplication,
+    { isLoading: decideLoading, isError: decideError },
+  ] = useDecideApplicationMutation();
+  const [decisionNotes, setDecisionNotes] = useState("s");
+
+  const router = useRouter();
+
+  if (isLoading) {
+    return <LoadingPage />;
+  }
+  if (isError || !data?.data?.application) {
+    return <div className="p-8 text-red-500">Error loading application.</div>;
+  }
+
+  const application = data.data.application;
+  const review = data.data.review;
+
+  const handleReviewerAssignment = async (
+    e: React.FormEvent<HTMLFormElement>
+  ) => {
+    e.preventDefault();
+    const form = e.target as HTMLFormElement;
+    const reviewerId = form.reviewer.value;
+    try {
+      if (reviewerId) {
+        await assignReviewer({
+          application_id: id,
+          reviewer_id: reviewerId,
+        });
+      }
+      router.push("/dashboard/manager");
+    } catch (error) {
+      console.error("Failed to assign reviewer", error);
+    }
+  };
+
+  const handleReject = async () => {
+    try {
+      await decideApplication({
+        status: "rejected",
+        decision_notes: decisionNotes,
+        application_id: id,
+      });
+      alert("Application rejected successfully!");
+      router.push("/dashboard/manager");
+    } catch (e) {
+      console.log("Error deciding on application", e);
+    }
+  };
+
+  const handleConfirm = async () => {
+    try {
+      await decideApplication({
+        status: "accepted",
+        decision_notes: decisionNotes,
+        application_id: id,
+      });
+      alert("Application accepted successfully!");
+      router.push("/dashboard/manager");
+    } catch (e) {
+      console.log("Error deciding on application", e);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
@@ -14,7 +102,7 @@ export const ApplicantManagement = (): JSX.Element => {
               <span className="text-sm text-gray-600">Back to Dashboard</span>
             </div>
             <h1 className="text-2xl font-bold text-gray-900">
-              Manage: Abel Tadesse
+              Manage: {application.applicant_name}
             </h1>
           </CardContent>
         </Card>
@@ -34,15 +122,13 @@ export const ApplicantManagement = (): JSX.Element => {
                     <h3 className="text-sm font-medium text-gray-700 mb-1">
                       School
                     </h3>
-                    <p className="text-gray-900">
-                      Addis Ababa Institute of Technology
-                    </p>
+                    <p className="text-gray-900">{application.school}</p>
                   </div>
                   <div>
                     <h3 className="text-sm font-medium text-gray-700 mb-1">
                       Degree Program
                     </h3>
-                    <p className="text-gray-900">Software Engineering</p>
+                    <p className="text-gray-900">{application.degree}</p>
                   </div>
                 </div>
 
@@ -52,24 +138,26 @@ export const ApplicantManagement = (): JSX.Element => {
                     Coding Profiles
                   </h3>
                   <div className="flex gap-4">
-                    <a
-                      href="#"
-                      className="text-blue-600 hover:text-blue-800 underline"
-                    >
-                      GitHub
-                    </a>
-                    <a
-                      href="#"
-                      className="text-blue-600 hover:text-blue-800 underline"
-                    >
-                      LeetCode
-                    </a>
-                    <a
-                      href="#"
-                      className="text-blue-600 hover:text-blue-800 underline"
-                    >
-                      Codeforces
-                    </a>
+                    {application.leetcode_handle && (
+                      <a
+                        href={`https://leetcode.com/${application.leetcode_handle}`}
+                        className="text-blue-600 hover:text-blue-800 underline"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        LeetCode
+                      </a>
+                    )}
+                    {application.codeforces_handle && (
+                      <a
+                        href={`https://codeforces.com/profile/${application.codeforces_handle}`}
+                        className="text-blue-600 hover:text-blue-800 underline"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Codeforces
+                      </a>
+                    )}
                   </div>
                 </div>
 
@@ -77,10 +165,10 @@ export const ApplicantManagement = (): JSX.Element => {
                 <div className="space-y-4 mb-6">
                   <div>
                     <h3 className="text-sm font-medium text-gray-700 mb-1">
-                      Essay 1: Tell us about your self?
+                      Essay 1: Tell us about yourself
                     </h3>
                     <p className="text-gray-900">
-                      I am passionate about solving complex problems.
+                      {application.essay_about_you}
                     </p>
                   </div>
                   <div>
@@ -88,8 +176,7 @@ export const ApplicantManagement = (): JSX.Element => {
                       Essay 2: Why do you want to join us?
                     </h3>
                     <p className="text-gray-900">
-                      I want to join because I am sure it will help me to
-                      improve my problem solving skill.
+                      {application.essay_why_a2sv}
                     </p>
                   </div>
                 </div>
@@ -99,12 +186,18 @@ export const ApplicantManagement = (): JSX.Element => {
                   <h3 className="text-sm font-medium text-gray-700 mb-1">
                     Resume
                   </h3>
-                  <a
-                    href="#"
-                    className="text-blue-600 hover:text-blue-800 underline"
-                  >
-                    View Resume.pdf
-                  </a>
+                  {application.resume_url ? (
+                    <a
+                      href={application.resume_url}
+                      className="text-blue-600 hover:text-blue-800 underline"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      View Resume
+                    </a>
+                  ) : (
+                    <span className="text-gray-500">No resume uploaded</span>
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -113,7 +206,7 @@ export const ApplicantManagement = (): JSX.Element => {
             <Card>
               <CardContent className="p-6">
                 <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                  Reviewer's Feedback (Jane R.)
+                  Reviewer's Feedback
                 </h2>
 
                 {/* Activity Check */}
@@ -122,7 +215,7 @@ export const ApplicantManagement = (): JSX.Element => {
                     Activity Check
                   </h3>
                   <p className="text-gray-900">
-                    Pass - 50 LC, 35 CF, 30 days active
+                    {review?.activity_check_notes || "No activity check notes."}
                   </p>
                 </div>
 
@@ -132,25 +225,41 @@ export const ApplicantManagement = (): JSX.Element => {
                     <h3 className="text-sm font-medium text-gray-700 mb-1">
                       Resume Score
                     </h3>
-                    <p className="text-gray-900">95/100</p>
+                    <p className="text-gray-900">
+                      {review?.resume_score ?? "-"}/100
+                    </p>
                   </div>
                   <div>
                     <h3 className="text-sm font-medium text-gray-700 mb-1">
-                      Essay Score
+                      Essay (Why A2SV) Score
                     </h3>
-                    <p className="text-gray-900">90/100</p>
+                    <p className="text-gray-900">
+                      {review?.essay_why_a2sv_score ?? "-"}/100
+                    </p>
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-700 mb-1">
+                      Essay (About You) Score
+                    </h3>
+                    <p className="text-gray-900">
+                      {review?.essay_about_you_score ?? "-"}/100
+                    </p>
                   </div>
                   <div>
                     <h3 className="text-sm font-medium text-gray-700 mb-1">
                       Tech Interview
                     </h3>
-                    <p className="text-gray-900">88/100</p>
+                    <p className="text-gray-900">
+                      {review?.technical_interview_score ?? "-"}/100
+                    </p>
                   </div>
                   <div>
                     <h3 className="text-sm font-medium text-gray-700 mb-1">
                       Behavioral
                     </h3>
-                    <p className="text-gray-900">92/100</p>
+                    <p className="text-gray-900">
+                      {review?.behavioral_interview_score ?? "-"}/100
+                    </p>
                   </div>
                 </div>
 
@@ -160,7 +269,7 @@ export const ApplicantManagement = (): JSX.Element => {
                     Interviewer Notes
                   </h3>
                   <p className="text-gray-900">
-                    Strong candidate with excellent problem-solving skills.
+                    {review?.interview_notes || "No notes provided."}
                   </p>
                 </div>
               </CardContent>
@@ -176,35 +285,67 @@ export const ApplicantManagement = (): JSX.Element => {
                 </h2>
 
                 {/* Assign Reviewer */}
-                <div className="mb-6">
-                  <h3 className="text-sm font-medium text-gray-700 mb-2">
-                    Assign Reviewer
-                  </h3>
-                  <div className="flex items-center justify-between p-3 bg-gray-50 rounded-md mb-3">
-                    <span className="text-gray-900">Jane R.</span>
+                {application.status === "submitted" && (
+                  <div className="mb-6">
+                    <h3 className="text-sm font-medium text-gray-700 mb-2">
+                      Assign Reviewer
+                    </h3>
+                    <form onSubmit={handleReviewerAssignment}>
+                      <select
+                        name="reviewer"
+                        className="w-full p-2 mb-3 border border-gray-300 rounded-md"
+                        defaultValue=""
+                        required
+                      >
+                        <option value="" disabled>
+                          {reviewersLoading
+                            ? "Loading reviewers..."
+                            : reviewersError
+                            ? "Failed to load reviewers"
+                            : "Select a reviewer"}
+                        </option>
+                        {reviewersData?.data?.reviewers?.map((reviewer) => (
+                          <option key={reviewer.id} value={reviewer.id}>
+                            {reviewer.full_name}
+                          </option>
+                        ))}
+                      </select>
+                      <button
+                        type="submit"
+                        className="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
+                        disabled={isAssigning}
+                      >
+                        {isAssigning ? "Assigning..." : "Assign"}
+                      </button>
+                    </form>
                   </div>
-                  <button className="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors">
-                    Confirm
-                  </button>
-                </div>
+                )}
 
-                {/* Final Decision */}
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                    Final Decision
-                  </h3>
-                  <p className="text-sm text-gray-600 mb-4">
-                    This action is final and will notify the applicant.
-                  </p>
-                  <div className="flex gap-3">
-                    <button className="flex-1 bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors">
-                      Reject
-                    </button>
-                    <button className="flex-1 bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition-colors">
-                      Accept
-                    </button>
-                  </div>
-                </div>
+                {application.status != "accepted" &&
+                  application.status != "rejected" && (
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                        Final Decision
+                      </h3>
+                      <p className="text-sm text-gray-600 mb-4">
+                        This action is final and will notify the applicant.
+                      </p>
+                      <div className="flex gap-3">
+                        <button
+                          onClick={handleReject}
+                          className="flex-1 bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors"
+                        >
+                          Reject
+                        </button>
+                        <button
+                          onClick={handleConfirm}
+                          className="flex-1 bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition-colors"
+                        >
+                          Accept
+                        </button>
+                      </div>
+                    </div>
+                  )}
               </CardContent>
             </Card>
           </div>

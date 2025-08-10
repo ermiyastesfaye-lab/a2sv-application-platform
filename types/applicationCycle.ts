@@ -19,7 +19,7 @@ export interface PaginationControlsProps {
 
 export interface CreateNewApplicationCycle{
     name: string;
-    country: string;
+    description: string;
     start_date: string;
     end_date: string;
 

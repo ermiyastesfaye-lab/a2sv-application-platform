@@ -9,7 +9,7 @@ export const adminApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: "https://a2sv-application-platform-backend-team1.onrender.com/",
     prepareHeaders: (headers) => {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem("token") 
       if (token) {
         headers.set("Authorization", `Bearer ${token}`);
         headers.set("Accept", "application/json");
@@ -37,6 +37,16 @@ export const adminApi = createApi({
         method: "PATCH",
       }),
     }),
+
+    deactivateCycle: builder.mutation<
+    { success: boolean; message: string },
+    { cycleId: string }
+  >({
+    query: ({ cycleId }) => ({
+      url: `/admin/cycles/${cycleId}/deactivate`,
+      method: "PATCH",
+    }),
+  }),
 
     deleteCycle: builder.mutation<
       { success: boolean; message: string },
@@ -88,6 +98,10 @@ export const adminApi = createApi({
     getCycleById: builder.query({
       query: (id) => `/cycles/${id}`,
     }),
+    getAnalytices: builder.query({
+      query: () => `/admin/analytics/`,
+    }),
+
   }),
 });
 
@@ -102,5 +116,9 @@ export const {
   useEditCycleMutation,
   useGetCycleByIdQuery,
   useActivateCycleMutation,
+  useDeactivateCycleMutation,
   useDeleteCycleMutation,
+  useGetAnalyticesQuery,
 } = adminApi;
+
+

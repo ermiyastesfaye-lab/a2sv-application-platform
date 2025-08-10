@@ -10,6 +10,23 @@ interface ListProps {
 
 const List = ({ text, link }: ListProps) => {
   const router = useRouter();
+  const handleLogout = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (typeof window !== "undefined") {
+      localStorage.clear();
+      window.location.href = "/auth/login";
+    }
+  };
+  if (text === "Logout") {
+    return (
+      <li
+        className={"hover:text-indigo-700 hover:underline cursor-pointer"}
+        onClick={handleLogout}
+      >
+        {text}
+      </li>
+    );
+  }
   return (
     <li
       className={`${link && "hover:text-indigo-700 hover:underline"}`}
