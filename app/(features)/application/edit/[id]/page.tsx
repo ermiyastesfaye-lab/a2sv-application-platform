@@ -72,7 +72,6 @@ export default function EditApplicationForm() {
   const next = () => setStep((prev) => prev + 1);
   const back = () => setStep((prev) => prev - 1);
 
-
   if (isLoading || !formData) {
     return <LoadingPage message="Loading application data..." />;
   }

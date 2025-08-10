@@ -1,11 +1,12 @@
+type ActionLabel = "Start Review" | "Continue Review" | "View Details";
 interface ApplicationCardProps {
   id: string;
-  image: string;
+  image?: string;
   name: string;
   submissionDate: string;
   status: "New" | "Under Review" | "Review Complete";
-  actionButton: "Start Review" | "Continue Review" | "View Details";
-  onAction: (id: string) => void;
+  actionButton: ActionLabel;
+  onAction: (id: string, action: ActionLabel) => void;
 }
 
 const ApplicationCard = ({
@@ -37,12 +38,36 @@ const ApplicationCard = ({
     return "bg-[#4f46e5] text-white hover:bg-[#4338ca]";
   };
 
+  // Generate initials from name
+  const getInitials = (name: string) => {
+    return name
+      .split(" ")
+      .map((word) => word.charAt(0))
+      .join("")
+      .toUpperCase()
+      .slice(0, 2);
+  };
+
+  // Check if image is a valid URL or use initials
+  const hasValidImage =
+    image && image.trim() !== "" && !image.includes("/images/alumni1.png");
+
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+    <div className="bg-white rounded-lg shadow-lg border border-gray-200 p-6">
       <div className="flex items-start space-x-4 mb-4">
         {/* Avatar */}
         <div className="w-12 h-12 rounded-full overflow-hidden">
-          <img src={image} alt={name} className="w-full h-full object-cover" />
+          {hasValidImage ? (
+            <img
+              src={image}
+              alt={name}
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <div className="w-full h-full bg-gray-300 flex items-center justify-center text-gray-600 font-semibold text-sm">
+              {getInitials(name)}
+            </div>
+          )}
         </div>
 
         {/* Name, Date, and Status */}
@@ -61,10 +86,10 @@ const ApplicationCard = ({
         </div>
       </div>
 
-      {/* Action Button */}
+      {/* Action Button(s) */}
       <div className="w-full">
         <button
-          onClick={() => onAction(id)}
+          onClick={() => onAction(id, actionButton)}
           className={`w-full px-4 py-2 rounded-lg font-medium transition-colors cursor-pointer ${getButtonVariant(
             actionButton
           )}`}

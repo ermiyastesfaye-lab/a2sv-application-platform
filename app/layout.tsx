@@ -7,6 +7,9 @@ import Footer from "./components/Footer";
 import ReduxProvider from "@/lib/providers/ReduxProvider";
 import { usePathname, useRouter } from "next/navigation";
 import Button from "./components/Butt";
+import "@mantine/core/styles.css";
+import { MantineProvider } from "@mantine/core";
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -56,7 +59,9 @@ export default function RootLayout({
         )}
 
         <main className="flex-grow bg-gray-100 mt-16">
-          <ReduxProvider>{children}</ReduxProvider>
+          <MantineProvider>
+            <ReduxProvider>{children}</ReduxProvider>
+          </MantineProvider>
         </main>
         <Footer />
       </body>

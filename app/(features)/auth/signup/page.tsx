@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useRegisterMutation } from "../services/auth";
+import { useRegisterMutation } from "../../../../lib/redux/api/auth";
 
 const Signup = () => {
   const router = useRouter();

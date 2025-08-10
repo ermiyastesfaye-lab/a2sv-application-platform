@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useLoginMutation } from "../services/auth";
+import { useLoginMutation } from "../../../../lib/redux/api/auth";
 
 const Login = () => {
   const router = useRouter();
@@ -27,11 +27,18 @@ const Login = () => {
         email: form.email,
         password: form.password,
       }).unwrap();
-      if (res && res.data && res.data.access) {
+      if (res && res.data) {
         localStorage.setItem("token", res.data.access);
+        localStorage.setItem("role", res.data.role);
+        localStorage.setItem("refresh", res.data.refresh);
       }
-      alert("User Logged in successfully");
-      router.push("/dashboard/applicant");
+      if (res.data.role == "applicant") {
+        router.push("/dashboard/applicant");
+      } else if (res.data.role == "manager") {
+        router.push("/dashboard/manager");
+      } else if (res.data.role == "reviewer") {
+        router.push("/dashboard/reviewer");
+      }
     } catch (err: any) {
       console.log(err);
     }

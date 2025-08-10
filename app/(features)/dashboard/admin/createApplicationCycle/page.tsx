@@ -16,7 +16,6 @@ export default function Home() {
           <ArrowLeft size={18} />
           Back to Application Cycles
         </button>
-
         <div className="flex flex-col gap-2">
           <h1 className="font-bold text-xl sm:text-2xl md:text-3xl">
             Create new cycle
@@ -25,7 +24,6 @@ export default function Home() {
             Use this form to create a new cycle and assign periods.
           </p>
         </div>
-
         <CycleForm />
       </div>
     </section>

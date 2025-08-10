@@ -1,4 +1,4 @@
-import { authApi } from "@/app/(features)/auth/services/auth";
+import { authApi } from "@/lib/redux/api/auth";
 import { configureStore } from "@reduxjs/toolkit";
 
 import { setupListeners } from "@reduxjs/toolkit/query";
@@ -23,13 +23,13 @@ export const store = configureStore({
     [adminApi.reducerPath]: adminApi.reducer,
     [cyclesApi.reducerPath]: cyclesApi.reducer,
 
-    [managersApi.reducerPath]:managersApi.reducer,
+    [managersApi.reducerPath]: managersApi.reducer,
 
-//     [reviewerApi.reducerPath]: reviewerApi.reducer,
- [profileApi.reducerPath]: profileApi.reducer,
-//     reviewer: reviewerReducer,
-//     profile: profileReducer,
-// >>>>>>> main
+    //     [reviewerApi.reducerPath]: reviewerApi.reducer,
+    [profileApi.reducerPath]: profileApi.reducer,
+    //     reviewer: reviewerReducer,
+    //     profile: profileReducer,
+    // >>>>>>> main
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -40,10 +40,10 @@ export const store = configureStore({
       managersApi.middleware,
       applicationsApi.middleware,
 
-// 
-//       reviewerApi.middleware,
-     profileApi.middleware
-// 
+      //
+      //       reviewerApi.middleware,
+      profileApi.middleware
+      //
     ),
 });
 
