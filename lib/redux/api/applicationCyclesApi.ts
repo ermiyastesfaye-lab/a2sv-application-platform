@@ -1,7 +1,10 @@
 
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import {  GetCycleResponse } from '@/lib/types/applicationCycles';
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 
 export const cyclesApi = createApi({
   reducerPath: "cyclesApi",
@@ -10,7 +13,11 @@ export const cyclesApi = createApi({
     prepareHeaders: (headers, { getState }) => {
 
      
+<<<<<<< Updated upstream
 
+=======
+   
+>>>>>>> Stashed changes
       const token = localStorage.getItem('token');
       if (token) {
         headers.set("Authorization", `Bearer ${token}`);

@@ -8,6 +8,9 @@ interface InputProps {
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   disabled?: boolean;
   className?: string;
+  min?: number;
+  max?: number;
+  step?: number;
 }
 
 const Input = ({
@@ -18,6 +21,9 @@ const Input = ({
   onChange,
   disabled,
   className,
+  min,
+  max,
+  step,
 }: InputProps) => {
   return (
     <input
@@ -27,6 +33,9 @@ const Input = ({
       value={value}
       onChange={onChange}
       disabled={disabled}
+      min={min}
+      max={max}
+      step={step}
       className={`w-full px-3 py-1 border border-gray-100 rounded-xl focus:outline-none focus:ring-0 focus:border-gray-200 shadow-sm text-gray-950 ${
         className || ""
       }`}

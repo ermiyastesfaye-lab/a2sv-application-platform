@@ -1,11 +1,13 @@
+type ActionLabel = "Start Review" | "Continue Review" | "View Details" | "Edit";
+
 interface ApplicationCardProps {
   id: string;
   image: string;
   name: string;
   submissionDate: string;
   status: "New" | "Under Review" | "Review Complete";
-  actionButton: "Start Review" | "Continue Review" | "View Details";
-  onAction: (id: string) => void;
+  actionButton: ActionLabel;
+  onAction: (id: string, action: ActionLabel) => void;
 }
 
 const ApplicationCard = ({
@@ -38,7 +40,7 @@ const ApplicationCard = ({
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+    <div className="bg-white rounded-lg shadow-lg border border-gray-200 p-6">
       <div className="flex items-start space-x-4 mb-4">
         {/* Avatar */}
         <div className="w-12 h-12 rounded-full overflow-hidden">
@@ -61,16 +63,37 @@ const ApplicationCard = ({
         </div>
       </div>
 
-      {/* Action Button */}
+      {/* Action Button(s) */}
       <div className="w-full">
-        <button
-          onClick={() => onAction(id)}
-          className={`w-full px-4 py-2 rounded-lg font-medium transition-colors cursor-pointer ${getButtonVariant(
-            actionButton
-          )}`}
-        >
-          {actionButton}
-        </button>
+        {status === "Review Complete" ? (
+          <div className="grid grid-cols-2 gap-3">
+            <button
+              onClick={() => onAction(id, "View Details")}
+              className={`px-4 py-2 rounded-lg font-medium transition-colors cursor-pointer ${getButtonVariant(
+                "View Details"
+              )}`}
+            >
+              View Details
+            </button>
+            <button
+              onClick={() => onAction(id, "Edit")}
+              className={`px-4 py-2 rounded-lg font-medium transition-colors cursor-pointer ${getButtonVariant(
+                "Continue Review"
+              )}`}
+            >
+              Edit
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={() => onAction(id, actionButton)}
+            className={`w-full px-4 py-2 rounded-lg font-medium transition-colors cursor-pointer ${getButtonVariant(
+              actionButton
+            )}`}
+          >
+            {actionButton}
+          </button>
+        )}
       </div>
     </div>
   );
