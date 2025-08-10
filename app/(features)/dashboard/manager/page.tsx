@@ -1,9 +1,14 @@
 "use client";
 
 import React, { JSX } from "react";
+import { useRouter } from "next/navigation";
 import { Badge } from "./components/Badge";
 import { Card, CardContent } from "./components/Card";
-import { useGetApplicantsQuery } from "@/lib/redux/api/managerApi";
+import {
+  useGetApplicantsQuery,
+  useGetReviewersQuery,
+  useAssignReviewerMutation,
+} from "@/lib/redux/api/managerApi";
 import {
   Table,
   TableBody,
@@ -20,21 +25,46 @@ import {
   DropdownMenuSubItem,
   DropdownMenuTrigger,
 } from "./components/DropdownMenu";
-import { ChevronDownIcon, UserIcon } from "./components/Icons";
+import { ChevronDownIcon } from "./components/Icons";
+
+import PaginationControls from "./components/PaginationControls";
+
+const APPLICANTS_PER_PAGE = 10;
 
 const DashboardMainSection = (): JSX.Element => {
-  const { data, isLoading, isError, error } = useGetApplicantsQuery();
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const { data, isLoading, isError, error, refetch } = useGetApplicantsQuery({
+    page: currentPage,
+    limit: APPLICANTS_PER_PAGE,
+  } as any);
+  const { data: acceptedData } = useGetApplicantsQuery({
+    page: currentPage,
+    limit: APPLICANTS_PER_PAGE,
+    status: "accepted",
+  } as any);
+  const { data: underReviewData } = useGetApplicantsQuery({
+    page: currentPage,
+    limit: APPLICANTS_PER_PAGE,
+    status: "pending_review",
+  } as any);
+  const router = useRouter();
+  const {
+    data: reviewersData,
+    isLoading: reviewersLoading,
+    isError: reviewersError,
+  } = useGetReviewersQuery({ page: 1, limit: 10 });
+  const [assignReviewer, { isLoading: isAssigning }] =
+    useAssignReviewerMutation();
   if (error) {
     console.log(error);
   }
   const metricCards = [
-    { title: "Total Applications", value: "1,204" },
-    { title: "Under Review", value: "750" },
-    { title: "Interview Stage", value: "250" },
-    { title: "Accepted", value: "82" },
+    { title: "Total Applications", value: data?.data.total_count },
+    { title: "Under Review", value: acceptedData?.data.total_count },
+
+    { title: "Accepted", value: underReviewData?.data.total_count },
   ];
 
-  // Data for team performance
   const teamPerformance = [
     {
       name: "Jane R.",
@@ -51,11 +81,23 @@ const DashboardMainSection = (): JSX.Element => {
     console.warn("Error loading applicants:", error);
   }
 
+  const handleAssign = async (applicationId: string, reviewerId: string) => {
+    try {
+      await assignReviewer({
+        application_id: applicationId,
+        reviewer_id: reviewerId,
+      }).unwrap();
+      refetch();
+    } catch (e) {
+      console.error("Failed to assign reviewer", e);
+    }
+  };
+
   return (
     <div className="flex justify-center">
       <section className="w-3/4 py-8 px-4">
         {/* Metric Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 items-center">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-6 mb-8 items-center">
           {metricCards.map((card, index) => (
             <Card key={index} className="shadow-lg">
               <CardContent className="p-5">
@@ -119,7 +161,15 @@ const DashboardMainSection = (): JSX.Element => {
                     </TableRow>
                   ) : (
                     data?.data?.applications?.map((app) => (
-                      <TableRow key={app.id}>
+                      <TableRow
+                        key={app.id}
+                        className="cursor-pointer hover:bg-gray-50"
+                        onClick={() =>
+                          router.push(
+                            `/dashboard/manager/applications/${app.id}`
+                          )
+                        }
+                      >
                         <TableCell className="font-medium text-gray-900">
                           {app.applicant_name}
                         </TableCell>
@@ -160,7 +210,10 @@ const DashboardMainSection = (): JSX.Element => {
                             {app.status}
                           </Badge>
                         </TableCell>
-                        <TableCell className="text-right">
+                        <TableCell
+                          className="text-right"
+                          onClick={(e) => e.stopPropagation()}
+                        >
                           <DropdownMenu>
                             <DropdownMenuTrigger className="inline-flex items-center text-indigo-600 font-medium text-sm hover:text-indigo-700">
                               Actions
@@ -171,28 +224,39 @@ const DashboardMainSection = (): JSX.Element => {
                               <DropdownMenuItem>View Details</DropdownMenuItem>
                               <DropdownMenuSub trigger="Assign to Reviewer">
                                 <div className="px-3 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-100">
-                                  Search for a reviewer
+                                  {reviewersLoading
+                                    ? "Loading reviewers..."
+                                    : reviewersError
+                                    ? "Failed to load reviewers"
+                                    : "Select a reviewer"}
                                 </div>
-                                <DropdownMenuSubItem
-                                  icon={
-                                    <UserIcon className="w-4 h-4 text-gray-400" />
-                                  }
-                                  onClick={() =>
-                                    console.log("Assigned to Abel Tadesse")
-                                  }
-                                >
-                                  Abel Tadesse
-                                </DropdownMenuSubItem>
-                                <DropdownMenuSubItem
-                                  icon={
-                                    <UserIcon className="w-4 h-4 text-gray-400" />
-                                  }
-                                  onClick={() =>
-                                    console.log("Assigned to Alemu Messele")
-                                  }
-                                >
-                                  Alemu Messele
-                                </DropdownMenuSubItem>
+                                {reviewersData?.data?.reviewers?.length
+                                  ? reviewersData.data.reviewers.map(
+                                      (reviewer) => (
+                                        <DropdownMenuSubItem
+                                          key={reviewer.id}
+                                          icon={
+                                            <img
+                                              src={`https://ui-avatars.com/api/?name=${encodeURIComponent(
+                                                reviewer.full_name
+                                              )}&background=EEF2FF&color=3730A3&size=32`}
+                                              alt={reviewer.full_name}
+                                              className="w-4 h-4 rounded-full"
+                                            />
+                                          }
+                                          onClick={() =>
+                                            handleAssign(app.id, reviewer.id)
+                                          }
+                                        >
+                                          {reviewer.full_name}
+                                        </DropdownMenuSubItem>
+                                      )
+                                    )
+                                  : !reviewersLoading && (
+                                      <div className="px-4 py-2 text-sm text-gray-500">
+                                        No reviewers available
+                                      </div>
+                                    )}
                               </DropdownMenuSub>
                             </DropdownMenuContent>
                           </DropdownMenu>
@@ -202,6 +266,17 @@ const DashboardMainSection = (): JSX.Element => {
                   )}
                 </TableBody>
               </Table>
+
+              {/* Pagination Controls */}
+              {data?.data?.total_count && (
+                <PaginationControls
+                  currentPage={currentPage}
+                  totalPages={Math.ceil(
+                    data.data.total_count / APPLICANTS_PER_PAGE
+                  )}
+                  onPageChange={setCurrentPage}
+                />
+              )}
             </CardContent>
           </Card>
 
