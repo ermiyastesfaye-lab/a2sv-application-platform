@@ -10,6 +10,7 @@ import Button from "./components/Butt";
 import "@mantine/core/styles.css";
 import { MantineProvider } from "@mantine/core";
 
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
