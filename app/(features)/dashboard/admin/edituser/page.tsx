@@ -8,6 +8,7 @@ import { useGetUserByIdQuery } from "@/lib/redux/slices/adminSlice";
 import { useForm } from "react-hook-form";
 import { useUpdateUserMutation } from "@/lib/redux/slices/adminSlice";
 import { useRouter } from "next/navigation";
+import LoadingPage from "@/app/components/LoadingPage";
 
 const EditUser = () => {
   const router = useRouter();
@@ -30,6 +31,9 @@ const EditUser = () => {
       });
     }
   }, [data]);
+
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState(false);
 
   const {
     register,
@@ -57,11 +61,18 @@ const EditUser = () => {
         full_name: data.full_name,
         role: data.role,
       }).unwrap();
-      console.log("User updated successfully:", response);
+      // console.log("User updated successfully:", response);
+      setSuccess(true);
+      setError(false);
     } catch (error) {
       console.error("Failed to update user:", error);
+      setError(true);
+      setSuccess(false);
     }
   };
+  if (isLoading) {
+    return <LoadingPage />;
+  }
 
   return (
     <AdminUser
@@ -112,6 +123,14 @@ const EditUser = () => {
               ]}
             />
           </div>
+          {success && (
+            <div className="text-sm text-green-800">
+              User created successfully
+            </div>
+          )}
+          {error && (
+            <div className="text-sm text-red-800">Failed on creating user</div>
+          )}
         </div>
         <div className="flex justify-end text-sm rounded-b-lg bg-gray-50 shadow-sm p-2">
           <button

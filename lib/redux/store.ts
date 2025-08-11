@@ -22,7 +22,7 @@ export const store = configureStore({
     [authApi.reducerPath]: authApi.reducer,
     [adminApi.reducerPath]: adminApi.reducer,
     [cyclesApi.reducerPath]: cyclesApi.reducer,
-    [analyticsApi.reducerPath] :analyticsApi.reducer,
+    [analyticsApi.reducerPath]: analyticsApi.reducer,
     [managersApi.reducerPath]: managersApi.reducer,
 
     [reviewerApi.reducerPath]: reviewerApi.reducer,

@@ -53,7 +53,6 @@ export const profileApi = createApi({
       providesTags: ["Profile"],
     }),
     updateProfile: builder.mutation<ProfileResponse, FormData>({
-    
       query: (formData) => ({
         url: "profile/me",
         method: "PUT",
