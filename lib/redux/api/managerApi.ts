@@ -3,6 +3,18 @@ import { GetApplicantsResponse } from "@/lib/types/manager";
 import type { getReviewers as GetReviewersResponse } from "@/lib/types/manager";
 import { ParamValue } from "next/dist/server/request/params";
 
+type ApplicantDetails = {
+  id: string;
+  name: string;
+  // ...other fields
+};
+
+type DecideApplicationResponse = {
+  success: boolean;
+  message?: string;
+  // ...other fields if any
+};
+
 export const managersApi = createApi({
   reducerPath: "managersApi",
   baseQuery: fetchBaseQuery({
@@ -47,13 +59,16 @@ export const managersApi = createApi({
         body: { reviewer_id },
       }),
     }),
-    getApplicantById: builder.query<any, { application_id: ParamValue }>({
+    getApplicantById: builder.query<
+      ApplicantDetails,
+      { application_id: ParamValue }
+    >({
       query: ({ application_id }) => ({
         url: `/applications/${application_id}`,
       }),
     }),
     decideApplication: builder.mutation<
-      any,
+      DecideApplicationResponse,
       { application_id: ParamValue; status: string; decision_notes: string }
     >({
       query: ({ application_id, status, decision_notes }) => ({

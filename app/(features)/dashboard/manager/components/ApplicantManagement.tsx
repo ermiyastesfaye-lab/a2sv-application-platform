@@ -212,7 +212,7 @@ export const ApplicantManagement = ({
             <Card>
               <CardContent className="p-6">
                 <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                  Reviewer's Feedback
+                  Reviewer Feedback
                 </h2>
 
                 {/* Activity Check */}

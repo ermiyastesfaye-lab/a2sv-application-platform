@@ -36,17 +36,17 @@ const DashboardMainSection = (): JSX.Element => {
   const { data, isLoading, isError, error, refetch } = useGetApplicantsQuery({
     page: currentPage,
     limit: APPLICANTS_PER_PAGE,
-  } as any);
+  });
   const { data: acceptedData } = useGetApplicantsQuery({
     page: currentPage,
     limit: APPLICANTS_PER_PAGE,
     status: "accepted",
-  } as any);
+  });
   const { data: underReviewData } = useGetApplicantsQuery({
     page: currentPage,
     limit: APPLICANTS_PER_PAGE,
     status: "pending_review",
-  } as any);
+  });
   const router = useRouter();
   const {
     data: reviewersData,
@@ -143,7 +143,7 @@ const DashboardMainSection = (): JSX.Element => {
                   {isLoading ? (
                     <TableRow>
                       <TableCell
-                        {...({ colSpan: 5 } as any)}
+                        {...({ colSpan: 5 })}
                         className="text-center"
                       >
                         Loading applications...
@@ -152,7 +152,7 @@ const DashboardMainSection = (): JSX.Element => {
                   ) : error ? (
                     <TableRow>
                       <TableCell
-                        {...({ colSpan: 5 } as any)}
+                        {...({ colSpan: 5 })}
                         className="text-center text-red-500"
                       >
                         Error loading applicants
