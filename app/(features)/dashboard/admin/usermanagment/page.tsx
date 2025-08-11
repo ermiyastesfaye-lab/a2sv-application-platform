@@ -2,7 +2,10 @@
 import AdminUser from "@/app/components/AdminUser";
 import Button from "@/app/components/Butt";
 import UserTable from "@/app/components/AdminUser/UserTable.tsx/UserTable";
-import { useGetAllUserNoFilterQuery } from "@/lib/redux/slices/adminSlice";
+import {
+  useGetAllUserNoFilterQuery,
+  useGetAllUsersQuery,
+} from "@/lib/redux/slices/adminSlice";
 import { useRouter } from "next/navigation";
 import { useState, useMemo } from "react";
 import PaginationControls from "@/app/components/ApplicationCycles/PaginationControls";
@@ -21,7 +24,7 @@ const UserManagment = () => {
     isError,
   } = useGetAllUserNoFilterQuery({
     page: 1,
-    limit: 1000,
+    limit: 100,
   });
   const allUsers = allUsersData?.data.users || [];
   const filteredUsers = useMemo(() => {
@@ -45,7 +48,7 @@ const UserManagment = () => {
   }, [filteredUsers, page, limit]);
   const totalPages = Math.ceil(filteredUsers.length / limit);
 
-  console.log(allUsers);
+  // console.log(allUsers);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
@@ -59,7 +62,6 @@ const UserManagment = () => {
 
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
-      console.log(page);
       setCurrentPage(page);
     }
   };

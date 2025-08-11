@@ -8,7 +8,7 @@ interface User {
   full_name: string;
   email: string;
   role: string;
-  status?: "Active" | "Inactive";
+  is_active: boolean;
 }
 
 interface UserTableProps {
@@ -74,12 +74,12 @@ const UserTable = ({ users }: UserTableProps) => {
               <td className="px-4 py-3">
                 <span
                   className={`px-2 py-1 rounded-full text-xs font-medium ${
-                    user.status !== "Active"
+                    user.is_active
                       ? "bg-blue-100 text-green-800"
                       : "bg-yellow-100 text-yellow-800"
                   }`}
                 >
-                  {user.status || "Active"}
+                  {user.is_active ? "Active" : "Inactive"}
                 </span>
               </td>
 
