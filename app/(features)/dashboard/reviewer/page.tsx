@@ -18,6 +18,18 @@ import DashboardHeader from "@/app/components/reviewerDashboard/DashboardHeader"
 import ApplicationCard from "@/app/components/reviewerDashboard/ApplicationCard";
 import Pagination from "@/app/components/reviewerDashboard/Pagination";
 
+type Review = {
+  application_id: string;
+  applicant_name: string;
+  submission_date: string;
+  profile_picture_url?: string | null; // <-- allow null
+};
+
+type ReviewStatus = {
+  hasReview: boolean;
+  isCompleted: boolean;
+};
+
 export default function ReviewerDashboard() {
   const router = useRouter();
   const dispatch = useDispatch();
@@ -162,7 +174,7 @@ export default function ReviewerDashboard() {
     const reviewStatusB = reviewStatuses?.[b.application_id];
 
     // Determine display status for sorting
-    const getDisplayStatus = (review: any, reviewStatus: any) => {
+    const getDisplayStatus = (review: Review, reviewStatus?: ReviewStatus) => {
       if (reviewStatus?.isCompleted) return "Review Complete";
       if (reviewStatus?.hasReview) return "Under Review";
       return "New";

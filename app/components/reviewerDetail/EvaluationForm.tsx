@@ -3,9 +3,19 @@ import { useRouter } from "next/navigation";
 import { useUpdateReviewMutation } from "@/lib/redux/api/reviewerApi";
 import Input from "@/app/components/profileSet/Input";
 
+type ReviewDetails = {
+  activity_check_notes?: string;
+  resume_score?: number;
+  essay_why_a2sv_score?: number;
+  essay_about_you_score?: number;
+  technical_interview_score?: number;
+  behavioral_interview_score?: number;
+  interview_notes?: string;
+};
+
 interface EvaluationFormProps {
   applicationId: string;
-  reviewDetails: any;
+  reviewDetails: ReviewDetails | null;
   readOnly?: boolean;
   fromManager?: boolean;
 }
