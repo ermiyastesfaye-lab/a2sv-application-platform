@@ -1,10 +1,15 @@
 "use client";
+
 import Button from "@/app/components/Butt";
 import NavBar from "@/app/components/NavBar";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { ReactNode } from "react";
 
-const layout = ({ children }: any) => {
+interface LayoutProps {
+  children: ReactNode;
+}
+
+const Layout = ({ children }: LayoutProps) => {
   const router = useRouter();
   const NavBarLists = {
     right: [
@@ -25,10 +30,9 @@ const layout = ({ children }: any) => {
           />
         }
       />
-
       {children}
     </div>
   );
 };
 
-export default layout;
+export default Layout;
