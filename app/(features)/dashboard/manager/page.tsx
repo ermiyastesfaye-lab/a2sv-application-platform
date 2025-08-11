@@ -96,7 +96,6 @@ const DashboardMainSection = (): JSX.Element => {
   return (
     <div className="flex justify-center">
       <section className="w-3/4 py-8 px-4">
-        {/* Metric Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-6 mb-8 items-center">
           {metricCards.map((card, index) => (
             <Card key={index} className="shadow-lg">
@@ -221,7 +220,16 @@ const DashboardMainSection = (): JSX.Element => {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent className="w-44">
                               <DropdownMenuItem>Review</DropdownMenuItem>
-                              <DropdownMenuItem>View Details</DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() =>
+                                  router.push(
+                                    `/dashboard/manager/applications/${app.id}`
+                                  )
+                                }
+                              >
+                                View Details
+                              </DropdownMenuItem>
+
                               <DropdownMenuSub trigger="Assign to Reviewer">
                                 <div className="px-3 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-100">
                                   {reviewersLoading

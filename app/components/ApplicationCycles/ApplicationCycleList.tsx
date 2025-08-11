@@ -11,7 +11,7 @@ import React from "react";
 
 const ApplicationCycleList: React.FC<ApplicationCycle> = ({
   name,
-  description, 
+  description,
   country,
   is_active,
   close,
@@ -77,8 +77,9 @@ const ApplicationCycleList: React.FC<ApplicationCycle> = ({
     }
   };
 
+
   return (
-    <div className="p-5 bg-white rounded-lg shadow-xl   w-full  min-w-[280px] min-h-[180px] flex flex-col justify-between">
+    <div className="p-5 bg-white rounded-lg shadow-xl w-full min-w-[280px] min-h-[180px]  flex flex-col justify-between">
       {showSuccess && (
         <div className="fixed top-5  right-5 z-50 rounded-lg bg-green-500 px-4 py-3 text-white shadow-lg transition-all">
           Application cycle{" "}
@@ -87,18 +88,18 @@ const ApplicationCycleList: React.FC<ApplicationCycle> = ({
       )}
       <div className="flex justify-between items-center ">
         <div>
-        <h3 className="font-semibold text-gray-900">{name}</h3>
+          <h3 className="font-semibold text-gray-900">{name}</h3>
         </div>
         <div className="flex flex-row flex-nowrap items-center gap-1 px-2">
           <button
             onClick={handleUpdateCycle}
-            className="text-xs font-medium px-2  hover:bg-blue-300 rounded-md bg-blue-200"
+            className="text-[10px] px-1 py-0.5 md:text-xs md:px-2 md:py-1 hover:bg-blue-300 rounded-md bg-blue-200"
           >
             Update
           </button>
           <button
             onClick={close ? handleActivate : handleClose}
-            className={`text-xs font-medium px-2  rounded-md ${
+            className={`text-[10px] px-1 py-0.5 md:text-xs md:px-2 md:py-1 rounded-md ${
               close
                 ? "bg-emerald-100 text-emerald-800 hover:bg-emerald-200"
                 : "bg-orange-100 text-orange-800 hover:bg-orange-200"
@@ -108,7 +109,7 @@ const ApplicationCycleList: React.FC<ApplicationCycle> = ({
           </button>
           <button
             onClick={handleDelete}
-            className="text-xs font-medium px-2  bg-red-200 rounded-md hover:bg-red-300"
+            className="text-[10px] px-1 py-0.5 md:text-xs md:px-2 md:py-1 bg-red-200 rounded-md hover:bg-red-300"
           >
             Delete
           </button>

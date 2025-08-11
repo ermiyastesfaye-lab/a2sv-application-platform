@@ -97,10 +97,16 @@ export const ApplicantManagement = ({
         {/* Header */}
         <Card className="mb-6">
           <CardContent className="p-6">
-            <div className="flex items-center gap-2 mb-2">
+            <div
+              className="flex items-center gap-2 mb-2"
+              onClick={() => router.push("/dashboard/manager")}
+            >
               <ChevronLeftIcon className="w-4 h-4 text-gray-600" />
-              <span className="text-sm text-gray-600">Back to Dashboard</span>
+              <button className="text-sm text-gray-600">
+                Back to Dashboard
+              </button>
             </div>
+
             <h1 className="text-2xl font-bold text-gray-900">
               Manage: {application.applicant_name}
             </h1>
@@ -322,30 +328,43 @@ export const ApplicantManagement = ({
                 )}
 
                 {application.status != "accepted" &&
-                  application.status != "rejected" && (
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                        Final Decision
-                      </h3>
-                      <p className="text-sm text-gray-600 mb-4">
-                        This action is final and will notify the applicant.
-                      </p>
-                      <div className="flex gap-3">
-                        <button
-                          onClick={handleReject}
-                          className="flex-1 bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors"
-                        >
-                          Reject
-                        </button>
-                        <button
-                          onClick={handleConfirm}
-                          className="flex-1 bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition-colors"
-                        >
-                          Accept
-                        </button>
-                      </div>
+                application.status != "rejected" ? (
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                      Final Decision
+                    </h3>
+                    <p className="text-sm text-gray-600 mb-4">
+                      This action is final and will notify the applicant.
+                    </p>
+                    <div className="flex gap-3">
+                      <button
+                        onClick={handleReject}
+                        className="flex-1 bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors"
+                      >
+                        Reject
+                      </button>
+                      <button
+                        onClick={handleConfirm}
+                        className="flex-1 bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition-colors"
+                      >
+                        Accept
+                      </button>
                     </div>
-                  )}
+                  </div>
+                ) : (
+                  <div className="text-lg font-semibold text-gray-900">
+                    Status:{" "}
+                    <span
+                      className={
+                        application.status === "accepted"
+                          ? "text-green-600"
+                          : "text-red-600"
+                      }
+                    >
+                      {application.status}
+                    </span>
+                  </div>
+                )}
               </CardContent>
             </Card>
           </div>
