@@ -105,7 +105,7 @@ const ApplicantStatusPage = ({ status: initialStatus }: StatusPageProps) => {
                   )}
                 </>
               }
-              isCompleted={false}
+              isCompleted={statusStages.isInProgress.isCompleted}
               isCurrent={statusStages.isInProgress.isCurrent}
             />
 
@@ -235,7 +235,7 @@ const ApplicantStatusPage = ({ status: initialStatus }: StatusPageProps) => {
           {status === "accepted" || status === "rejected" ? (
             <section className="p-5 rounded shadow-lg bg-indigo-700 text-white">
               <h3 className="font-bold text-lg mb-3">Final Decision Made</h3>
-              <p className="text-gray-600 text-sm">
+              <p className="text-white text-sm">
                 {status === "accepted"
                   ? "Your application has been accepted! Check your email for the next steps."
                   : "Your application was not successful. Thank you for applying."}
