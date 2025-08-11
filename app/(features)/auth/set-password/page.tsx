@@ -99,4 +99,16 @@ const SetPassword = () => {
   );
 };
 
-export default SetPassword;
+
+
+import { Suspense } from "react";
+
+
+
+const Page = () => (
+  <Suspense fallback={<div>Loading...</div>}>
+    <SetPassword/>
+  </Suspense>
+);
+
+export default Page;

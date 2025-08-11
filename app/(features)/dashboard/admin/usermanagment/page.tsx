@@ -1,18 +1,17 @@
 "use client";
+import { Suspense, useState, useMemo, useEffect } from "react";
 import AdminUser from "@/app/components/AdminUser";
 import Button from "@/app/components/Butt";
 import UserTable from "@/app/components/AdminUser/UserTable.tsx/UserTable";
 import {
   useGetAllUserNoFilterQuery,
-  useGetAllUsersQuery,
 } from "@/lib/redux/slices/adminSlice";
 import { useSearchParams, useRouter } from "next/navigation";
-import { useState, useMemo, useEffect } from "react";
 import PaginationControls from "@/app/components/ApplicationCycles/PaginationControls";
 import LoadingPage from "@/app/components/LoadingPage";
 import ErrorPage from "../../applicant/components/ErrorPage";
 
-const UserManagment = () => {
+const UserManagmentContent = () => {
   const [search, setSearch] = useState("");
   const [role, setRole] = useState("All Roles");
   const roles = ["All Roles", "Admin", "Reviewer", "Manager"];
@@ -69,8 +68,6 @@ const UserManagment = () => {
   }, [filteredUsers, page, limit]);
   const totalPages = Math.ceil(filteredUsers.length / limit);
 
-  // console.log(allUsers);
-
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
     setCurrentPage(1);
@@ -99,11 +96,9 @@ const UserManagment = () => {
         />
       }
     >
-      {" "}
       {showSuccess && (
-        <div className="fixed top-5  right-5 z-50 rounded-lg bg-green-500 px-4 py-3 text-white shadow-lg transition-all">
-          User {showSuccess === "user-created" ? "created" : "updated"}{" "}
-          successfully
+        <div className="fixed top-5 right-5 z-50 rounded-lg bg-green-500 px-4 py-3 text-white shadow-lg transition-all">
+          User {showSuccess === "user-created" ? "created" : "updated"} successfully
         </div>
       )}
       <div className="flex gap-4 shadow-lg mb-6 bg-white rounded-lg p-4">
@@ -120,11 +115,7 @@ const UserManagment = () => {
           className="shrink-0 bg-indigo-100 px-4 py-2 rounded-lg outline-none"
         >
           {roles.map((r) => (
-            <option
-              className="bg-white outline-none hover:bg-indigo-100"
-              key={r}
-              value={r}
-            >
+            <option key={r} value={r} className="bg-white outline-none hover:bg-indigo-100">
               {r}
             </option>
           ))}
@@ -139,5 +130,11 @@ const UserManagment = () => {
     </AdminUser>
   );
 };
+
+const UserManagment = () => (
+  <Suspense fallback={<LoadingPage />}>
+    <UserManagmentContent />
+  </Suspense>
+);
 
 export default UserManagment;
