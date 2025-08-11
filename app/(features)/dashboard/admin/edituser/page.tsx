@@ -152,4 +152,13 @@ const EditUser = () => {
   );
 };
 
-export default EditUser;
+
+import { Suspense } from "react";
+
+const Page = () => (
+  <Suspense fallback={<div>Loading...</div>}>
+    <EditUser />
+  </Suspense>
+);
+
+export default Page;
