@@ -55,7 +55,7 @@ const EvaluationForm = ({
   }, [reviewDetails]);
 
   const handleInputChange = (field: string, value: string | number) => {
-    if (readOnly) return;
+    if (isActuallyReadOnly) return;
     setFormData((prev) => ({
       ...prev,
       [field]: value,
@@ -64,7 +64,7 @@ const EvaluationForm = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (readOnly) return;
+    if (isActuallyReadOnly) return;
     try {
       await updateReview({
         applicationId,
@@ -74,9 +74,6 @@ const EvaluationForm = ({
       // Show success message
       alert("Review updated successfully!");
 
-      // Navigate back to appropriate dashboard
-      // If coming from manager, go back to manager dashboard
-      // Otherwise go to reviewer dashboard
       if (fromManager) {
         router.push("/dashboard/manager");
       } else {
@@ -152,7 +149,7 @@ const EvaluationForm = ({
               onChange={(e) =>
                 handleInputChange("activity_check_notes", e.target.value)
               }
-              disabled={readOnly}
+              disabled={isActuallyReadOnly}
             />
           </div>
 
@@ -171,7 +168,7 @@ const EvaluationForm = ({
                     parseInt(e.target.value) || 0
                   )
                 }
-                disabled={readOnly}
+                disabled={isActuallyReadOnly}
                 min={0}
                 max={100}
                 step={1}
@@ -193,7 +190,7 @@ const EvaluationForm = ({
                     parseInt(e.target.value) || 0
                   )
                 }
-                disabled={readOnly}
+                disabled={isActuallyReadOnly}
                 min={0}
                 max={100}
                 step={1}
@@ -217,7 +214,7 @@ const EvaluationForm = ({
                     parseInt(e.target.value) || 0
                   )
                 }
-                disabled={readOnly}
+                disabled={isActuallyReadOnly}
                 min={0}
                 max={100}
                 step={1}
@@ -239,7 +236,7 @@ const EvaluationForm = ({
                     parseInt(e.target.value) || 0
                   )
                 }
-                disabled={readOnly}
+                disabled={isActuallyReadOnly}
                 min={0}
                 max={100}
                 step={1}
@@ -262,7 +259,7 @@ const EvaluationForm = ({
                   parseInt(e.target.value) || 0
                 )
               }
-              disabled={readOnly}
+              disabled={isActuallyReadOnly}
               min={0}
               max={100}
               step={1}
@@ -280,7 +277,7 @@ const EvaluationForm = ({
               onChange={(e) =>
                 handleInputChange("interview_notes", e.target.value)
               }
-              disabled={readOnly}
+              disabled={isActuallyReadOnly}
             />
           </div>
 
