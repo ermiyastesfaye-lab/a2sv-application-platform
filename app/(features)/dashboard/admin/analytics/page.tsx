@@ -38,15 +38,15 @@ const page = () => {
       <div className="flex gap-2 justify-around w-ful mt-4 ">
         <div className="bg-white  py-5 px-5 w-full shadow-1xl rounded-xl">
           <p>Total Applicants</p>
-          <h1 className="font-bold text-2xl text-black">1204</h1>
+          <h1 className="font-bold text-2xl text-black">{total_applicants}</h1>
         </div>
         <div className="bg-white  py-5 px-5 w-full shadow-1xl rounded-xl">
           <p>Acceptance Rate</p>
-          <h1 className="font-bold text-2xl  text-black">6.8%</h1>
+          <h1 className="font-bold text-2xl  text-black">{acceptance_rate}</h1>
         </div>
         <div className="bg-white  py-5 px-5 w-full shadow-1xl rounded-xl">
           <p>Avg Review Time</p>
-          <h1 className="font-bold text-2xl  text-black">3.2 Days</h1>
+          <h1 className="font-bold text-2xl  text-black">{average_review_time_days}</h1>
         </div>
       </div>
       <div className="flex gap-4 mt-5  ">

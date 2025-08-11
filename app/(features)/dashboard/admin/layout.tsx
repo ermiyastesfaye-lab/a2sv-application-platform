@@ -17,7 +17,7 @@ const layout = ({ children }: any) => {
       { text: "Dashboard", link: "/dashboard/admin" },
       { text: "Users", link: "/dashboard/admin/usermanagment" },
       { text: "Cycles", link: "/dashboard/admin/applicationCycle" },
-      { text: "Analytics", link: "" },
+      { text: "Analytics", link: "/dashboard/admin/analytics" },
     ],
   };
 

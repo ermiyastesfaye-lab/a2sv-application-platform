@@ -134,7 +134,7 @@ const AdminDashboard = () => {
           Explore application data and platform insights.
         </p>
         <Link
-          href="/admin/analytics"
+          href="/dashboard/admin/analytics"
           className="text-indigo-600 text-sm hover:text-indigo-900"
         >
           Go to Analytics →
