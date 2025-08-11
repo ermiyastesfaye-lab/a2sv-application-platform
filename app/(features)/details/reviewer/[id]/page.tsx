@@ -22,27 +22,30 @@ const ReviewerDetails = () => {
   const applicationId = params.id as string;
   const searchParams = useSearchParams();
   const mode = searchParams.get("mode");
-  const fromManager = searchParams.get("from") === "manager";
-  const isReadOnly = mode === "view";
+  // const fromManager = searchParams.get("from") === "manager";
 
-  const { data, isLoading, error, refetch } = useGetApplicationDetailsQuery(
-    applicationId || "",
-    { skip: !applicationId || applicationId === "[id]" }
-  );
+  const { data, isLoading, error, refetch } =
+    useGetApplicationDetailsQuery(applicationId);
   const [updateReview] = useUpdateReviewMutation();
 
   useEffect(() => {
-    if (error && "status" in error && (error as FetchBaseQueryError).status === 403) {
+    if (
+      error &&
+      typeof error === "object" &&
+      error !== null &&
+      "status" in error &&
+      (error as { status?: number }).status === 403
+    ) {
       localStorage.removeItem("token");
       router.push("/auth/login");
     }
   }, [error, router]);
+
+  // If opened from New, initialize a blank review to transition to Under Review
   useEffect(() => {
     if (!data) return;
-    
     const status = data.data.applicant_details?.status;
     const hasReview = !!data.data.review_details;
-    
     if (status === "pending_review" && !hasReview) {
       (async () => {
         try {
@@ -59,14 +62,14 @@ const ReviewerDetails = () => {
             },
           }).unwrap();
           await refetch();
-        } catch (e) {
-          
-        }
+        } catch (e) {}
       })();
     }
   }, [data, applicationId, updateReview, refetch]);
 
-  
+  const isReadOnly = mode === "view";
+
+  // Guard: If applicationId is missing or invalid, show error
   if (!applicationId || applicationId === "[id]") {
     return (
       <div className="min-h-screen bg-gray-100 mb-20">
@@ -88,7 +91,13 @@ const ReviewerDetails = () => {
     );
   }
 
-  if (error && "status" in error && (error as FetchBaseQueryError).status === 403) {
+  if (
+    error &&
+    typeof error === "object" &&
+    error !== null &&
+    "status" in error &&
+    (error as { status?: number }).status === 403
+  ) {
     return (
       <div className="min-h-screen bg-gray-100 mb-20 flex items-center justify-center">
         <div className="text-center">
