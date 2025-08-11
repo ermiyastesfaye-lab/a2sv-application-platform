@@ -21,7 +21,7 @@ const UserManagment = () => {
     isError,
   } = useGetAllUserNoFilterQuery({
     page: 1,
-    limit: 1000,
+    limit: 100,
   });
   const allUsers = allUsersData?.data.users || [];
   const filteredUsers = useMemo(() => {
