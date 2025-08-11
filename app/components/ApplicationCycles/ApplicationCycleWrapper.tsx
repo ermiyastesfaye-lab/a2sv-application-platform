@@ -12,10 +12,13 @@ const ApplicationCycleWrapper = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const router = useRouter();
 
-  const { data, isLoading, isError, refetch } = useGetCyclesQuery({
-    page: currentPage,
-    limit: ITEMS_PER_PAGE,
-  });
+  const { data, isLoading, isError, refetch } = useGetCyclesQuery(
+    {
+      page: currentPage,
+      limit: ITEMS_PER_PAGE,
+    },
+    { refetchOnMountOrArgChange: true }
+  );
 
   const totalItems = data?.data?.total_count || 0;
   const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);

@@ -77,7 +77,6 @@ const ApplicationCycleList: React.FC<ApplicationCycle> = ({
     }
   };
 
-
   return (
     <div className="p-5 bg-white rounded-lg shadow-xl w-full min-w-[280px] min-h-[180px]  flex flex-col justify-between">
       {showSuccess && (

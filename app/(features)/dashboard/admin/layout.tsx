@@ -2,7 +2,7 @@
 import NavBar from "@/app/components/NavBar";
 import React, { useEffect, useState } from "react";
 
-const layout = ({ children }: any) => {
+const Layout = ({ children }: any) => {
   const [role, setRole] = useState("");
   useEffect(() => {
     const r = localStorage.getItem("role") || "";
@@ -36,4 +36,4 @@ const layout = ({ children }: any) => {
   );
 };
 
-export default layout;
+export default Layout;

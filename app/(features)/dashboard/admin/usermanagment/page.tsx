@@ -6,8 +6,8 @@ import {
   useGetAllUserNoFilterQuery,
   useGetAllUsersQuery,
 } from "@/lib/redux/slices/adminSlice";
-import { useRouter } from "next/navigation";
-import { useState, useMemo } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+import { useState, useMemo, useEffect } from "react";
 import PaginationControls from "@/app/components/ApplicationCycles/PaginationControls";
 import LoadingPage from "@/app/components/LoadingPage";
 import ErrorPage from "../../applicant/components/ErrorPage";
@@ -27,6 +27,27 @@ const UserManagment = () => {
     limit: 100,
   });
   const allUsers = allUsersData?.data.users || [];
+
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const [showSuccess, setShowSuccess] = useState("");
+
+  useEffect(() => {
+    if (
+      searchParams.get("success") === "user-created" ||
+      searchParams.get("success") === "user-updated"
+    ) {
+      setShowSuccess(searchParams.get("success") || "");
+
+      const timeout = setTimeout(() => {
+        setShowSuccess("");
+        router.replace("/dashboard/admin/usermanagment");
+      }, 3000);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [searchParams, router]);
+
   const filteredUsers = useMemo(() => {
     return allUsers.filter((user: any) => {
       const matchesSearch =
@@ -66,7 +87,6 @@ const UserManagment = () => {
     }
   };
 
-  const router = useRouter();
   if (isError) return <ErrorPage />;
   return (
     <AdminUser
@@ -79,6 +99,13 @@ const UserManagment = () => {
         />
       }
     >
+      {" "}
+      {showSuccess && (
+        <div className="fixed top-5  right-5 z-50 rounded-lg bg-green-500 px-4 py-3 text-white shadow-lg transition-all">
+          User {showSuccess === "user-created" ? "created" : "updated"}{" "}
+          successfully
+        </div>
+      )}
       <div className="flex gap-4 shadow-lg mb-6 bg-white rounded-lg p-4">
         <input
           type="text"
@@ -103,7 +130,6 @@ const UserManagment = () => {
           ))}
         </select>
       </div>
-
       {isLoading ? <LoadingPage /> : <UserTable users={paginatedUsers} />}
       <PaginationControls
         currentPage={page}

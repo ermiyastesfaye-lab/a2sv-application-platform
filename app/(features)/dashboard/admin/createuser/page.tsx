@@ -16,7 +16,7 @@ const CreateUser = () => {
     formState: { errors },
   } = useForm();
   const [createUser] = useCreateUserMutation();
-  const [success, setSuccess] = useState(false);
+  //const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
 
   const onSubmit = async (data: any) => {
@@ -25,11 +25,12 @@ const CreateUser = () => {
       const response = await createUser(data).unwrap();
       console.log("User created successfully:", response);
       reset();
-      setSuccess(true);
+      router.push("/dashboard/admin/usermanagment?success=user-updated");
+      //setSuccess(true);
       setError(false);
     } catch (error) {
       console.error("Failed to create user:", error);
-      setSuccess(false);
+      //setSuccess(false);
       setError(true);
     }
   };
@@ -81,11 +82,11 @@ const CreateUser = () => {
               ]}
             />
           </div>
-          {success && (
+          {/*   {success && (
             <div className="text-sm text-green-800">
               User created successfully
             </div>
-          )}
+          )} */}
           {error && (
             <div className="text-sm text-red-800">Failed on creating user</div>
           )}
