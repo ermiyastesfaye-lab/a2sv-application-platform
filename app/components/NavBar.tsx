@@ -17,6 +17,17 @@ const List = ({ text, link }: ListProps) => {
       window.location.href = "/auth/login";
     }
   };
+  const handleClick = () => {
+    if (link?.startsWith("#")) {
+      const element = document.querySelector(link);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" }); // <-- smooth scroll here
+      }
+    } else {
+      router.push(link || "");
+    }
+  };
+
   if (text === "Logout") {
     return (
       <li
@@ -30,7 +41,7 @@ const List = ({ text, link }: ListProps) => {
   return (
     <li
       className={`${link && "hover:text-indigo-700 hover:underline"}`}
-      onClick={() => router.push(link || "")}
+      onClick={handleClick}
     >
       {text}
     </li>

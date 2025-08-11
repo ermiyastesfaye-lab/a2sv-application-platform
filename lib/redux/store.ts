@@ -9,6 +9,7 @@ import { cyclesApi } from "./api/applicationCyclesApi";
 import { profileApi } from "./api/profileApi";
 // import reviewerReducer from "./slices/reviewerSlice";
 import profileReducer from "./slices/profileSlice";
+import { analyticsApi } from "./api/analyticsApi";
 
 import { managersApi } from "./api/managerApi";
 
@@ -22,6 +23,7 @@ export const store = configureStore({
     [cyclesApi.reducerPath]: cyclesApi.reducer,
 
     [managersApi.reducerPath]: managersApi.reducer,
+    [analyticsApi.reducerPath]: analyticsApi.reducer,
 
     //     [reviewerApi.reducerPath]: reviewerApi.reducer,
     [profileApi.reducerPath]: profileApi.reducer,
@@ -34,6 +36,7 @@ export const store = configureStore({
       authApi.middleware,
       adminApi.middleware,
       cyclesApi.middleware,
+      analyticsApi.middleware,
 
       managersApi.middleware,
       applicationsApi.middleware,

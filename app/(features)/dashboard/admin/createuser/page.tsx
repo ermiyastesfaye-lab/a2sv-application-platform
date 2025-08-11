@@ -1,7 +1,7 @@
 "use client";
 import AdminUser from "@/app/components/AdminUser";
 import InputBox from "@/app/components/AdminUser/InputBox/InputBox";
-import React from "react";
+import React, { useState } from "react";
 import ComboBox from "@/app/components/AdminUser/ComboBox/ComboBox";
 import { useForm } from "react-hook-form";
 import { useCreateUserMutation } from "@/lib/redux/slices/adminSlice";
@@ -16,6 +16,8 @@ const CreateUser = () => {
     formState: { errors },
   } = useForm();
   const [createUser] = useCreateUserMutation();
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState(false);
 
   const onSubmit = async (data: any) => {
     try {
@@ -23,8 +25,12 @@ const CreateUser = () => {
       const response = await createUser(data).unwrap();
       console.log("User created successfully:", response);
       reset();
+      setSuccess(true);
+      setError(false);
     } catch (error) {
       console.error("Failed to create user:", error);
+      setSuccess(false);
+      setError(true);
     }
   };
   return (
@@ -75,6 +81,14 @@ const CreateUser = () => {
               ]}
             />
           </div>
+          {success && (
+            <div className="text-sm text-green-800">
+              User created successfully
+            </div>
+          )}
+          {error && (
+            <div className="text-sm text-red-800">Failed on creating user</div>
+          )}
         </div>
         <div className="flex justify-end text-sm rounded-b-lg bg-gray-50 shadow-sm p-2">
           <button
