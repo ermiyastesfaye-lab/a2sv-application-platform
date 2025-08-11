@@ -9,17 +9,64 @@ import {
 import ApplicationProfile from "@/app/components/reviewerDetail/ApplicationProfile";
 import EvaluationForm from "@/app/components/reviewerDetail/EvaluationForm";
 
+
+type FetchBaseQueryError = {
+  status: number;
+  data?: unknown;
+};
+
 const ReviewerDetails = () => {
   const router = useRouter();
+  
   const params = useParams();
   const applicationId = params.id as string;
   const searchParams = useSearchParams();
   const mode = searchParams.get("mode");
   const fromManager = searchParams.get("from") === "manager";
-
   const isReadOnly = mode === "view";
 
-  // Guard: If applicationId is missing or invalid, show error
+  const { data, isLoading, error, refetch } = useGetApplicationDetailsQuery(
+    applicationId || "",
+    { skip: !applicationId || applicationId === "[id]" }
+  );
+  const [updateReview] = useUpdateReviewMutation();
+
+  useEffect(() => {
+    if (error && "status" in error && (error as FetchBaseQueryError).status === 403) {
+      localStorage.removeItem("token");
+      router.push("/auth/login");
+    }
+  }, [error, router]);
+  useEffect(() => {
+    if (!data) return;
+    
+    const status = data.data.applicant_details?.status;
+    const hasReview = !!data.data.review_details;
+    
+    if (status === "pending_review" && !hasReview) {
+      (async () => {
+        try {
+          await updateReview({
+            applicationId,
+            reviewData: {
+              activity_check_notes: "",
+              resume_score: 0,
+              essay_why_a2sv_score: 0,
+              essay_about_you_score: 0,
+              technical_interview_score: 0,
+              behavioral_interview_score: 0,
+              interview_notes: "",
+            },
+          }).unwrap();
+          await refetch();
+        } catch (e) {
+          
+        }
+      })();
+    }
+  }, [data, applicationId, updateReview, refetch]);
+
+  
   if (!applicationId || applicationId === "[id]") {
     return (
       <div className="min-h-screen bg-gray-100 mb-20">
@@ -41,45 +88,7 @@ const ReviewerDetails = () => {
     );
   }
 
-  const { data, isLoading, error, refetch } =
-    useGetApplicationDetailsQuery(applicationId);
-  const [updateReview] = useUpdateReviewMutation();
-
-  useEffect(() => {
-    if (error && "status" in error && (error as any).status === 403) {
-      localStorage.removeItem("token");
-      router.push("/auth/login");
-    }
-  }, [error, router]);
-
-  // If opened from New, initialize a blank review to transition to Under Review
-  useEffect(() => {
-    if (!data) return;
-    const status = data.data.applicant_details?.status;
-    const hasReview = !!data.data.review_details;
-    if (status === "pending_review" && !hasReview) {
-      (async () => {
-        try {
-          await updateReview({
-            applicationId,
-            reviewData: {
-              activity_check_notes: "",
-              resume_score: 0,
-              essay_why_a2sv_score: 0,
-              essay_about_you_score: 0,
-              technical_interview_score: 0,
-              behavioral_interview_score: 0,
-              interview_notes: "",
-            },
-          }).unwrap();
-          await refetch();
-        } catch (e) {
-        }
-      })();
-    }
-  }, [data, applicationId, updateReview, refetch]);
-
-  if (error && "status" in error && (error as any).status === 403) {
+  if (error && "status" in error && (error as FetchBaseQueryError).status === 403) {
     return (
       <div className="min-h-screen bg-gray-100 mb-20 flex items-center justify-center">
         <div className="text-center">
