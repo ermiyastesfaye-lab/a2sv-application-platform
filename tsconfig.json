@@ -27,7 +27,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "app/(features)/analytics/components/pieChar.tsx"
+    "app/(features)/dashboard/admin/analytics/components/pieChar.tsx"
   ],
   "exclude": ["node_modules"]
 }

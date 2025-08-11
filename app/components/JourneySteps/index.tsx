@@ -19,7 +19,7 @@ const StepCard: React.FC<JourneyStep> = ({ logo, phase, description }) => (
 
 const JourneySteps: React.FC = () => {
   return (
-    <section className="bg-white py-28 text-black">
+    <section className="bg-white py-28 text-black" id="journey">
       <div className="max-w-6xl mx-auto px-6 space-y-10">
         <div className="text-center space-y-2">
           <h2 className="text-3xl font-extrabold">

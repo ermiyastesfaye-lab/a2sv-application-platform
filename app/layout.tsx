@@ -1,5 +1,4 @@
 "use client";
-import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import NavBar from "./components/NavBar";
@@ -9,7 +8,6 @@ import { usePathname, useRouter } from "next/navigation";
 import Button from "./components/Butt";
 import "@mantine/core/styles.css";
 import { MantineProvider } from "@mantine/core";
-
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -23,9 +21,9 @@ const geistMono = Geist_Mono({
 
 const NavBarLists = {
   middle: [
-    { text: "Home", link: "/" },
-    { text: "About", link: "/" },
-    { text: "Success Stories", link: "/" },
+    { text: "Journey", link: "#journey" },
+    { text: "About", link: "#about" },
+    { text: "Testimonials", link: "#testimonial" },
   ],
 };
 
@@ -39,7 +37,8 @@ export default function RootLayout({
     pathname.startsWith("/dashboard/admin") ||
     pathname.startsWith("/dashboard/manager") ||
     pathname.startsWith("/dashboard/reviewer") ||
-    pathname.startsWith("/dashboard/applicant");
+    pathname.startsWith("/dashboard/applicant") ||
+    pathname.startsWith("/auth");
   const router = useRouter();
   return (
     <html lang="en">
@@ -52,7 +51,7 @@ export default function RootLayout({
             button={
               <Button
                 text="Apply Now"
-                onclick={() => router.push("/auth/login")}
+                onclick={() => router.push("/auth/signup")}
               />
             }
           />

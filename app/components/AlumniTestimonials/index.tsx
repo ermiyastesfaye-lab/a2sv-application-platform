@@ -27,7 +27,7 @@ const TestimonialCard: React.FC<Testimonial> = ({
 
 const AlumniTestimonials = () => {
   return (
-    <section className="bg-[#F9FAFB] py-16">
+    <section className="bg-[#F9FAFB] py-16" id="testimonial">
       <div className="max-w-6xl mx-auto px-6">
         <h2 className="text-3xl font-extrabold text-center text-gray-900 mb-10 tracking-tight">
           Hear from Our Alumni

@@ -1,8 +1,10 @@
 "use client";
 import React from "react";
 import Button from "./components/Butt";
+import { useRouter } from "next/navigation";
 
 const ErrorPage = () => {
+  const router = useRouter();
   return (
     <div className="flex flex-col items-center justify-center min-h-120 text-center ">
       <div className="">
@@ -11,7 +13,7 @@ const ErrorPage = () => {
         <p className="text-sm text-gray-500 mt-4 mb-4">
           Sorry, we couldn't find page you're looking for.
         </p>
-        <Button text="Go Home" />
+        <Button text="Go Home" onclick={() => router.push("/")} />
       </div>
     </div>
   );
