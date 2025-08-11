@@ -7,7 +7,7 @@ import { useGetanalyticsQuery } from "@/lib/redux/api/analyticsApi";
 import LoadingPage from "@/app/components/LoadingPage";
 import ErrorPage from "./components/ErrorPage";
 
-const page = () => {
+const Page = () => {
   const { data, error, isLoading } = useGetanalyticsQuery();
   if (isLoading) {
     return <LoadingPage />;
@@ -88,4 +88,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
