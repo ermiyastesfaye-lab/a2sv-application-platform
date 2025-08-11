@@ -14,7 +14,7 @@ import {
   useGetReviewStatusesQuery,
   useUpdateReviewMutation,
 } from "@/lib/redux/api/reviewerApi";
-import NavBar from "@/app/components/NavBar";
+
 import DashboardHeader from "@/app/components/reviewerDashboard/DashboardHeader";
 import ApplicationCard from "@/app/components/reviewerDashboard/ApplicationCard";
 import Pagination from "@/app/components/reviewerDashboard/Pagination";
@@ -99,7 +99,6 @@ export default function ReviewerDashboard() {
   if (isLoading || statusesLoading) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <NavBar />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <DashboardHeader
             totalAssigned={data?.data.total_count || 0}
@@ -119,7 +118,6 @@ export default function ReviewerDashboard() {
   if (error) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <NavBar />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <DashboardHeader
             totalAssigned={0}
@@ -190,8 +188,6 @@ export default function ReviewerDashboard() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <NavBar />
-
       <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-20 mb-10">
         <DashboardHeader
           totalAssigned={totalCount}
