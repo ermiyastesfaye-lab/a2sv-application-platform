@@ -63,6 +63,7 @@ const EditUser = () => {
       }).unwrap();
       // console.log("User updated successfully:", response);
       setSuccess(true);
+      router.push("/dashboard/admin/usermanagment?success=user-updated");
       setError(false);
     } catch (error) {
       console.error("Failed to update user:", error);
@@ -125,7 +126,7 @@ const EditUser = () => {
           </div>
           {success && (
             <div className="text-sm text-green-800">
-              User created successfully
+              User updated successfully
             </div>
           )}
           {error && (
