@@ -17,8 +17,7 @@ const BuildByEngineers = () => {
         </div>
 
         <div className="flex-1 w-full">
-          <Image
-          width={100} height={100}
+          <img
             src="/images/built-by-engineers.jpg"
             alt="Built by Engineers"
             className="w-full h-auto rounded-lg shadow-lg object-cover"

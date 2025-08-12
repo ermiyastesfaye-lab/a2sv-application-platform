@@ -21,7 +21,7 @@ const Footer = () => {
     <footer className="text-sm font-light text-[#ffffff96] mt-auto bg-[#1f2937] p-8">
       <div className="flex justify-center">
         <div>
-          <Image width={100} height={100} className="h-10" src="/a2svlogo(white).png" alt="A2SV Logo"  />
+          <img  className="h-10" src="/a2svlogo(white).png" alt="A2SV Logo"  />
           <p className="my-4">
             Preparing Africa&apos;s top tech talent for global opportunities
           </p>

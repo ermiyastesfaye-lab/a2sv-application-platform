@@ -244,14 +244,13 @@ const DashboardMainSection = (): JSX.Element => {
                                         <DropdownMenuSubItem
                                           key={reviewer.id}
                                           icon={
-                                            <Image
+                                            <img
                                               src={`https://ui-avatars.com/api/?name=${encodeURIComponent(
                                                 reviewer.full_name
                                               )}&background=EEF2FF&color=3730A3&size=32`}
                                               alt={reviewer.full_name}
                                               className="w-4 h-4 rounded-full"
-                                              width={100} 
-                                              height={100}
+                                              
                                               
                                             />
                                           }

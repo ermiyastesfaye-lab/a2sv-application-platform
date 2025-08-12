@@ -5,9 +5,7 @@ import React from "react";
 
 const StepCard: React.FC<JourneyStep> = ({ logo, phase, description }) => (
   <div className="p-6 w-full max-w-sm flex gap-4">
-    <Image
-    width={100}
-     height={100}
+    <img
       src={logo}
       alt={phase}
       className="h-12 w-12 object-contain flex-shrink-0"
