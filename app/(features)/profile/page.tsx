@@ -1,5 +1,4 @@
 "use client";
-import { useRouter } from "next/navigation";
 import { useGetUserProfileQuery } from "@/lib/redux/api/profileApi";
 import ProfileHeader from "@/app/components/profileSet/ProfileHeader";
 import InfoForm from "@/app/components/profileSet/InfoForm";
@@ -7,7 +6,7 @@ import PasswordForm from "@/app/components/profileSet/PasswordForm";
 import { useEffect } from "react";
 
 export default function ProfilePage() {
-  const router = useRouter();
+  // const router = useRouter();
   const {
     data: profileData,
     isLoading,

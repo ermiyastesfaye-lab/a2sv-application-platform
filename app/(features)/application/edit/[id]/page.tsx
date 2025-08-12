@@ -65,7 +65,7 @@ export default function EditApplicationForm() {
       }, 1500);
     } catch (error) {
       console.error("Update failed:", error);
-      alert((error as any)?.data?.message || "Update failed. Please try again.");
+      alert("Update failed. Please try again.");
     }
   };
 

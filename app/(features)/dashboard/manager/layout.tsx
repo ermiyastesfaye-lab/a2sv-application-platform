@@ -1,7 +1,7 @@
 import NavBar from "@/app/components/NavBar";
 import React from "react";
 
-const layout = ({ children }: any) => {
+const Layout = ({ children }: {children:React.ReactNode}) => {
   const NavBarLinks = {
     right: [
       { text: "Your Profile", link: "/profile" },
@@ -25,4 +25,4 @@ const layout = ({ children }: any) => {
   );
 };
 
-export default layout;
+export default Layout;

@@ -26,7 +26,6 @@ export default function Step3EssaysResume({
     handleSubmit,
     reset,
     formState: { errors },
-    watch,
   } = useForm<StartApplicationForm>({ defaultValues: data });
 
     useEffect(() => {
@@ -34,7 +33,6 @@ export default function Step3EssaysResume({
       }, [data, reset]);
   const [replacing, setReplacing] = useState(false);
 
-  const resumeFile = watch("resume");
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;

@@ -9,8 +9,6 @@ import {
 import { useGetActiveCyclesQuery } from "@/lib/redux/api/applicationCyclesApi";
 
 const AdminDashboard = () => {
-  const totalApplicants = 1204;
-  const activeCycles = 1;
   const recentActivities = [
     {
       action: "User Abebe Kebede created",

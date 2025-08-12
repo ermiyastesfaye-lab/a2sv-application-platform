@@ -37,7 +37,7 @@ const ApplicationDashboard = ({
         <div className="col-span-4 bg-gradient-to-r from-indigo-600 to-purple-500 text-white p-6 rounded-lg shadow md:max-h-48 mb-3">
           <h2 className="text-2xl font-bold mb-2">{applicationCycle}</h2>
           <p className="text-sm mb-4">
-            It's time to submit your application and show us your potential
+            It&apos;s time to submit your application and show us your potential
           </p>
           <button className="bg-white py-2 px-4 text-indigo-800 rounded font-semibold hover:bg-gray-200 text-[15px]">
             <Link href="/application"> Start Application</Link>

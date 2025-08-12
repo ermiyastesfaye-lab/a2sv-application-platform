@@ -1,7 +1,8 @@
 "use client";
 import React from "react";
-import Button from "./Butt";
+
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 interface ListProps {
   text: string;
@@ -57,7 +58,7 @@ const NavBar = ({ middlelists, rightlists, button }: NavBarProps) => {
   return (
     <div className="fixed top-0 left-0 w-full z-50 bg-[#fff] shadow-xs text-black">
       <div className="flex justify-around h-16 items-center ">
-        <img className="h-8" src="/a2svlogo(blue).png" alt="A2SV Logo" />
+        <Image width={100} height={100} className="h-8" src="/a2svlogo(blue).png" alt="A2SV Logo" />
         <div className="flex gap-4 text-sm">
           <ul className="flex gap-4 text-sm">
             {middlelists?.map((list, index) => (

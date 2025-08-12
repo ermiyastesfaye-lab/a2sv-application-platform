@@ -13,7 +13,7 @@ const CycleForm = () => {
     formState: { errors },
   } = useForm<CreateNewApplicationCycle>();
 
-  const [createCycle, { isLoading, isSuccess, isError, reset: resetFetch }] =
+  const [createCycle, { isLoading, reset: resetFetch }] =
     useCreateCycleMutation();
   const [dateError, setDateError] = useState("");
   const router = useRouter();
@@ -34,13 +34,9 @@ const CycleForm = () => {
       reset();
       console.log("cycle created successfully");
       router.push("/dashboard/admin/applicationCycle?success=cycle-created");
-    } catch (err: any) {
-      if (err?.data?.message === "Cycle with this name already exists.") {
-        setDateError(err.data.message);
-      } else {
-        setDateError("Something went wrong. Please try again.");
-      }
-      console.warn("Error creating cycle:", err);
+    } catch (err) {
+      console.log(err)
+        setDateError("Something went wrong. Please try again.")
     }
   };
 

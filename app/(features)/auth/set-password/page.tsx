@@ -32,8 +32,9 @@ const SetPassword = () => {
       await resetPassword({ token, new_password: newPassword }).unwrap();
       setSuccess("Password updated successfully! You can now log in.");
       setTimeout(() => router.push("/auth/login"), 1500);
-    } catch (err: any) {
-      setError(err?.data?.message || "Failed to reset password.");
+    } catch (err: unknown) {
+      console.log(err)
+      setError("Error happend");
     }
   };
   return (

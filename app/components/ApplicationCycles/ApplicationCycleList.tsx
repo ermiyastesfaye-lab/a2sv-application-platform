@@ -18,10 +18,10 @@ const ApplicationCycleList: React.FC<ApplicationCycle> = ({
   id,
   refetchCycles,
 }) => {
-  const [activateCycle, { isLoading: isActivating }] =
+  const [activateCycle, { }] =
     useActivateCycleMutation();
-  const [deleteCycle, { isLoading: isDeleting }] = useDeleteCycleMutation();
-  const [deactivateCycle, { isLoading: isDeactiving }] =
+  const [deleteCycle, {  }] = useDeleteCycleMutation();
+  const [deactivateCycle, {  }] =
     useDeactivateCycleMutation();
 
   const searchParams = useSearchParams();

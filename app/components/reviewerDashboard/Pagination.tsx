@@ -9,8 +9,6 @@ interface PaginationProps {
 const Pagination = ({
   currentPage,
   totalPages,
-  totalCount,
-  pageSize,
   onPageChange,
 }: PaginationProps) => {
   const getPageNumbers = () => {

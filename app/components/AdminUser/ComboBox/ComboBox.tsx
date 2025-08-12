@@ -1,4 +1,5 @@
 import React from "react";
+import { FieldValues, UseFormRegister } from "react-hook-form";
 
 interface Option {
   value: string;
@@ -8,8 +9,8 @@ interface Option {
 interface ComboBoxProps {
   label: string;
   options: Option[];
-  register?: any;
-  error?: any;
+ register?: ReturnType<UseFormRegister<FieldValues>>;
+  error?: string;
 
   onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 }

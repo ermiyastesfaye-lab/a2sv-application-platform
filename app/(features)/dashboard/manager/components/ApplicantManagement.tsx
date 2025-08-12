@@ -16,7 +16,7 @@ export const ApplicantManagement = ({
 }: {
   id: ParamValue;
 }): JSX.Element => {
-  const { data, isLoading, isError, refetch } = useGetApplicantByIdQuery({
+  const { data, isLoading, isError} = useGetApplicantByIdQuery({
     application_id: id,
   });
   const {
@@ -28,9 +28,9 @@ export const ApplicantManagement = ({
     useAssignReviewerMutation();
   const [
     decideApplication,
-    { isLoading: decideLoading, isError: decideError },
+    {  },
   ] = useDecideApplicationMutation();
-  const [decisionNotes, setDecisionNotes] = useState("s");
+  const [decisionNotes] = useState("s");
 
   const router = useRouter();
 
@@ -212,7 +212,7 @@ export const ApplicantManagement = ({
             <Card>
               <CardContent className="p-6">
                 <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                  Reviewer's Feedback
+                  Reviewer&apos;s Feedback
                 </h2>
 
                 {/* Activity Check */}

@@ -1,7 +1,6 @@
 "use client";
 import { TimelineItem } from "@/app/components/TimelineItem";
 import { GoCheckCircle } from "react-icons/go";
-import { GrFormSchedule } from "react-icons/gr";
 import {
   useGetApplicationStatusQuery,
   useGetApplicationDetailsQuery,
@@ -88,7 +87,7 @@ const ApplicantStatusPage = ({ status: initialStatus }: StatusPageProps) => {
       <div className="mb-6">
         <h1 className="font-bold text-2xl mb-2">Your Application Progress</h1>
         <p className="text-gray-600 text-sm">
-          You're on your way! Here's a summary of your application status
+          You&apos;re on your way! Here&apos;s a summary of your application status
         </p>
       </div>
 
@@ -99,7 +98,7 @@ const ApplicantStatusPage = ({ status: initialStatus }: StatusPageProps) => {
               title="Application In Progress"
               description={
                 <>
-                  <p>We're currently processing your application...</p>
+                  <p>We&apos;re currently processing your application...</p>
                   {status === "in_progress" && (
                     <InProgressActionButtons applicationId={applicationId!} />
                   )}
@@ -190,7 +189,7 @@ const ApplicantStatusPage = ({ status: initialStatus }: StatusPageProps) => {
                 Your Application is in Progress
               </h3>
               <p className="text-sm mb-2">
-                You've started your application – great job! Make sure to fill
+                You&apos;ve started your application – great job! Make sure to fill
                 in all the required details.
               </p>
               <a
@@ -222,7 +221,7 @@ const ApplicantStatusPage = ({ status: initialStatus }: StatusPageProps) => {
                 {status === "interview" ? "Interview" : "Next Steps"}!
               </h3>
               <p className="text-sm mb-2">
-                While you wait, it's a great time to prepare. Practice your
+                While you wait, it&apos;s a great time to prepare. Practice your
                 problem-solving skills on platforms like LeetCode and
                 Codeforces.
               </p>

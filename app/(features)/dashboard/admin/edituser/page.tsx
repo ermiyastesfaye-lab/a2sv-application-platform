@@ -10,11 +10,21 @@ import { useUpdateUserMutation } from "@/lib/redux/slices/adminSlice";
 import { useRouter } from "next/navigation";
 import LoadingPage from "@/app/components/LoadingPage";
 
+
+
+interface User {
+  full_name: string;
+  email: string;
+  role: string;
+}
+
+
+
 const EditUser = () => {
   const router = useRouter();
   const params = useSearchParams();
   const userId = params.get("id");
-  const { data, isLoading, isError } = useGetUserByIdQuery(userId);
+  const { data, isLoading } = useGetUserByIdQuery(userId);
   const [user, setUser] = useState({
     full_name: "",
     email: "",
@@ -40,7 +50,7 @@ const EditUser = () => {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm({});
+  } = useForm<User>({});
 
   useEffect(() => {
     if (user) {
@@ -54,14 +64,14 @@ const EditUser = () => {
 
   const [updateUser] = useUpdateUserMutation();
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: User) => {
     try {
-      const response = await updateUser({
+     await updateUser({
         id: userId,
         full_name: data.full_name,
         role: data.role,
       }).unwrap();
-      // console.log("User updated successfully:", response);
+
       setSuccess(true);
       router.push("/dashboard/admin/usermanagment?success=user-updated");
       setError(false);

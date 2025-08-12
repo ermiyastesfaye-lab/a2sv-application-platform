@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useSearchParams, useRouter } from "next/navigation";
+import {  useRouter } from "next/navigation";
 
 import {
   useGetCycleByIdQuery,
@@ -11,6 +11,12 @@ import {
 interface EditCycleFormProps {
   editCycleId: string | null;
 }
+interface EditCycleFormData {
+  name: string;
+  description: string;
+  start_date: string;
+  end_date: string;
+}
 
 const EditCycleForm = ({ editCycleId }: EditCycleFormProps) => {
   const {
@@ -18,11 +24,11 @@ const EditCycleForm = ({ editCycleId }: EditCycleFormProps) => {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm();
+  } = useForm<EditCycleFormData>();
 
   const { data, isLoading: isFetching } = useGetCycleByIdQuery(editCycleId);
 
-  const [editCycle, { isLoading, isSuccess, isError }] = useEditCycleMutation();
+  const [editCycle, { isLoading }] = useEditCycleMutation();
 
   const [dateError, setDateError] = useState("");
 
@@ -39,7 +45,7 @@ const EditCycleForm = ({ editCycleId }: EditCycleFormProps) => {
     }
   }, [data, reset]);
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: EditCycleFormData) => {
     setDateError("");
     console.log("Form Data:", data);
 
@@ -63,13 +69,11 @@ const EditCycleForm = ({ editCycleId }: EditCycleFormProps) => {
 
       console.log("Cycle updated successfully", response);
       router.push("/dashboard/admin/applicationCycle?success=cycle-updated");
-    } catch (err: any) {
-      if (err?.data?.message === "Cycle with this name already exists.") {
-        setDateError(err.data.message);
-      } else {
+    } catch (err) {
+     console.warn("Error creating cycle:", err);
         setDateError("Something went wrong. Please try again.");
-      }
-      console.warn("Error creating cycle:", err);
+      
+     
     }
   };
 

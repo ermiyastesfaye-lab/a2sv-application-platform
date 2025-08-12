@@ -1,18 +1,17 @@
 import {
-  ApplicationDetailsResponse,
+
   ApplicationStatusResponse,
 } from "@/types/application";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import type {
-  StartApplicationForm,
   ApplicationResponse,
 } from "@/app/(features)/application/types";
 
 export const applicationsApi = createApi({
   reducerPath: "applicationsApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://a2sv-application-platform-backend-team1.onrender.com/",
-    prepareHeaders: (headers, { getState }) => {
+    baseUrl: "https://a2sv-application-platform-backend-team2.onrender.com/",
+    prepareHeaders: (headers) => {
       const token = localStorage.getItem("token");
       if (token) headers.set("Authorization", `Bearer ${token}`);
       return headers;
@@ -51,7 +50,7 @@ export const applicationsApi = createApi({
       providesTags: ["Application"],
     }),
 
-    submitApplication: builder.mutation<any, string>({
+    submitApplication: builder.mutation<ApplicationResponse, string>({
       query: (applicationId) => ({
         url: `/applications/${applicationId}`,
         method: "PATCH",
@@ -62,7 +61,7 @@ export const applicationsApi = createApi({
       invalidatesTags: ["Application"],
     }),
 
-    deleteApplication: builder.mutation<any, string>({
+    deleteApplication: builder.mutation<ApplicationResponse, string>({
       query: (applicationId) => ({
         url: `/applications/${applicationId}`,
         method: "DELETE",
