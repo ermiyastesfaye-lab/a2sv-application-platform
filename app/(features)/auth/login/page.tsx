@@ -117,7 +117,7 @@ const Login = () => {
           {formError && <div className="text-red-500 text-sm">{formError}</div>}
           {isError && error && (
             <div className="text-red-500 text-sm">
-              {"An error occurred. Please try again."}
+              {"incorrect email or password"}
             </div>
           )}
           <button
