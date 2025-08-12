@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 type ActionLabel = "Start Review" | "Continue Review" | "View Details";
 interface ApplicationCardProps {
   id: string;
@@ -58,10 +60,12 @@ const ApplicationCard = ({
         {/* Avatar */}
         <div className="w-12 h-12 rounded-full overflow-hidden">
           {hasValidImage ? (
-            <img
+            <Image
               src={image}
               alt={name}
               className="w-full h-full object-cover"
+              width={100}
+              height={100}
             />
           ) : (
             <div className="w-full h-full bg-gray-300 flex items-center justify-center text-gray-600 font-semibold text-sm">

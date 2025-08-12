@@ -30,8 +30,8 @@ const HeroSection = () => {
             Forge Your Future in Tech
           </h1>
           <h3 className="font-medium text-base md:text-lg lg:text-xl max-w-2xl mt-4">
-            Join an elite community of Africa's brightest minds, and get
-            fast-tracked to a software engineering career at the world's leading
+            Join an elite community of Africa&apos;s brightest minds, and get
+            fast-tracked to a software engineering career at the world&apos;s leading
             tech companies.
           </h3>
           <StartButton />

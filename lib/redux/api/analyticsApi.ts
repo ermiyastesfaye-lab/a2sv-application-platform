@@ -4,8 +4,8 @@ import { AnalyticsResponse } from "@/lib/types/analyticsType";
 export const analyticsApi = createApi({
   reducerPath: "analyticsApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://a2sv-application-platform-backend-team1.onrender.com/",
-    prepareHeaders: (headers, { getState }) => {
+    baseUrl: "https://a2sv-application-platform-backend-team2.onrender.com/",
+    prepareHeaders: (headers) => {
       const token = localStorage.getItem("token");
       if (token) {
         headers.set("Authorization", `Bearer ${token}`);

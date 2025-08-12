@@ -1,7 +1,7 @@
 import NavBar from "@/app/components/NavBar";
 import React from "react";
 
-const layout = ({ children }: any) => {
+const layout = ({ children }: {children:React.ReactNode}) => {
   const NavBarLinks = {
     right: [
       { text: "Your Profile", link: "/profile" },

@@ -2,17 +2,17 @@
 import NavBar from "@/app/components/NavBar";
 import React, { useEffect, useState } from "react";
 
-const Layout = ({ children }: any) => {
+const Layout = ({ children }: {children:React.ReactNode}) => {
   const [role, setRole] = useState("");
   useEffect(() => {
-    const r = localStorage.getItem("role") || "";
+    const r = "admin";
     setRole(r);
   }, []);
   const NavBarLinks = {
     right: [
       { text: "Your Profile", link: "/profile" },
       {
-        text: role[0]?.toUpperCase() + role?.slice(1).toLowerCase() || "Admin",
+        text: "Admin",
       },
       {
         text: "Logout",

@@ -11,6 +11,16 @@ import PaginationControls from "@/app/components/ApplicationCycles/PaginationCon
 import LoadingPage from "@/app/components/LoadingPage";
 import ErrorPage from "../../applicant/components/ErrorPage";
 
+
+
+interface User {
+  id: number;
+  full_name: string;
+  email: string;
+  role: string;
+  is_active: boolean;
+}
+
 const UserManagmentContent = () => {
   const [search, setSearch] = useState("");
   const [role, setRole] = useState("All Roles");
@@ -25,7 +35,10 @@ const UserManagmentContent = () => {
     page: 1,
     limit: 100,
   });
-  const allUsers = allUsersData?.data.users || [];
+  // const allUsers = useMemo(()=>{allUsersData?.data.users || []}, [allUsersData] );
+  const allUsers: User[] = allUsersData?.data.users ?? [];
+
+
 
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -48,7 +61,7 @@ const UserManagmentContent = () => {
   }, [searchParams, router]);
 
   const filteredUsers = useMemo(() => {
-    return allUsers.filter((user: any) => {
+    return allUsers.filter((user: User) => {
       const matchesSearch =
         user.full_name.toLowerCase().includes(search.toLowerCase()) ||
         user.email.toLowerCase().includes(search.toLowerCase());

@@ -65,6 +65,7 @@ const PasswordForm = () => {
         confirm_password: "",
       });
     } catch (error) {
+      console.log(error)
       alert(
         "Error changing password. Please check your current password and try again."
       );

@@ -1,6 +1,6 @@
 "use client";
 import EditCycleForm from "@/app/components/EditApplication";
-import { useSearchParams, useRouter } from "next/navigation";
+import {  useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import React from "react";
 interface PageProps {

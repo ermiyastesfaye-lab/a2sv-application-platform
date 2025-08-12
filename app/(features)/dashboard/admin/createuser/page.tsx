@@ -7,6 +7,17 @@ import { useForm } from "react-hook-form";
 import { useCreateUserMutation } from "@/lib/redux/slices/adminSlice";
 import { useRouter } from "next/navigation";
 
+
+
+interface User {
+  full_name: string;
+  email: string;
+  password: string;
+  role: string;
+}
+
+
+
 const CreateUser = () => {
   const router = useRouter();
   const {
@@ -14,12 +25,12 @@ const CreateUser = () => {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm();
+  } = useForm<User>();
   const [createUser] = useCreateUserMutation();
   //const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: User) => {
     try {
       console.log("Form data:", data);
       const response = await createUser(data).unwrap();

@@ -7,7 +7,7 @@ import {
 export const adminApi = createApi({
   reducerPath: "adminApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://a2sv-application-platform-backend-team1.onrender.com/",
+    baseUrl: "https://a2sv-application-platform-backend-team2.onrender.com/",
     prepareHeaders: (headers) => {
       const token = localStorage.getItem("token");
       if (token) {

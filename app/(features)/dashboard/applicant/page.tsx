@@ -2,12 +2,13 @@
 import {
   useGetApplicationStatusQuery,
   useGetCyclesClientQuery,
-  useGetProfileQuery,  
+  useGetProfileQuery,
 } from "@/lib/redux/api/clientApi";
 import WelcomePage from "./components/WelcomePage";
 import StatusPage from "./components/StatusPage";
 import LoadingPage from "@/app/components/LoadingPage";
 import ErrorPage from "./components/ErrorPage";
+import { Cycle } from "@/lib/types/applicationCycles";
 
 export default function ApplicantDashboardPage() {
   const {
@@ -17,21 +18,25 @@ export default function ApplicantDashboardPage() {
     error,
   } = useGetApplicationStatusQuery();
 
-  const {
-    data: cyclesResponse,
-    isLoading: cyclesLoading,
-    error: cyclesError,
-  } = useGetCyclesClientQuery(null);
-  const { data:profileData, isLoading:profileLoading, error: profileError } = useGetProfileQuery(null);
+  const { data: cyclesResponse, isLoading: cyclesLoading } =
+    useGetCyclesClientQuery(null);
+  const { data: profileData, isLoading: profileLoading } =
+    useGetProfileQuery(null);
 
   if (statusLoading || cyclesLoading || profileLoading) return <LoadingPage />;
 
+  // const isNotFound = isError && error && "status" in error && error.status === 404;
   const isNotFound =
-    isError && error && "status" in error && (error as any).status === 404;
+    isError &&
+    error &&
+    typeof error === "object" &&
+    error !== null &&
+    "status" in error &&
+    (error as { status?: number }).status === 404;
 
   const cycles = cyclesResponse?.data?.cycles || [];
   const name = profileData?.data?.full_name;
-  const activeCycle = cycles.find((cycle: any) => cycle.is_active);
+  const activeCycle = cycles.find((cycle: Cycle) => cycle.is_active);
 
   if (isNotFound) {
     return (
@@ -55,6 +60,6 @@ export default function ApplicantDashboardPage() {
   }
 
   return (
-    <ErrorPage message={(error as any)?.data?.message || "Unknown error"} />
+    <ErrorPage  />
   );
 }

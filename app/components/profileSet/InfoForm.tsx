@@ -39,6 +39,7 @@ const InfoForm = ({ userProfile, onSuccess }: InfoFormProps) => {
       alert("Profile updated successfully!");
       if (onSuccess) onSuccess();
     } catch (error) {
+      console.log(error)
       alert("Error updating profile. Please try again.");
     }
   };

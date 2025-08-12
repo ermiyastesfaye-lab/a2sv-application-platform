@@ -1,6 +1,7 @@
 import React from "react";
 import { testimonials } from "@/data/landing";
 import type { Testimonial } from "@/types/landing";
+import Image from "next/image";
 
 const TestimonialCard: React.FC<Testimonial> = ({
   photo,
@@ -12,7 +13,8 @@ const TestimonialCard: React.FC<Testimonial> = ({
     <p className="text-gray-700">{description}</p>
 
     <div className="flex items-center gap-4 mt-auto">
-      <img
+      <Image
+      width={100} height={100}
         src={photo}
         alt={name}
         className="w-16 h-16 rounded-full object-cover"

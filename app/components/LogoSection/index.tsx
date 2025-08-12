@@ -1,3 +1,4 @@
+import Image from "next/image";
 import React from "react";
 
 interface LogoSectionProps {
@@ -10,7 +11,7 @@ const LogoSection: React.FC<LogoSectionProps> = ({ logos }) => {
       <div className="max-w-6xl mx-auto px-12">
         <div className="flex items-center gap-20">
           {logos.map((logo, index) => (
-            <img key={index} src={logo} alt={`Logo ${index + 1}`} />
+            <Image width={100}  height={100} key={index} src={logo} alt={`Logo ${index + 1}`} />
           ))}
         </div>
       </div>

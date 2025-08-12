@@ -6,12 +6,11 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   useLoginAdminMutation,
-  useLoginMutation,
 } from "../../../../../lib/redux/api/auth";
 
 const Login = () => {
   const router = useRouter();
-  const [login, { data, error, isError, isLoading, isSuccess }] =
+  const [login, {  error, isError, isLoading }] =
     useLoginAdminMutation();
   const [form, setForm] = useState({
     email: "",
@@ -35,7 +34,7 @@ const Login = () => {
       }
       alert("Admin Logged in successfully");
       router.push("/dashboard/admin");
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.log(err);
     }
   };
@@ -113,9 +112,7 @@ const Login = () => {
           {formError && <div className="text-red-500 text-sm">{formError}</div>}
           {isError && error && (
             <div className="text-red-500 text-sm">
-              {"data" in error && (error as any).data?.message
-                ? (error as any).data.message
-                : "An error occurred. Please try again."}
+              {"An error occurred. Please try again."}
             </div>
           )}
           <button

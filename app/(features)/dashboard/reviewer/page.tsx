@@ -6,7 +6,6 @@ import { RootState } from "@/lib/redux/store";
 import {
   setCurrentPage,
   setStatusFilter,
-  setSearchQuery,
   setSortBy,
 } from "@/lib/redux/slices/reviewerSlice";
 import {
@@ -34,7 +33,7 @@ export default function ReviewerDashboard() {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  const { currentPage, pageSize, statusFilter, searchQuery, sortBy } =
+  const { currentPage, pageSize, statusFilter, sortBy } =
     useSelector((state: RootState) => state.reviewer);
 
   const { data, isLoading, error, refetch } = useGetAssignedReviewsQuery(
@@ -78,6 +77,7 @@ export default function ReviewerDashboard() {
         // make sure the list is fresh when the user comes back
         refetch();
       } catch (err) {
+        console.log(err)
         // proceed to details even if initialization fails
       }
       router.push(`/details/reviewer/${applicationId}`);
@@ -99,9 +99,9 @@ export default function ReviewerDashboard() {
     dispatch(setStatusFilter(status));
   };
 
-  const handleSearchChange = (query: string) => {
-    dispatch(setSearchQuery(query));
-  };
+  // const handleSearchChange = (query: string) => {
+  //   dispatch(setSearchQuery(query));
+  // };
 
   const handleSortChange = (sort: string) => {
     dispatch(setSortBy(sort));

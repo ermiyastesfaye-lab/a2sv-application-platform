@@ -1,5 +1,5 @@
 "use client";
-
+import Image from "next/image";
 import React, { JSX } from "react";
 import { useRouter } from "next/navigation";
 import { Badge } from "./components/Badge";
@@ -36,24 +36,24 @@ const DashboardMainSection = (): JSX.Element => {
   const { data, isLoading, isError, error, refetch } = useGetApplicantsQuery({
     page: currentPage,
     limit: APPLICANTS_PER_PAGE,
-  } as any);
+  });
   const { data: acceptedData } = useGetApplicantsQuery({
     page: currentPage,
     limit: APPLICANTS_PER_PAGE,
     status: "accepted",
-  } as any);
+  });
   const { data: underReviewData } = useGetApplicantsQuery({
     page: currentPage,
     limit: APPLICANTS_PER_PAGE,
     status: "pending_review",
-  } as any);
+  });
   const router = useRouter();
   const {
     data: reviewersData,
     isLoading: reviewersLoading,
     isError: reviewersError,
   } = useGetReviewersQuery({ page: 1, limit: 10 });
-  const [assignReviewer, { isLoading: isAssigning }] =
+  const [assignReviewer, { }] =
     useAssignReviewerMutation();
   if (error) {
     console.log(error);
@@ -143,7 +143,7 @@ const DashboardMainSection = (): JSX.Element => {
                   {isLoading ? (
                     <TableRow>
                       <TableCell
-                        {...({ colSpan: 5 } as any)}
+                        {...({ colSpan: 5 } )}
                         className="text-center"
                       >
                         Loading applications...
@@ -152,7 +152,7 @@ const DashboardMainSection = (): JSX.Element => {
                   ) : error ? (
                     <TableRow>
                       <TableCell
-                        {...({ colSpan: 5 } as any)}
+                        {...({ colSpan: 5 } )}
                         className="text-center text-red-500"
                       >
                         Error loading applicants
@@ -244,12 +244,15 @@ const DashboardMainSection = (): JSX.Element => {
                                         <DropdownMenuSubItem
                                           key={reviewer.id}
                                           icon={
-                                            <img
+                                            <Image
                                               src={`https://ui-avatars.com/api/?name=${encodeURIComponent(
                                                 reviewer.full_name
                                               )}&background=EEF2FF&color=3730A3&size=32`}
                                               alt={reviewer.full_name}
                                               className="w-4 h-4 rounded-full"
+                                              width={100} 
+                                              height={100}
+                                              
                                             />
                                           }
                                           onClick={() =>

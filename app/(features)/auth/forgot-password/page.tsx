@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { useForgotPasswordMutation } from "../../../../lib/redux/api/auth";
 import Image from "next/image";
 
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 const ForgotPassword = () => {
@@ -22,8 +21,9 @@ const ForgotPassword = () => {
         callback_url: `${window.location.origin}/auth/set-password`,
       }).unwrap();
       setSuccess("If your email exists, a reset link has been sent.");
-    } catch (err: any) {
-      setError(err?.data?.message || "Failed to send reset link.");
+    } catch (e) {
+      console.log(e)
+      setError("error");
     }
   };
   return (
@@ -44,7 +44,7 @@ const ForgotPassword = () => {
         </h2>
         <div className="flex justify-center text-sm mb-6">
           <p className="text-center text-gray-500">
-            Enter your email and we'll send you a link to get back into your
+            Enter your email and we&apos;ll send you a link to get back into your
             account.
           </p>
           <div style={{ borderRight: "1px solid #4F46E5" }}></div>

@@ -76,25 +76,28 @@ export interface UpdateReviewResponse {
   message: string;
 }
 
+// Create a baseQuery instance to reuse inside queryFn
+const rawBaseQuery = fetchBaseQuery({
+  baseUrl: "https://a2sv-application-platform-backend-team2.onrender.com/",
+  prepareHeaders: (headers) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      headers.set("Authorization", `Bearer ${token}`);
+    }
+    headers.set("Content-Type", "application/json");
+    return headers;
+  },
+  validateStatus: (response) => {
+    if (response.status === 403) {
+      return true;
+    }
+    return response.status >= 200 && response.status < 300;
+  },
+});
+
 export const reviewerApi = createApi({
   reducerPath: "reviewerApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: "https://a2sv-application-platform-backend-team1.onrender.com/",
-    prepareHeaders: (headers) => {
-      const token = localStorage.getItem("token");
-      if (token) {
-        headers.set("Authorization", `Bearer ${token}`);
-      }
-      headers.set("Content-Type", "application/json");
-      return headers;
-    },
-    validateStatus: (response, body) => {
-      if (response.status === 403) {
-        return true;
-      }
-      return response.status >= 200 && response.status < 300;
-    },
-  }),
+  baseQuery: rawBaseQuery,
   tagTypes: ["AssignedReviews", "ApplicationDetails"],
   endpoints: (builder) => ({
     getAssignedReviews: builder.query<
@@ -120,14 +123,17 @@ export const reviewerApi = createApi({
       { [applicationId: string]: { hasReview: boolean; isCompleted: boolean } },
       string[]
     >({
-      async queryFn(applicationIds, { dispatch }, extraOptions, baseQuery) {
-        const results: {
-          [applicationId: string]: { hasReview: boolean; isCompleted: boolean };
-        } = {};
+      async queryFn(applicationIds, queryApi, extraOptions) {
+        const results: Record<string, { hasReview: boolean; isCompleted: boolean }> = {};
 
         for (const applicationId of applicationIds) {
           try {
-            const result = await baseQuery(`reviews/${applicationId}`);
+            const result = await rawBaseQuery(
+              { url: `reviews/${applicationId}`, method: "GET" },
+              queryApi,
+              extraOptions
+            );
+
             if (result.data) {
               const data = result.data as ApplicationDetailsResponse;
               const hasReview = !!data.data.review_details;
@@ -143,6 +149,7 @@ export const reviewerApi = createApi({
               results[applicationId] = { hasReview: false, isCompleted: false };
             }
           } catch (error) {
+            console.error("Error fetching review status for", applicationId, error);
             results[applicationId] = { hasReview: false, isCompleted: false };
           }
         }
@@ -150,7 +157,7 @@ export const reviewerApi = createApi({
         return { data: results };
       },
       providesTags: (result, error, applicationIds) =>
-        applicationIds.map((id) => ({ type: "ApplicationDetails", id })),
+        applicationIds.map((id) => ({ type: "ApplicationDetails" as const, id })),
     }),
     updateReview: builder.mutation<
       UpdateReviewResponse,

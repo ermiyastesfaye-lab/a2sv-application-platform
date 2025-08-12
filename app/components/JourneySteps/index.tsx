@@ -1,13 +1,17 @@
 import { journeySteps } from "@/data/landing";
 import type { JourneyStep } from "@/types/landing";
+import Image from "next/image";
 import React from "react";
 
 const StepCard: React.FC<JourneyStep> = ({ logo, phase, description }) => (
   <div className="p-6 w-full max-w-sm flex gap-4">
-    <img
+    <Image
+    width={100}
+     height={100}
       src={logo}
       alt={phase}
       className="h-12 w-12 object-contain flex-shrink-0"
+
     />
 
     <div className="flex flex-col">

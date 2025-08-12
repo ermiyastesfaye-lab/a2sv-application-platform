@@ -1,5 +1,6 @@
 import { useRef, useState, useEffect } from "react";
 import { useUpdateProfileMutation } from "@/lib/redux/api/profileApi";
+import Image from "next/image";
 
 interface UserProfile {
   id: string;
@@ -82,7 +83,9 @@ const ProfileHeader = ({ userProfile, onSuccess }: ProfileHeaderProps) => {
           >
             <div className="relative w-32 h-32 rounded-full border-4 border-white shadow-lg overflow-hidden flex items-center justify-center bg-gray-900">
               {!hasError && currentAvatar ? (
-                <img
+                <Image
+                width={100}
+                 height={100}
                   src={currentAvatar}
                   alt="Profile"
                   className={`w-full h-full object-cover transition-opacity duration-300 ${

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -8,7 +8,7 @@ import { useRegisterMutation } from "../../../../lib/redux/api/auth";
 
 const Signup = () => {
   const router = useRouter();
-  const [register, { data, error, isError, isLoading, isSuccess }] =
+  const [register, {  error, isError, isLoading }] =
     useRegisterMutation();
   const [form, setForm] = React.useState({
     fullName: "",
@@ -30,14 +30,14 @@ const Signup = () => {
       return;
     }
     try {
-      const res = await register({
+      await register({
         full_name: form.fullName,
         email: form.email,
         password: form.password,
       }).unwrap();
       alert("User created successfully!");
       router.push("/auth/login");
-    } catch (err: any) {
+    } catch (err) {
       console.log(err);
     }
   };
@@ -122,9 +122,7 @@ const Signup = () => {
           {formError && <div className="text-red-500 text-sm">{formError}</div>}
           {isError && error && (
             <div className="text-red-500 text-sm">
-              {"data" in error && (error as any).data?.message
-                ? (error as any).data.message
-                : "An error occurred. Please try again."}
+              {"An error occurred. Please try again."}
             </div>
           )}
           <button

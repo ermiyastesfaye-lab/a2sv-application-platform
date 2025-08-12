@@ -10,10 +10,10 @@ import ApplicationProfile from "@/app/components/reviewerDetail/ApplicationProfi
 import EvaluationForm from "@/app/components/reviewerDetail/EvaluationForm";
 
 
-type FetchBaseQueryError = {
-  status: number;
-  data?: unknown;
-};
+// type FetchBaseQueryError = {
+//   status: number;
+//   data?: unknown;
+// };
 
 const ReviewerDetails = () => {
   const router = useRouter();
@@ -62,7 +62,9 @@ const ReviewerDetails = () => {
             },
           }).unwrap();
           await refetch();
-        } catch (e) {}
+        } catch (e) {
+          console.log(e)
+        }
       })();
     }
   }, [data, applicationId, updateReview, refetch]);

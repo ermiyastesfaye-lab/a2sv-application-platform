@@ -1,10 +1,13 @@
 import React from "react";
+  
+import { FieldValues, UseFormRegister } from "react-hook-form";
+
 interface InputBoxProps {
   title: string;
   placeholder?: string;
   type?: string;
-  register?: any;
-  error?: any;
+ register?: ReturnType<UseFormRegister<FieldValues>>;
+  error?: string;
   disabled?: boolean;
 }
 
