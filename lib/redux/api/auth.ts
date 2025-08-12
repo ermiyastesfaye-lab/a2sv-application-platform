@@ -1,8 +1,14 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import {Reauth } from "./Reauth";
 export const authApi = createApi({
   reducerPath: "auth",
- baseQuery: Reauth,
+  baseQuery: fetchBaseQuery({
+    baseUrl: "https://a2sv-application-platform-backend-team1.onrender.com/",
+    prepareHeaders: (headers, { getState }) => {
+      const token = localStorage.getItem("token");
+      if (token) headers.set("Authorization", `Bearer ${token}`);
+      return headers;
+    },
+  }),
   endpoints: (builder) => ({
     register: builder.mutation({
       query: (user) => ({
