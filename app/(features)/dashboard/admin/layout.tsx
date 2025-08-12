@@ -3,11 +3,8 @@ import NavBar from "@/app/components/NavBar";
 import React, { useEffect, useState } from "react";
 
 const Layout = ({ children }: {children:React.ReactNode}) => {
-  const [role, setRole] = useState("");
-  useEffect(() => {
-    const r = "admin";
-    setRole(r);
-  }, []);
+
+
   const NavBarLinks = {
     right: [
       { text: "Your Profile", link: "/profile" },

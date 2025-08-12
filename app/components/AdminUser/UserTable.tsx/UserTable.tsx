@@ -23,7 +23,7 @@ const UserTable = ({ users }: UserTableProps) => {
     setDisplayedUsers(users);
   }, [users]);
 
-  const handleDelete = async (id: string|number) => {
+  const handleDelete = async (id: string | number) => {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this user? This action cannot be undone."
     );
@@ -54,14 +54,12 @@ const UserTable = ({ users }: UserTableProps) => {
           {displayedUsers.map((user) => (
             <tr key={user.id} className="border-b border-gray-200">
               <td className="px-4 py-3 flex items-center gap-3">
-                <Image
-                width={100} height={100}
-                  src="/profile-set-avatar-img.png"
-
+                <img
+                  src="https://i.pinimg.com/736x/96/7a/10/967a10a901f67d8e08e9e1f06c4de245.jpg"
                   alt={user.full_name}
                   className="w-10 h-10 rounded-full object-cover"
-                  
                 />
+
                 <div>
                   <div className="font-medium">{user.full_name}</div>
                   <div className="text-sm text-gray-500">{user.email}</div>
